@@ -6,6 +6,7 @@ Run locally:  streamlit run app.py
 """
 import json
 from pathlib import Path
+from html import escape
 
 import streamlit as st
 import streamlit.components.v1 as components
@@ -36,6 +37,14 @@ def page(stamp: float) -> str:
             f"window.ODDECH_SIM_SRC={json.dumps(sim)};")
     scripts = [read(HERE / "vendor" / "three.min.js"), sim] + [read(SITE / f) for f in SCRIPTS]
     html = read(SITE / "index.html")
+    film = escape(read(SITE / "living-air-sensor.html"), quote=True)
+    film_frame = (
+        '<iframe title="Living-cell air sensor animation" '
+        'style="display:block;width:100%;height:1050px;border:0;" '
+        'loading="lazy" '
+        f'srcdoc="{film}"></iframe>'
+    )
+    html = html.replace("<!--LIVING_AIR_SENSOR-->", film_frame)
     for mark, block in (("<!--STYLE-->", f"<style>{read(SITE / 'style.css')}</style>"),
                         ("<!--DATA-->", f"<script>{safe(data)}</script>"),
                         ("<!--SCRIPTS-->", "".join(f"<script>{safe(s)}</script>" for s in scripts))):

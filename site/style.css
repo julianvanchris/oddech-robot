@@ -551,6 +551,12 @@ body.ready .line > span { transform: none; }
 .deck.deck-max { position: fixed; inset: 0; z-index: 200; width: 100vw; height: 100vh; aspect-ratio: auto; border: 0; }
 .dash-side-foot { margin-top: auto; padding: 10px; font-size: 10.5px; color: var(--dg); }
 
+.original { margin-top: 56px; border-top: 1px solid var(--nightHair); }
+.original summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: baseline; gap: 24px; padding: 18px 0; }
+.original summary::-webkit-details-marker { display: none; }
+.original summary .note { margin: 0; } .original summary .note::after { content: " · open"; color: var(--accent2); } .original[open] summary .note::after { content: " · close"; }
+.original iframe { border-radius: 4px; background: #000; }
+
 /* ---------------------------------------------------------------- print: the pitch deck only, one slide per page */
 @media print {
   @page { size: 1280px 720px; margin: 0; }
