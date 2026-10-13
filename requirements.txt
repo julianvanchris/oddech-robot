@@ -1,0 +1,2 @@
+# Oddech site on Streamlit Community Cloud. Everything else is static HTML/JS in site/ and vendor/.
+streamlit>=1.35.0,<2.0.0

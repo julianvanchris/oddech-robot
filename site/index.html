@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oddech · a robot that reads the air</title>
+<meta name="description" content="Oddech, Polish for breath: a ground robot with a sensor mast that maps fine dust in a room, estimates what people breathe, explains it and acts. FL Joint Program 2026, Kraków.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!--STYLE-->
+</head>
+<body>
+<div id="loader" aria-hidden="true"><div class="ld-ring"></div><div class="ld-word">Oddech</div><div class="ld-sub">breathing in</div></div>
+<div class="grain" aria-hidden="true"></div>
+<div id="cursor" aria-hidden="true"><i></i></div>
+<div id="progress" aria-hidden="true"></div>
+
+<header class="topbar">
+  <a href="#hero" class="brand"><span class="brand-dot"></span>Oddech</a>
+  <nav class="topnav" aria-label="Sections">
+    <a href="#problem">Problem</a><a href="#diagnosis">Diagnosis</a><a href="#robot">Robot</a><a href="#sensor">Sensor</a>
+    <a href="#simulation">Simulation</a><a href="#market">Market</a><a href="#model">Business</a><a href="#research">Research</a>
+  </nav>
+  <button class="present-btn" id="presentBtn" title="Presentation mode: arrow keys move section by section (P)">Present</button>
+</header>
+<nav class="index" id="sideIndex" aria-hidden="true"></nav>
+<div class="slide-count" id="slideCount" aria-hidden="true"></div>
+
+<main>
+<!-- ================================================================ HERO -->
+<section id="hero" class="night hero" data-title="Oddech">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-inner wrap">
+    <div class="kicker light">FL Joint Program 2026 · Kraków · Team Oddech</div>
+    <h1 class="hero-title"><span class="line"><span>Oddech</span></span></h1>
+    <p class="hero-lede"><span class="serif-i">The air in your room has a shape.</span> Oddech, Polish for <em>breath</em>, is a small robot that finds it. It maps the fine dust in a room, works out what reaches the people in it, says so in plain words, and tells the window and the purifier what to do.</p>
+    <div class="hero-cta">
+      <a href="#simulation" class="btn solid magnetic">Watch it work</a>
+      <a href="#diagnosis" class="btn ghost magnetic">Read the diagnosis</a>
+    </div>
+  </div>
+  <div class="hero-meta wrap">
+    <div><span class="mono">50.06° N · 19.94° E</span><span>Kraków, the smog season</span></div>
+    <div><span class="mono">16 · 10 · 2026</span><span>Final presentation</span></div>
+    <div class="scroll-cue"><span>Scroll</span><i></i></div>
+  </div>
+</section>
+
+<!-- ================================================================ 01 PROBLEM -->
+<section id="problem" class="paper" data-title="Problem">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">01</div>
+      <div><div class="kicker">The problem</div>
+      <h2 class="sec-title">Kraków breathes better than ten years ago. <em>Not well enough.</em></h2>
+      <p class="stand">The city banned solid fuel at home and the air improved. It is still above the limit, the smoke still drifts in from the towns around it, and in the cold months it comes indoors with us.</p></div>
+    </div>
+
+    <div class="bignums" data-reveal>
+      <div class="bn"><div class="bn-v accent">−40 %</div><p>Annual mean PM2.5, 2010 to 2021, after the solid-fuel ban. The PM2.5 limit was still not met. <a class="c" data-ref="kicinska2025"></a></p></div>
+      <div class="bn"><div class="bn-v">≈70 <small>vs</small> ≈10</div><p>Monthly PM2.5 in µg/m³, February against August 2014, Kraków urban background: the smog is seasonal. <a class="c" data-ref="samek2017"></a></p></div>
+      <div class="bn"><div class="bn-v">≈70 %</div><p>Share of the finest dust, PM2.5, in indoor PM10 in Kraków flats in the cold half-year. <a class="c" data-ref="scibor2020"></a></p></div>
+      <div class="bn"><div class="bn-v">87 %</div><p>Of our time is spent inside buildings (United States survey, 9,386 people). <a class="c" data-ref="klepeis2001"></a></p></div>
+    </div>
+
+    <div class="grid2 gap-xl">
+      <div data-reveal>
+        <div class="kicker">Why here</div>
+        <h3 class="h3">A valley that holds its smoke</h3>
+        <p class="body">Kraków is a pollution hot spot in Europe. <a class="c" data-ref="casotto2022"></a> It lies in a concave landform. In the heating season smog episodes follow from poor natural ventilation and frequent temperature inversions. <a class="c" data-ref="scibor2020"></a> Solid-fuel heating in the towns around the city is the main source of the smoke that reaches it, and the city's position makes it collect pollution from its neighbours. <a class="c" data-ref="danek2021,zareba2022"></a></p>
+        <div class="valley">
+          <canvas id="valleyCanvas" aria-label="Schematic: smoke from chimneys around a valley city, with and without a temperature inversion"></canvas>
+          <div class="valley-ctl">
+            <button class="chip on" id="invOn">Inversion</button><button class="chip" id="invOff">Mixed day</button>
+            <span class="note">Schematic, not to scale.</span>
+          </div>
+        </div>
+      </div>
+      <div data-reveal>
+        <div class="kicker">How far from safe</div>
+        <h3 class="h3">Annual PM2.5 against the yardsticks</h3>
+        <div class="ladder" id="ladder">
+          <div class="lad" data-v="5"><span class="lad-l">WHO guideline <a class="c" data-ref="who2021"></a></span><span class="lad-bar"><i></i></span><span class="lad-v mono">5</span></div>
+          <div class="lad" data-v="10"><span class="lad-l">EU limit from 2030 <a class="c" data-ref="eu2024"></a></span><span class="lad-bar"><i></i></span><span class="lad-v mono">10</span></div>
+          <div class="lad" data-v="25"><span class="lad-l">EU limit until 2030 <a class="c" data-ref="eu2024"></a></span><span class="lad-bar"><i></i></span><span class="lad-v mono">25</span></div>
+          <div class="lad hot" data-v="31"><span class="lad-l">Kraków, Feb 2014 – Jan 2015 <a class="c" data-ref="samek2017"></a></span><span class="lad-bar"><i></i></span><span class="lad-v mono">≈31</span></div>
+        </div>
+        <p class="note">µg/m³. The Kraków value predates the 2019 ban; since then the annual mean has fallen, but the limit is still not met. <a class="c" data-ref="kicinska2025"></a></p>
+        <div class="verdict">
+          <div class="kicker accent">Our diagnosis</div>
+          <p><span class="serif-i big">Ecological or health problem? Both, at opposite ends.</span> At the source it is an energy and heating problem, fixed by policy over years. At the receiving end it is a health problem, decided indoors, room by room and hour by hour. Oddech works at the receiving end, where a person can act today.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 02 DIAGNOSIS -->
+<section id="diagnosis" class="paper2" data-title="Diagnosis">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">02</div>
+      <div><div class="kicker">The diagnosis</div>
+      <h2 class="sec-title">Twelve hard questions, <em>before anything is built.</em></h2>
+      <p class="stand">The questions a robotics and computer-science examiner would ask, answered with evidence, a design choice, or an honest “to be tested”. Each answer is tagged.</p></div>
+    </div>
+    <div class="tags-legend" data-reveal><span class="tag ev">Evidence</span><span class="tag de">Design choice</span><span class="tag tt">To be tested</span><span class="tag kc">Kill criterion</span></div>
+    <div class="qa-list" id="qaList">
+
+      <details class="qa" open><summary><span class="qn mono">01</span><span class="qt">Is indoor air in Kraków really the problem?</span><span class="tag ev">Evidence</span></summary>
+        <div class="qa-a"><p class="lead">Yes. In the heating season indoor air follows the outdoor smog, and rooms add their own.</p>
+        <p>PM2.5 made up about 70 % of indoor PM10 in Kraków flats in the cold half-year. <a class="c" data-ref="scibor2020"></a> In naturally ventilated Silesian kindergartens indoor PM2.5 did not differ significantly from outdoor. <a class="c" data-ref="blaszczyk2017"></a> In Barcelona schools PM2.5 was 1.7 times the urban background, largely from sources inside the school. <a class="c" data-ref="rivas2014"></a></p></div></details>
+
+      <details class="qa"><summary><span class="qn mono">02</span><span class="qt">Why not just buy an air purifier?</span><span class="tag ev">Evidence</span><span class="tag de">Design</span></summary>
+        <div class="qa-a"><p class="lead">Buy one. Oddech does not replace it; it tells it when, where and how hard to work, and tells people why.</p>
+        <p>Purifiers work: in a randomized crossover trial in 17 elementary schools, classrooms with HEPA cleaners had 39.9 % lower average PM2.5. <a class="c" data-ref="simona2025"></a> But a purifier cleans the air near it and reads one point. Indoor air is not well mixed: in a tracer-gas study in two homes, concentrations within 0.25 m of an active source averaged 6 to 20 times the well-mixed prediction. <a class="c" data-ref="acevedo2011"></a> The well-mixed assumption itself “needs to be revisited”. <a class="c" data-ref="lakey2021"></a> A map says where the purifier should stand, and when opening a window helps more than filtering.</p></div></details>
+
+      <details class="qa"><summary><span class="qn mono">03</span><span class="qt">Why a robot, and not ten fixed sensors?</span><span class="tag tt">To be tested</span><span class="tag kc">Kill criterion</span></summary>
+        <div class="qa-a"><p class="lead">One good sensor that moves solves the placement problem again every few minutes; ten cheap ones each need calibrating.</p>
+        <p>Low-cost units vary from unit to unit. <a class="c" data-ref="castell2017"></a> Choosing where to place sensors is itself hard: maximising the information they give is NP-complete. <a class="c" data-ref="guestrin2005"></a> In our simulation of 24 rooms, three fixed sensors plus Oddech beat four fixed sensors where people breathe in every room (H1, section 06).</p>
+        <p class="kill"><b>Kill criterion.</b> If the rooms we target turn out to be well mixed within the sensor's own uncertainty, the robot is not needed: we drop it and ship the software with one sensor.</p></div></details>
+
+      <details class="qa"><summary><span class="qn mono">04</span><span class="qt">The dust is airborne. Why a ground robot and not a drone?</span><span class="tag de">Design choice</span></summary>
+        <div class="qa-a"><p class="lead">Because a rotor stirs the very air it is trying to measure.</p>
+        <p>Aerial robots are used for gas mapping. <a class="c" data-ref="francis2022"></a> Indoors near children, our engineering judgement goes the other way: downwash mixes the field, rotors are loud, flight lasts minutes rather than hours, and a falling drone is a hazard. Oddech drives, stops, and only then raises a telescoping mast, sampling at 0.40, 1.10 and 1.60 m: a child on the floor, a seated adult, a standing adult.</p></div></details>
+
+      <details class="qa"><summary><span class="qn mono">05</span><span class="qt">How does it decide where to go next?</span><span class="tag de">Design</span><span class="tag tt">To be tested</span></summary>
+        <div class="qa-a"><p class="lead">It goes where its map is least sure about the air that people actually breathe, if the trip is worth it.</p>
+        <p>The map is probabilistic: a mean and an uncertainty everywhere. The textbook choice is the place of highest variance; mutual information does better. <a class="c" data-ref="guestrin2005"></a> Oddech weights uncertainty by where people sit and divides by travel time. Physics enters as the prior, the room's mass balance <a class="c" data-ref="nazaroff2004"></a>; in WP1 a physics-informed neural network replaces the browser's estimator. <a class="c" data-ref="raissi2019,yang2021"></a></p></div></details>
+
+      <details class="qa"><summary><span class="qn mono">06</span><span class="qt">Is mass in µg/m³ even the right number? What about toxicity, mitochondria?</span><span class="tag ev">Evidence</span><span class="tag de">Design</span></summary>
+        <div class="qa-a"><p class="lead">Not entirely. Mass is what can be sensed in a home; toxicity has to be sampled and analysed.</p>
+        <p>Across Europe, oxidative potential, a measure of how strongly particles drive oxidative stress, comes mostly from anthropogenic sources, residential biomass burning among them, and cutting mass alone may not cut it. <a class="c" data-ref="daellenbach2020"></a> Biomass-related PM2.5 caused mitochondrial dysfunction in human airway cells: lower membrane potential, more mitochondrial ROS, less ATP. <a class="c" data-ref="gao2021"></a> Online oxidative-potential instruments exist, but at laboratory scale. <a class="c" data-ref="puthussery2018"></a> So: <b>mass on board, toxicity off board</b>. Oddech can carry a filter sampler to breathing height for the lab.</p></div></details>
+
+      <details class="qa"><summary><span class="qn mono">07</span><span class="qt">Can a cheap optical sensor be trusted?</span><span class="tag ev">Evidence</span><span class="tag de">Design</span></summary>
+        <div class="qa-a"><p class="lead">Only with calibration, a humidity correction, and honest ranges.</p>
+        <p>Readings rise sharply above about 75 % relative humidity, because particles take up water. <a class="c" data-ref="jayaratne2018"></a> A κ-Köhler correction brought one optical counter to within 33 % of a reference instrument. <a class="c" data-ref="crilley2018,petters2007"></a> Oddech carries a humidity sensor, applies the correction, is co-located with a reference before each deployment, and always speaks in ranges.</p></div></details>
+
+      <details class="qa"><summary><span class="qn mono">08</span><span class="qt">Will people act on it, and trust it the right amount?</span><span class="tag tt">To be tested</span></summary>
+        <div class="qa-a"><p class="lead">Unknown. That is the third experiment.</p>
+        <p>People fail to rely on automation appropriately; trust should match reliability. <a class="c" data-ref="lee2004"></a> Humanness cues change how a chatbot is perceived. <a class="c" data-ref="go2019"></a> WP3 crosses persona (neutral or human-like) with uncertainty (hidden or stated): four versions of the same advice, which you can switch between in the simulation.</p></div></details>
+
+      <details class="qa"><summary><span class="qn mono">09</span><span class="qt">Who pays?</span><span class="tag tt">Hypothesis</span></summary>
+        <div class="qa-a"><p class="lead">First, institutions where one room serves many people and staff decide for them.</p>
+        <p>Kindergartens, schools and care homes: a yearly service including the robot, calibration and reports. Families through software on the monitors and purifiers they already own. City clean-air programmes as co-funders of pilots. All of it is a hypothesis we test in interviews (section 09).</p></div></details>
+
+      <details class="qa"><summary><span class="qn mono">10</span><span class="qt">Is it safe and private in a home with children?</span><span class="tag de">Design choice</span></summary>
+        <div class="qa-a"><p class="lead">No camera, speech on the device, mast down while moving, slow near people.</p>
+        <p>Navigation uses a laser scanner, so the robot never films anyone. The language model runs on board; health talk stays at home, under EU health-data rules. Disclosing emotions to a chatbot had the same effects as disclosing them to a person <a class="c" data-ref="ho2018"></a>, which is exactly why the data must not leave. The mast is raised only when the robot stands still; speed halves within about a metre of a person.</p></div></details>
+
+      <details class="qa"><summary><span class="qn mono">11</span><span class="qt">Isn't this just Ecovacs' AIRBOT?</span><span class="tag ev">Evidence</span></summary>
+        <div class="qa-a"><p class="lead">No. AIRBOT moves a filter. Oddech moves a measurement, and can steer any purifier, AIRBOT included.</p>
+        <p>AIRBOT Z1 is a mobile purifier with a 600 m³/h clean-air delivery rate that senses PM2.5, temperature and humidity on board and cleans an area when a linked monitor crosses a threshold. <a class="c" data-ref="ecovacs"></a> It does not build a room map with uncertainty, read the air at several heights, estimate a dose or explain it. Those are the parts Oddech adds.</p></div></details>
+
+      <details class="qa"><summary><span class="qn mono">12</span><span class="qt">What would prove us wrong?</span><span class="tag kc">Kill criteria</span></summary>
+        <div class="qa-a"><p class="lead">We state them now, so they cannot move later.</p>
+        <ul class="ul"><li>H1 fails in the chamber: a moving sensor does not beat fixed ones at equal cost.</li>
+        <li>Target rooms are well mixed within sensor uncertainty (see 03): drop the robot, keep the software.</li>
+        <li>Wording makes no difference to what people do, whatever we try (H3a): the interface is not our edge.</li>
+        <li>No institution will pay for a pilot after the interviews: switch to licensing the software to purifier makers.</li></ul></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 03 CONCEPT -->
+<section id="concept" class="night" data-title="Concept">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">03</div>
+      <div><div class="kicker light">The concept</div>
+      <h2 class="sec-title">From a particle to a person, <em>in five links.</em></h2>
+      <p class="stand">Each link has an owner. Break any one and the chain from air to action breaks.</p></div>
+    </div>
+    <ol class="chain" data-reveal>
+      <li><span class="ch-n mono">01</span><b>Measure</b><span>Where is the dust? One monitor and the robot's mast, at three heights.</span><em>Julian</em></li>
+      <li><span class="ch-n mono">02</span><b>Map</b><span>What is everywhere else, and how sure are we? A probabilistic map with physics as its prior.</span><em>Julian</em></li>
+      <li><span class="ch-n mono">03</span><b>Dose</b><span>How much lands in the airways? Micrograms per square centimetre, by airway region.</span><em>Julian · Thea</em></li>
+      <li><span class="ch-n mono">04</span><b>Explain</b><span>What does that dose do to cells, and how should a robot say it?</span><em>Thea · Aleksandra</em></li>
+      <li><span class="ch-n mono">05</span><b>Act</b><span>Close the window, move the purifier, play in the other corner, check again.</span><em>Everyone</em></li>
+    </ol>
+    <div class="grid2 gap-xl concept-low">
+      <div data-reveal>
+        <div class="kicker light">The dose</div>
+        <div class="equation">D<sub>r</sub>(T) = <span class="int">∫<span class="lim"><span>T</span><span>0</span></span></span> <span class="frac"><span>C(t) · V̇<sub>E</sub> · DF<sub>r</sub>(d<sub>p</sub>)</span><span>A<sub>r</sub></span></span> dt <span class="unit">[µg cm⁻²]</span></div>
+        <p class="body light">C is the concentration where the person breathes (the map), V̇<sub>E</sub> the breathing rate, DF<sub>r</sub> the deposition fraction in airway region r for particle size d<sub>p</sub>, as in the ICRP lung model <a class="c" data-ref="bair1995"></a>, and A<sub>r</sub> the region's surface area.</p>
+      </div>
+      <div data-reveal>
+        <div class="kicker light accent">The bridge</div>
+        <p class="serif-i big light">Micrograms of PM2.5 per square centimetre of airway is both what deposition physics computes and the dose that airway-cell studies use.</p>
+        <p class="body light">Bronchial epithelial cells were dosed at 1 and 30 µg/cm² <a class="c" data-ref="huang2021"></a>; cells from people with asthma and especially COPD responded more strongly than healthy ones. <a class="c" data-ref="sotty2019"></a> So the robot can speak about the body, not only the air.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 04 ROBOT -->
+<section id="robot" class="paper" data-title="Robot">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">04</div>
+      <div><div class="kicker">The robot</div>
+      <h2 class="sec-title">Small enough for a kindergarten. <em>Tall enough for a standing adult.</em></h2>
+      <p class="stand">The size of a robot vacuum, with a telescoping mast that lifts the sensor to where people breathe. These are design targets, not a built prototype.</p></div>
+    </div>
+    <div class="robot-grid">
+      <div class="robot-stage" data-reveal>
+        <canvas id="robotCanvas" aria-label="Interactive 3D model of the Oddech robot"></canvas>
+        <div class="robot-ctl">
+          <label class="slider"><span>Mast <b class="mono" id="mastVal">0.40 m</b></span><input type="range" id="mastRange" min="0.40" max="1.60" step="0.01" value="0.40"></label>
+          <div class="seg"><button class="chip on" data-h="0.40">0.40 child</button><button class="chip" data-h="1.10">1.10 seated</button><button class="chip" data-h="1.60">1.60 standing</button></div>
+          <button class="chip" id="explodeBtn">Exploded view</button>
+        </div>
+        <div class="robot-labels" id="robotLabels"></div>
+      </div>
+      <div class="spec" data-reveal>
+        <div class="spec-row" data-part="head"><span class="sp-n mono">1</span><div><b>Sensor head</b><p>Optical particle counter (PM1, PM2.5, PM10 and size bins), humidity and temperature, CO₂ and VOC. Air enters at the top and leaves downward, away from the robot's own heat.</p></div></div>
+        <div class="spec-row" data-part="mast"><span class="sp-n mono">2</span><div><b>Telescoping mast</b><p>Four nested 32 cm stages on a lead screw stow inside the body and lift the inlet from 0.40 to 1.60 m. It rises only when the robot stands still.</p></div></div>
+        <div class="spec-row" data-part="ring"><span class="sp-n mono">3</span><div><b>Light ring and voice</b><p>Indigo for clean air, terracotta for heavy air; microphones and a speaker for plain-language advice.</p></div></div>
+        <div class="spec-row" data-part="lidar"><span class="sp-n mono">4</span><div><b>Laser scanner band</b><p>2D LiDAR for mapping and navigation, cliff sensors and a bumper. No camera, by design.</p></div></div>
+        <div class="spec-row" data-part="compute"><span class="sp-n mono">5</span><div><b>On-board computer</b><p>Map, planner and a small language model run locally; nothing about the household leaves the device.</p></div></div>
+        <div class="spec-row" data-part="battery"><span class="sp-n mono">6</span><div><b>Battery and dock</b><p>14.4 V lithium-ion, about 100 Wh. Returns to its dock below 20 %.</p></div></div>
+        <div class="spec-row" data-part="drive"><span class="sp-n mono">7</span><div><b>Drive</b><p>Two hub motors and a caster: at most 0.30 m/s, and 0.15 m/s within about a metre of a person.</p></div></div>
+        <div class="spec-row" data-part="sampler"><span class="sp-n mono">8</span><div><b>Filter sampler, optional</b><p>A 37 mm filter cassette and a small pump collect particles at breathing height for the lab: oxidative potential, airway-cell assays.</p></div></div>
+      </div>
+    </div>
+    <div class="specstrip" data-reveal>
+      <div><span class="mono">Ø 34 cm</span>footprint</div><div><span class="mono">42 cm</span>stowed height</div><div><span class="mono">0.40–1.60 m</span>sensor height</div>
+      <div><span class="mono">≈ 7 kg</span>mass</div><div><span class="mono">≈ 100 Wh</span>battery</div><div><span class="mono">0</span>cameras</div>
+    </div>
+
+    <div class="sub-head" data-reveal><div class="kicker">Why this platform</div><h3 class="h3">Six ways to measure a room, judged on the same nine questions</h3>
+      <p class="note">Our engineering assessment, for discussion. Filled: yes · ringed: partly · open: no.</p></div>
+    <div class="matrix-wrap" data-reveal><table class="matrix" id="platformMatrix"></table></div>
+
+    <div class="grid2 gap-xl calc-row">
+      <div class="calc" data-reveal>
+        <div class="kicker">Power budget</div>
+        <h3 class="h3">How long does it run?</h3>
+        <label class="slider"><span>Battery <b class="mono" id="pbWhV"></b></span><input type="range" id="pbWh" min="40" max="200" step="5" value="100"></label>
+        <label class="slider"><span>Computer and sensors <b class="mono" id="pbBaseV"></b></span><input type="range" id="pbBase" min="4" max="25" step="0.5" value="9"></label>
+        <label class="slider"><span>Time spent driving <b class="mono" id="pbDriveV"></b></span><input type="range" id="pbDrive" min="0" max="80" step="5" value="30"></label>
+        <label class="slider"><span>Time moving the mast <b class="mono" id="pbMastV"></b></span><input type="range" id="pbMast" min="0" max="40" step="5" value="10"></label>
+        <div class="calc-out"><div><span class="mono big" id="pbAvg"></span><span>average power</span></div><div><span class="mono big accent" id="pbHours"></span><span>per charge, to the 20 % reserve</span></div></div>
+        <p class="note">Driving adds 8 W and the mast 6 W while moving (design targets).</p>
+      </div>
+      <div class="calc" data-reveal>
+        <div class="kicker">Stability</div>
+        <h3 class="h3">How stable is it with the mast up?</h3>
+        <label class="slider"><span>Sensor height <b class="mono" id="stHV"></b></span><input type="range" id="stH" min="0.40" max="1.60" step="0.05" value="1.60"></label>
+        <label class="slider"><span>Mast and head mass <b class="mono" id="stMV"></b></span><input type="range" id="stM" min="0.2" max="1.5" step="0.05" value="0.6"></label>
+        <div class="calc-out three"><div><span class="mono big" id="stCog"></span><span>centre of mass height</span></div><div><span class="mono big accent" id="stAcc"></span><span>deceleration that would tip it</span></div><div><span class="mono big" id="stMar"></span><span>margin over a 1 m/s² stop</span></div></div>
+        <p class="note">Base 6.4 kg with its centre at 0.12 m; mast and head lumped at 70 % of the mast height; tipping edge 0.10 m from the centre. Tipping deceleration a = g·b/h. Braking alone would not tip it; a door sill or a collision can briefly exceed this, so the mast stays down while it drives.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 05 SENSOR -->
+<section id="sensor" class="paper2" data-title="Sensor">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">05</div>
+      <div><div class="kicker">The sensor</div>
+      <h2 class="sec-title">How a low-cost sensor sees a particle, <em>and how it is fooled.</em></h2>
+      <p class="stand">An optical particle counter does not weigh dust. It counts flashes of scattered laser light and converts them into mass with assumptions.</p></div>
+    </div>
+    <div class="sensor-grid">
+      <div class="opc" data-reveal><canvas id="opcCanvas" aria-label="Animated optical particle counter"></canvas></div>
+      <ol class="steps" data-reveal>
+        <li><b>A fan draws air</b> through a dark chamber.</li>
+        <li><b>A laser beam</b> crosses the air stream.</li>
+        <li><b>Each particle scatters a flash</b> onto a photodiode; a bigger particle gives a bigger pulse.</li>
+        <li><b>Pulses are sorted by size</b> into bins and counted.</li>
+        <li><b>Counts become mass</b> with an assumed shape and density. Water on the particles is counted as dust.</li>
+      </ol>
+    </div>
+    <div class="rh" data-reveal>
+      <div class="rh-ctl">
+        <div class="kicker">Humidity, the known trap</div>
+        <h3 class="h3">Wet particles look heavier</h3>
+        <label class="slider"><span>Relative humidity <b class="mono" id="rhV"></b></span><input type="range" id="rhR" min="30" max="97" step="1" value="85"></label>
+        <label class="slider"><span>Hygroscopicity κ of the dust <b class="mono" id="kV"></b></span><input type="range" id="kR" min="0.05" max="0.6" step="0.01" value="0.30"></label>
+        <label class="slider"><span>κ the correction assumes <b class="mono" id="kaV"></b></span><input type="range" id="kaR" min="0.05" max="0.6" step="0.01" value="0.25"></label>
+        <div class="calc-out three"><div><span class="mono big">35</span><span>true dry PM2.5</span></div><div><span class="mono big accent" id="rhRaw"></span><span>what the sensor reports</span></div><div><span class="mono big indigo" id="rhCor"></span><span>after correction</span></div></div>
+        <p class="note">Mass growth factor f = 1 + (κ ρ<sub>w</sub>/ρ<sub>p</sub>) · a<sub>w</sub>/(1 − a<sub>w</sub>), with a<sub>w</sub> = RH and ρ<sub>p</sub> = 1.65 g/cm³; the κ form follows <a class="c" data-ref="petters2007"></a> as applied to an optical counter by <a class="c" data-ref="crilley2018"></a>. Readings rise above about 75 % RH. <a class="c" data-ref="jayaratne2018"></a></p>
+      </div>
+      <div class="rh-plot"><canvas id="rhCanvas" aria-label="Growth factor against relative humidity"></canvas></div>
+    </div>
+
+    <div class="sub-head" data-reveal><div class="kicker">Mass on board, toxicity off board</div><h3 class="h3">What Oddech measures, and where</h3></div>
+    <div class="tiers" data-reveal>
+      <div class="tier"><div class="tier-k mono">On board · every second</div><h4>Particles, humidity, CO₂, VOC</h4><p>PM mass and size from the optical counter; humidity for the correction; CO₂ says whether the room is ventilated; VOC flags cooking and cleaning sprays.</p></div>
+      <div class="tier"><div class="tier-k mono">On board · collected for the lab</div><h4>Filter samples at breathing height</h4><p>Oxidative potential by the DTT assay, and airway-cell responses including mitochondrial endpoints: membrane potential, mitochondrial ROS, ATP. <a class="c" data-ref="gao2021"></a> This is Thea's dose–response work.</p></div>
+      <div class="tier"><div class="tier-k mono">Not on a home robot yet</div><h4>Toxicity in real time</h4><p>Online oxidative-potential instruments exist but are laboratory-scale, with a mist chamber and syringe pumps. <a class="c" data-ref="puthussery2018"></a> Living-cell sensors need culture conditions. We watch this space; we do not promise it.</p></div>
+    </div>
+    <p class="callout" data-reveal><span class="serif-i">Mass is not toxicity.</span> Across Europe, cutting particle mass alone may not cut its oxidative potential, which comes mostly from sources such as residential biomass burning. <a class="c" data-ref="daellenbach2020"></a></p>
+  </div>
+</section>
+
+<!-- ================================================================ 06 SIMULATION -->
+<section id="simulation" class="night sim-sec" data-title="Simulation">
+  <div class="sim-stage" id="simStage">
+    <canvas id="simCanvas" aria-label="3D simulation of a flat with the Oddech robot"></canvas>
+    <div class="sim-labels" id="simLabels"></div>
+
+    <div class="sim-top">
+      <div class="sim-title"><span class="mono">06 · live model</span><h2>Watch Oddech work</h2><p id="scNote"></p></div>
+      <div class="sim-clock"><span class="mono" id="simClock">00:00</span><span>simulated time</span></div>
+    </div>
+
+    <div class="sim-kpis">
+      <div class="kpi"><span class="kpi-l">Outdoor</span><span class="kpi-v mono" id="kOut">–</span></div>
+      <div class="kpi"><span class="kpi-l">Room average <i>truth</i></span><span class="kpi-v mono" id="kMean">–</span></div>
+      <div class="kpi"><span class="kpi-l">Child <i>Oddech's estimate</i></span><span class="kpi-v mono accent" id="kChild">–</span></div>
+      <div class="kpi"><span class="kpi-l">Child <i>truth</i></span><span class="kpi-v mono" id="kChildT">–</span></div>
+      <div class="kpi"><span class="kpi-l">Household monitor</span><span class="kpi-v mono" id="kMon">–</span></div>
+      <div class="kpi"><span class="kpi-l">Map error <i>whole floor</i></span><span class="kpi-v mono indigo" id="kErr">–</span></div>
+      <div class="kpi"><span class="kpi-l">Robot</span><span class="kpi-v mono" id="kRobot">–</span></div>
+      <div class="kpi"><span class="kpi-l">Purifier</span><span class="kpi-v mono" id="kPur">–</span></div>
+    </div>
+
+    <aside class="sim-panel" id="simPanel">
+      <div class="tabs" role="tablist"><button class="tab on" data-tab="scene">Scene</button><button class="tab" data-tab="air">Air</button><button class="tab" data-tab="robot">Robot</button><button class="tab" data-tab="view">View</button></div>
+      <div class="tabpane on" data-pane="scene">
+        <div class="pl">Scenario</div>
+        <div class="seg col" id="scBtns"></div>
+        <div class="pl">Playback</div>
+        <div class="seg"><button class="chip on" id="playBtn">Pause</button><button class="chip" id="resetBtn">Restart</button></div>
+        <div class="seg" id="speedBtns"><button class="chip" data-s="10">10×</button><button class="chip on" data-s="30">30×</button><button class="chip" data-s="60">60×</button><button class="chip" data-s="120">120×</button></div>
+        <label class="toggle"><input type="checkbox" id="followAdv"><span>Household follows Oddech's advice (after 90 s)</span></label>
+      </div>
+      <div class="tabpane" data-pane="air">
+        <label class="slider"><span>Outdoor PM2.5 <b class="mono" id="coutV"></b></span><input type="range" id="coutR" min="5" max="150" step="1" value="55"></label>
+        <label class="toggle"><input type="checkbox" id="winT"><span>Window open</span></label>
+        <label class="toggle"><input type="checkbox" id="stoveT"><span>Cooking on the stove</span></label>
+        <label class="toggle"><input type="checkbox" id="candleT"><span>Candle on the dining table</span></label>
+        <label class="toggle"><input type="checkbox" id="matT"><span>Child playing, dust stirred from the mat</span></label>
+        <div class="pl">Purifier</div>
+        <div class="seg" id="purBtns"><button class="chip" data-m="off">Off</button><button class="chip" data-m="on">On</button><button class="chip on" data-m="auto">Oddech decides</button></div>
+        <label class="slider"><span>Clean-air delivery rate <b class="mono" id="cadrV"></b></span><input type="range" id="cadrR" min="100" max="600" step="25" value="300"></label>
+        <button class="chip" id="purHome">Put the purifier back in its corner</button>
+      </div>
+      <div class="tabpane" data-pane="robot">
+        <div class="pl">Where to measure next</div>
+        <div class="seg col" id="polBtns">
+          <button class="chip on" data-p="oddech">Oddech: least sure where people breathe</button>
+          <button class="chip" data-p="explore">Least sure anywhere (variance)</button>
+          <button class="chip" data-p="hunt">Hunt the hot spot (mean + 2 sd)</button>
+          <button class="chip" data-p="patrol">Fixed patrol route</button>
+          <button class="chip" data-p="random">Random spots</button>
+        </div>
+        <div class="profile"><div class="pl">Last vertical profile</div><div id="profileBars"></div></div>
+        <div class="batt"><span class="pl">Battery</span><span class="batt-bar"><i id="battBar"></i></span><span class="mono" id="battV"></span></div>
+      </div>
+      <div class="tabpane" data-pane="view">
+        <div class="pl">Colour layer</div>
+        <div class="seg col" id="layerBtns">
+          <button class="chip on" data-l="truth">Truth: the simulated air</button>
+          <button class="chip" data-l="est">Oddech's map: what it believes</button>
+          <button class="chip" data-l="sd">Map uncertainty: where it is unsure</button>
+          <button class="chip" data-l="err">Error: belief against truth</button>
+          <button class="chip" data-l="off">No colour layer: particles only</button>
+        </div>
+        <div class="pl">Slice height</div>
+        <div class="seg" id="sliceBtns"><button class="chip" data-z="0.4">0.4 m</button><button class="chip on" data-z="1.1">1.1 m</button><button class="chip" data-z="1.6">1.6 m</button></div>
+        <label class="toggle"><input type="checkbox" id="partT" checked><span>Show particles</span></label>
+        <label class="toggle"><input type="checkbox" id="trailT" checked><span>Show path and samples</span></label>
+        <div class="pl">Camera</div>
+        <div class="seg" id="camBtns"><button class="chip on" data-c="orbit">Overview</button><button class="chip" data-c="top">Top</button><button class="chip" data-c="follow">Follow robot</button></div>
+      </div>
+    </aside>
+
+    <div class="sim-msg" id="simMsg">
+      <div class="msg-head"><span class="mono">Oddech says</span>
+        <div class="seg tiny" id="voiceBtns"><button class="chip on" data-v="warm">Human-like</button><button class="chip" data-v="neutral">Neutral</button></div>
+        <div class="seg tiny" id="uncBtns"><button class="chip on" data-u="stated">Range stated</button><button class="chip" data-u="hidden">Hidden</button></div>
+      </div>
+      <p id="msgText" class="msg-text">Warming up: the robot is taking its first readings.</p>
+      <div class="msg-actions" id="msgActions"></div>
+      <div class="msg-log" id="msgLog"></div>
+    </div>
+
+    <div class="sim-charts">
+      <div class="chart"><div class="ch-l"><i class="sw acc"></i>Child's air, estimate <i class="sw ink"></i>truth <i class="sw grey"></i>monitor</div><canvas id="chartA"></canvas></div>
+      <div class="chart"><div class="ch-l"><i class="sw ind"></i>Map error <i class="sw acc2"></i>child's inhaled PM2.5</div><canvas id="chartB"></canvas></div>
+    </div>
+    <div class="sim-legend"><span id="legendName">PM2.5 at 1.1 m, µg/m³</span><canvas id="legendCanvas" width="320" height="10"></canvas><div class="legend-ticks" id="legendTicks"></div></div>
+    <button class="panel-toggle chip" id="panelToggle">Controls</button>
+  </div>
+
+  <div class="wrap sim-below">
+    <div class="grid3" data-reveal>
+      <div><div class="kicker light">The air</div><p class="body light">A three-dimensional model of an 8 × 6 × 2.7 m flat on a 20 cm grid: fine dust is carried by the air, spread by turbulence, deposited on surfaces, exchanged with the outside, and removed by the purifier. The flows from the purifier, the cooking plume and the open window are built to conserve mass exactly. This is the “truth” the robot never sees directly.</p></div>
+      <div><div class="kicker light">The map</div><p class="body light">Oddech sees only noisy readings: its own mast at three heights and the household monitor on the bookshelf. A Gaussian process on log concentration, with the room's mass balance as its prior, turns them into a map with an uncertainty everywhere. In WP1 a physics-informed neural network takes this role. <a class="c" data-ref="raissi2019,yang2021"></a></p></div>
+      <div><div class="kicker light">The robot</div><p class="body light">It picks its next stop by the policy you choose, plans a path around the furniture with A*, keeps clear of people, drives, stops, raises the mast, reads, lowers it, and returns to its dock when the battery runs low. Its advice comes in the four wordings of the WP3 experiment.</p></div>
+    </div>
+    <div class="assume" data-reveal>
+      <div class="kicker light">Model assumptions, stated</div>
+      <div class="assume-grid">
+        <div><span class="mono">0.04 m²/s</span>turbulent diffusivity</div><div><span class="mono">0.3 /h</span>deposition rate</div>
+        <div><span class="mono">0.5 /h · 0.8</span>infiltration, penetration</div><div><span class="mono">0.08 m³/s</span>open-window exchange</div>
+        <div><span class="mono">1.5 mg/min</span>cooking emission</div><div><span class="mono">0.32 · 0.54 m³/h</span>breathing, child · adult</div>
+        <div><span class="mono">± 6 % · bias</span>sensor noise and unit bias</div><div><span class="mono">15 µg/m³</span>purifier switch-on (WHO 24-hour guideline)</div>
+      </div>
+      <p class="note light">Illustrative values chosen for a plausible room, not measurements. The purifier in this model cleans the room more slowly than the ideal well-mixed formula, because the room is not well mixed.</p>
+    </div>
+
+    <div class="bench" data-reveal>
+      <div class="bench-head">
+        <div><div class="kicker light accent">Hypothesis H1, in simulation</div>
+        <h3 class="h3 light">Three fixed sensors and Oddech, against four fixed sensors</h3>
+        <p class="body light" id="benchLede"></p></div>
+        <button class="btn ghost light-btn" id="benchRun">Run 3 new rooms in your browser</button>
+      </div>
+      <div class="bench-grid">
+        <div><div class="pl light">Where the child and the adult breathe · error, lower is better</div><div class="bars" id="benchPeople"></div></div>
+        <div><div class="pl light">Across the whole floor, at 1.1 m · error, lower is better</div><div class="bars" id="benchField"></div></div>
+      </div>
+      <p class="note light" id="benchNote"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 07 USERS -->
+<section id="users" class="paper" data-title="Users">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">07</div>
+      <div><div class="kicker">Who it is for</div>
+      <h2 class="sec-title">The people who breathe the most indoor air, <em>and those who decide for them.</em></h2>
+      <p class="stand">Start where the risk is highest and someone in the room can act.</p></div>
+    </div>
+    <div class="personas" data-reveal>
+      <div class="persona"><div class="p-k mono">01 · beachhead</div><h4>Kindergarten teacher</h4><p class="p-today"><b>Today</b> One city number on a phone, twenty children in one room, a window to open or not.</p><p class="p-odd"><b>With Oddech</b> “Keep the windows shut until two; the reading corner by the window is the worst; I have moved the purifier there.”</p></div>
+      <div class="persona"><div class="p-k mono">02</div><h4>Care-home nurse</h4><p class="p-today"><b>Today</b> Residents with lung disease indoors all day; a purifier that runs on a timer.</p><p class="p-odd"><b>With Oddech</b> A morning round of every lounge, and a voice that explains rather than a dial.</p></div>
+      <div class="persona"><div class="p-k mono">03</div><h4>Parent of a child with asthma</h4><p class="p-today"><b>Today</b> Cooking on a smog evening: open the window or not?</p><p class="p-odd"><b>With Oddech</b> “Outside is 55, the play mat is 160: air the room for ten minutes, then close it.”</p></div>
+      <div class="persona"><div class="p-k mono">04 · partner</div><h4>City clean-air officer</h4><p class="p-today"><b>Today</b> Outdoor sensor maps exist; analysts call information and education key. <a class="c" data-ref="danek2021"></a></p><p class="p-odd"><b>With Oddech</b> Consented, anonymous indoor exposure for programmes that so far stop at the window.</p></div>
+    </div>
+    <div class="grid2 gap-xl why-now" data-reveal>
+      <div><div class="kicker">Why now</div><p class="serif-i big">The cold half-year is the smog season, and indoor air follows it. <a class="c" data-ref="scibor2020"></a></p></div>
+      <div><p class="body">A child on the floor breathes at about 0.4 m, below the shelf where a monitor tends to sit. Diseased airway cells respond more strongly to the same dose. <a class="c" data-ref="sotty2019"></a> And the EU limit for PM2.5 falls from 25 to 10 µg/m³ in 2030. <a class="c" data-ref="eu2024"></a> Institutions will be asked what they did about the air inside.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 08 MARKET -->
+<section id="market" class="paper2" data-title="Market">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">08</div>
+      <div><div class="kicker">Who else is in the room</div>
+      <h2 class="sec-title">Plenty of numbers, plenty of filters. <em>No map that speaks.</em></h2>
+      <p class="stand">Where today's products sit on two questions: where in the room do they know the air, and what do they tell you? Positions are our reading of each category.</p></div>
+    </div>
+    <div class="market-grid">
+      <div class="posmap" data-reveal><svg id="posMap" viewBox="0 0 600 460" role="img" aria-label="Positioning map of air-quality products"></svg></div>
+      <div class="players" data-reveal>
+        <div class="player"><b>City networks and apps</b><span>Street-level maps. Airly, a company founded in Kraków, runs one. <a class="c" data-ref="airly"></a></span><em>Leaves open: your room, your body, what to do.</em></div>
+        <div class="player"><b>Indoor monitors</b><span>One number at one point, usually at shelf height.</span><em>Leaves open: the rest of the room, uncertainty, meaning.</em></div>
+        <div class="player"><b>Smart purifiers</b><span>Clean the air and show a reading at their own inlet.</span><em>Leaves open: where the dirty air is, when to air the room.</em></div>
+        <div class="player"><b>Mobile purifier robot</b><span>Ecovacs AIRBOT Z1: 600 m³/h, PM2.5, temperature and humidity on board, moves to clean. <a class="c" data-ref="ecovacs"></a></span><em>Leaves open: a map with uncertainty, heights, dose, explanation.</em></div>
+        <div class="player"><b>General home robots</b><span>Samsung now calls Ballie an “active innovation platform”, not a product. <a class="c" data-ref="ballie"></a> Amazon ended Astro for Business in 2024. <a class="c" data-ref="astro"></a></span><em>Lesson: a robot for everything is hard to justify; one job is easier.</em></div>
+        <div class="player"><b>Research robots</b><span>Gas distribution mapping and source localisation with ground and aerial robots. <a class="c" data-ref="francis2022"></a></span><em>Leaves open: a product, homes, people.</em></div>
+      </div>
+    </div>
+    <div class="moat" data-reveal>
+      <div class="kicker accent">Our edge, if the tests hold</div>
+      <div class="grid3">
+        <div><h4>The model, not the metal</h4><p>Physics-informed mapping and a dose model are hard to copy; the chassis is not.</p></div>
+        <div><h4>A dataset nobody has</h4><p>Consented indoor maps at three heights, across rooms and seasons, improve every new deployment.</p></div>
+        <div><h4>Words that are tested</h4><p>Advice whose wording is chosen by experiment, in Polish and English, not guessed.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 09 BUSINESS MODEL -->
+<section id="model" class="paper" data-title="Business">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">09</div>
+      <div><div class="kicker">Business model</div>
+      <h2 class="sec-title">Software first. <em>The robot where one room serves many.</em></h2>
+      <p class="stand">Four ways to earn, and a pivot ready for each way we could be wrong. Every line is a hypothesis we test in Kraków and at the Entre Challenge.</p></div>
+    </div>
+    <div class="engines" data-reveal>
+      <div class="engine"><div class="e-k mono">A · Oddech Room</div><h4>Robot as a service</h4><p>Kindergartens, schools, care homes: a monthly fee for the robot, calibration, reports and support.</p></div>
+      <div class="engine"><div class="e-k mono">B · Oddech Sense</div><h4>Software</h4><p>The map and the advice for monitors and purifiers people already own; free for families, paid for institutions.</p></div>
+      <div class="engine"><div class="e-k mono">C · Oddech Inside</div><h4>Licence</h4><p>Mapping, planning and advice as the “brain” for purifier and robot makers, mobile purifiers included.</p></div>
+      <div class="engine"><div class="e-k mono">D · Cities</div><h4>Paid pilots</h4><p>Clean-air programmes co-fund pilots and receive consented, anonymous indoor exposure statistics.</p></div>
+    </div>
+    <div class="grid2 gap-xl">
+      <div data-reveal>
+        <div class="kicker">Pivot map</div>
+        <h3 class="h3">If we are wrong about this, we do that</h3>
+        <div class="pivots">
+          <div class="pv"><span>Rooms turn out well mixed</span><i></i><b>Engine B only: software and one sensor</b></div>
+          <div class="pv"><span>Institutions will not pay</span><i></i><b>Engine C: licence to purifier makers</b></div>
+          <div class="pv"><span>The map is not accurate enough in homes</span><i></i><b>A research instrument for exposure studies</b></div>
+          <div class="pv"><span>The wording is what people value most</span><i></i><b>An advice layer for city apps, by API</b></div>
+        </div>
+      </div>
+      <div class="calc" data-reveal>
+        <div class="kicker">Unit economics, engine A</div>
+        <h3 class="h3">When does one robot pay for itself?</h3>
+        <label class="slider"><span>Parts (bill of materials) <b class="mono" id="ueBomV"></b></span><input type="range" id="ueBom" min="300" max="2000" step="50" value="850"></label>
+        <label class="slider"><span>Assembly and calibration <b class="mono" id="ueAsmV"></b></span><input type="range" id="ueAsm" min="50" max="500" step="10" value="150"></label>
+        <label class="slider"><span>Monthly fee <b class="mono" id="ueFeeV"></b></span><input type="range" id="ueFee" min="20" max="250" step="5" value="80"></label>
+        <label class="slider"><span>Service cost per month <b class="mono" id="ueSvcV"></b></span><input type="range" id="ueSvc" min="0" max="80" step="1" value="15"></label>
+        <label class="slider"><span>Service life <b class="mono" id="ueLifeV"></b></span><input type="range" id="ueLife" min="12" max="72" step="6" value="36"></label>
+        <div class="calc-out three"><div><span class="mono big" id="ueGm"></span><span>gross margin per month</span></div><div><span class="mono big accent" id="uePay"></span><span>payback</span></div><div><span class="mono big" id="ueLtv"></span><span>gross profit over its life</span></div></div>
+        <p class="note">Planning assumptions for discussion, not quotes or market data. Move the sliders.</p>
+      </div>
+    </div>
+    <div class="canvas9" data-reveal>
+      <div class="c9"><span class="mono">Problem</span>A number is not a decision; indoor air is not uniform; the smog season comes indoors.</div>
+      <div class="c9"><span class="mono">Customers</span>Kindergartens, schools, care homes first; families; city programmes.</div>
+      <div class="c9 hot"><span class="mono">Promise</span>Which room, which hour, what to do, and how sure we are.</div>
+      <div class="c9"><span class="mono">Solution</span>A mast robot, a probabilistic map, a dose, tested wording.</div>
+      <div class="c9"><span class="mono">Channels</span>City clean-air programmes, kindergarten operators, purifier makers.</div>
+      <div class="c9"><span class="mono">Revenue</span>Service fees, software subscriptions, licences, paid pilots.</div>
+      <div class="c9"><span class="mono">Costs</span>Hardware, calibration, support, research.</div>
+      <div class="c9"><span class="mono">Metrics</span>Error where people breathe; actions taken; exposure avoided.</div>
+      <div class="c9"><span class="mono">Edge</span>Model, data and words, rather than metal.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 10 RESEARCH -->
+<section id="research" class="night" data-title="Research">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">10</div>
+      <div><div class="kicker light">Research questions</div>
+      <h2 class="sec-title">Four questions, <em>each with a way to fail.</em></h2>
+      <p class="stand">Hypotheses, measures, baselines and pass marks are set before the data, not after.</p></div>
+    </div>
+    <div class="rqs" data-reveal>
+      <div class="rq"><div class="rq-k mono">RQ1 · sensing · Julian</div><h4>Does a moving sensor map the air people breathe better than fixed ones, at equal cost?</h4>
+        <dl><dt>H1</dt><dd>Three fixed sensors and one uncertainty-guided robot beat four fixed sensors.</dd><dt>Measure</dt><dd>Error of log PM2.5 where people breathe and across the floor; coverage of the 90 % intervals.</dd><dt>Baselines</dt><dd>Four fixed; three fixed and a robot sent to random places.</dd><dt>Status</dt><dd>Supported in our simulation (section 06). Untested in a chamber or a real room.</dd></dl></div>
+      <div class="rq"><div class="rq-k mono">RQ2 · body · Thea</div><h4>Where does a day indoors in Kraków sit on the airway-cell dose axis, and what responds there?</h4>
+        <dl><dt>Approach</dt><dd>Dose table (µg/cm², adult and child, by airway region) against published dose–response data.</dd><dt>Endpoints</dt><dd>Gene expression pathways <a class="c" data-ref="huang2021"></a>; mitochondrial function <a class="c" data-ref="gao2021"></a>; healthy against diseased models. <a class="c" data-ref="sotty2019"></a></dd><dt>Status</dt><dd>Descriptive; no direction assumed.</dd></dl></div>
+      <div class="rq"><div class="rq-k mono">RQ3 · words · Aleksandra</div><h4>Does a human-like voice make people act, and does stating uncertainty keep trust in line with accuracy?</h4>
+        <dl><dt>Design</dt><dd>2 × 2 between subjects: persona × uncertainty; a second scenario where the robot was wrong. <a class="c" data-ref="go2019,lee2004"></a></dd><dt>Sample</dt><dd>128 people (32 per cell) for a medium effect, f = 0.25, α = 0.05, power 0.8. <a class="c" data-ref="cohen2013"></a></dd><dt>Status</dt><dd>The pilot with programme participants tests the materials, not the hypotheses.</dd></dl></div>
+      <div class="rq"><div class="rq-k mono">RQ4 · decisions · all of us</div><h4>Does advice about dose and body lead to better decisions than the bare number?</h4>
+        <dl><dt>Measure</dt><dd>Actions taken and exposure avoided in the simulated room, then in a pilot room.</dd><dt>Baseline</dt><dd>The same room with a monitor's number only.</dd><dt>Status</dt><dd>After the programme.</dd></dl></div>
+    </div>
+    <div class="ladder2" data-reveal>
+      <div class="kicker light">Validation ladder</div>
+      <ol><li class="done"><b>Simulation</b><span>Known truth; three sensing strategies; this site.</span></li><li><b>Chamber</b><span>A sealed room, a controlled source, a reference instrument.</span></li><li><b>One real room</b><span>A kindergarten or care-home room, with consent.</span></li><li><b>Pilot</b><span>Several rooms through a smog season.</span></li></ol>
+    </div>
+    <div class="threats" data-reveal>
+      <div class="kicker light">Threats to validity</div>
+      <div class="grid3">
+        <p><b>Simulation to reality.</b> Real flows, people and furniture move; the chamber step exists to catch this.</p>
+        <p><b>Sensors.</b> Unit bias, drift and humidity <a class="c" data-ref="castell2017,jayaratne2018"></a>; co-location with a reference instrument and a stated range on every reading.</p>
+        <p><b>People.</b> Novelty, being watched, and a small, educated pilot sample; the pilot tests materials only.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 11 PLAN -->
+<section id="plan" class="paper" data-title="Plan">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">11</div>
+      <div><div class="kicker">Roadmap</div>
+      <h2 class="sec-title">From Kraków <em>to a first room.</em></h2>
+      <p class="stand">Programme dates from the FL schedule; 2027 is our plan, not yet arranged.</p></div>
+    </div>
+    <div class="timeline" data-reveal>
+      <div class="tl"><span class="mono">14 Oct</span><b>Field visit</b><span>Kraków</span></div>
+      <div class="tl hot"><span class="mono">16 Oct</span><b>Final presentation</b><span>This site, the simulation, first survey results</span></div>
+      <div class="tl"><span class="mono">27 Nov</span><b>Student Research Day</b><span>TUAT</span></div>
+      <div class="tl"><span class="mono">26 Feb 2027</span><b>Entre Challenge</b><span>Business model tested</span></div>
+      <div class="tl hot"><span class="mono">2027</span><b>Chamber test, first pilot room</b><span>Plan</span></div>
+    </div>
+    <div class="deliv" data-reveal>
+      <div class="kicker">Ready for 16 October</div>
+      <div class="deliv-grid">
+        <div><span class="mono">D1</span>Map demonstration and the H1 benchmark <em>Julian</em></div>
+        <div><span class="mono">D2</span>Dose table, adult and child, by airway region <em>Julian</em></div>
+        <div><span class="mono">D3</span>Dose–response sheet on the same axis <em>Thea</em></div>
+        <div><span class="mono">D4</span>Four messages in English and Polish, pilot questionnaire <em>Aleksandra</em></div>
+        <div><span class="mono">D5</span>Final presentation <em>All</em></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 12 TEAM -->
+<section id="team" class="paper2" data-title="Team">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">12</div>
+      <div><div class="kicker">Team</div>
+      <h2 class="sec-title">Physics, biology and communication. <em>Take one away and the chain breaks.</em></h2></div>
+    </div>
+    <div class="team" data-reveal>
+      <div class="member"><div class="m-k mono">Physics-informed AI</div><h4>Julian Evan Chrisnanto</h4><span>Tokyo University of Agriculture and Technology, Japan</span><p>Builds the room map, the robot's choices and the dose.</p></div>
+      <div class="member"><div class="m-k mono">RNA bioinformatics</div><h4>Xiyue (Thea) Cao</h4><span>Tokyo University of Agriculture and Technology, Japan</span><p>Links the dose to what happens in airway cells.</p></div>
+      <div class="member"><div class="m-k mono">Human–machine communication</div><h4>Aleksandra Skrzypiec</h4><span>Jagiellonian University, Poland</span><p>Designs and tests how Oddech speaks, and when people trust it: a machine as a communicator. <a class="c" data-ref="guzman2020"></a></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 13 ASK -->
+<section id="ask" class="night ask" data-title="Ask">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">13</div>
+      <div><div class="kicker light">What we ask of you</div>
+      <h2 class="sec-title">One room, one reference instrument, <em>and your honest view.</em></h2></div>
+    </div>
+    <div class="asks" data-reveal>
+      <div class="askx"><span class="mono">1</span><h4>A room for 2027</h4><p>A kindergarten, school or care home willing to host a pilot, with permission.</p></div>
+      <div class="askx"><span class="mono">2</span><h4>A reference to calibrate against</h4><p>Access to a reference particle instrument or a test chamber.</p></div>
+      <div class="askx"><span class="mono">3</span><h4>Introductions</h4><p>The city's clean-air office, and makers of purifiers or robots.</p></div>
+      <div class="askx"><span class="mono">4</span><h4>Your honest view</h4><p>Would you use Oddech? Who should pay for it?</p></div>
+    </div>
+    <p class="closing serif-i">Dziękujemy. Thank you. ありがとうございました。</p>
+  </div>
+</section>
+
+<!-- ================================================================ SOURCES -->
+<section id="sources" class="paper" data-title="Sources">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">—</div>
+      <div><div class="kicker">Sources</div>
+      <h2 class="sec-title">Every number on this page, <em>traced.</em></h2>
+      <p class="stand">Journal metadata checked against Crossref; each quoted figure checked against the paper's abstract; web pages as accessed on 13 October 2026. The simulation is a model room: it shows the method, not evidence about real rooms.</p></div>
+    </div>
+    <ol class="refs" id="refList"></ol>
+  </div>
+  <footer class="foot wrap">
+    <span>Team Oddech · FL Joint Program 2026 · Tokyo University of Agriculture and Technology · Jagiellonian University</span>
+    <span>Proposal and model. Product details are design targets; business lines are hypotheses.</span>
+  </footer>
+</section>
+</main>
+
+<!--DATA-->
+<!--SCRIPTS-->
+</body>
+</html>
