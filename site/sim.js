@@ -26,6 +26,9 @@
     P: 0.8,               // penetration factor through the envelope
     Qwin: 0.08,           // exchange through the open window, m3/s
   };
+  // relative oxidative potential per unit mass, by source (illustrative; motivated by Daellenbach et al. 2020:
+  // oxidative potential comes mostly from anthropogenic combustion, e.g. residential biomass burning, not from mass alone)
+  const TOX = { out: 1.4, stove: 0.7, candle: 1.6, mat: 0.5 };
 
   const LAYOUT = {
     window: { x0: 4.6, x1: 6.4, z0: 0.9, z1: 2.2 },       // back wall, y = Ly
@@ -140,8 +143,9 @@
     constructor(cfg) {
       this.cfg = Object.assign({ cout: 70, windowOpen: false, stoveOn: false, candleOn: false, matOn: false,
         stoveRate: 25, candleRate: 4, matRate: 6, purifierOn: false, cadr: 300 / 3600, purifier: Object.assign({}, LAYOUT.purifier) }, cfg || {});
-      this.C = new Float32Array(NCELL); this.D = new Float32Array(NCELL);
+      this.C = new Float32Array(NCELL); this.D = new Float32Array(NCELL); this.O = new Float32Array(NCELL);
       this.C.fill(PHYS.lam * PHYS.P * this.cfg.cout / (PHYS.lam + PHYS.kd));
+      this.O.fill(PHYS.lam * PHYS.P * this.cfg.cout * TOX.out / (PHYS.lam + PHYS.kd));   // toxicity-weighted field
       this.t = 0; this.rebuild();
     }
     rebuild() {
@@ -170,8 +174,13 @@
       let left = seconds;
       while (left > 1e-6) { const dt = Math.min(left, this.flow.dtMax); this.step(dt); left -= dt; }
     }
-    step(dt) {
-      const C = this.C, D = this.D, { u, v, w } = this.flow, K = PHYS.K, cfg = this.cfg;
+    step(dt) {                                             // mass field, then the toxicity-weighted field (same flow, same sinks)
+      this.stepField(this.C, dt, this.cfg.cout, { stove: 1, candle: 1, mat: 1 });
+      this.stepField(this.O, dt, this.cfg.cout * TOX.out, TOX);
+      this.t += dt;
+    }
+    stepField(C, dt, cin, wt) {
+      const D = this.D, { u, v, w } = this.flow, K = PHYS.K, cfg = this.cfg;
       D.fill(0);
       for (let k = 0; k < NZ; k++) for (let j = 0; j < NY; j++) {
         const row = NX * (j + NY * k), ur = (NX + 1) * (j + NY * k);
@@ -195,27 +204,28 @@
         const f = (wf > 0 ? wf * C[a] : wf * C[b]) - K * (C[b] - C[a]) / DZ;
         D[a] -= f / DZ; D[b] += f / DZ;
       }
-      const gain = PHYS.lam * PHYS.P * cfg.cout, loss = PHYS.lam + PHYS.kd;
+      const gain = PHYS.lam * PHYS.P * cin, loss = PHYS.lam + PHYS.kd;
       for (let n = 0; n < NCELL; n++) D[n] += gain - loss * C[n];
-      if (cfg.windowOpen) { const r = PHYS.Qwin / (this.winCells.length * VCELL); for (const n of this.winCells) D[n] += r * (cfg.cout - C[n]); }
+      if (cfg.windowOpen) { const r = PHYS.Qwin / (this.winCells.length * VCELL); for (const n of this.winCells) D[n] += r * (cin - C[n]); }
       if (cfg.purifierOn && cfg.cadr > 0) { const r = cfg.cadr / (this.intake.length * VCELL); for (const n of this.intake) D[n] -= r * C[n]; }
-      if (cfg.stoveOn) D[this.srcCells.stove] += cfg.stoveRate / VCELL;
-      if (cfg.candleOn) D[this.srcCells.candle] += cfg.candleRate / VCELL;
-      if (cfg.matOn) D[this.srcCells.mat] += cfg.matRate / VCELL;
+      if (cfg.stoveOn) D[this.srcCells.stove] += wt.stove * cfg.stoveRate / VCELL;
+      if (cfg.candleOn) D[this.srcCells.candle] += wt.candle * cfg.candleRate / VCELL;
+      if (cfg.matOn) D[this.srcCells.mat] += wt.mat * cfg.matRate / VCELL;
       for (let n = 0; n < NCELL; n++) { const c = C[n] + dt * D[n]; C[n] = c > 0 ? c : 0; }
-      this.t += dt;
     }
-    at(x, y, z) {                                          // trilinear, cell-centred
+    at(x, y, z) { return this.sample(this.C, x, y, z); }
+    opAt(x, y, z) { return this.sample(this.O, x, y, z); }   // toxicity-weighted concentration
+    sample(C, x, y, z) {                                   // trilinear, cell-centred
       const fx = clamp(x / DX - 0.5, 0, NX - 1.001), fy = clamp(y / DY - 0.5, 0, NY - 1.001), fz = clamp(z / DZ - 0.5, 0, NZ - 1.001);
-      const i = Math.floor(fx), j = Math.floor(fy), k = Math.floor(fz), a = fx - i, b = fy - j, c = fz - k, C = this.C;
+      const i = Math.floor(fx), j = Math.floor(fy), k = Math.floor(fz), a = fx - i, b = fy - j, c = fz - k;
       const n = idx(i, j, k), sy = NX, sz = NX * NY;
       const c00 = C[n] * (1 - a) + C[n + 1] * a, c10 = C[n + sy] * (1 - a) + C[n + sy + 1] * a;
       const c01 = C[n + sz] * (1 - a) + C[n + sz + 1] * a, c11 = C[n + sz + sy] * (1 - a) + C[n + sz + sy + 1] * a;
       return (c00 * (1 - b) + c10 * b) * (1 - c) + (c01 * (1 - b) + c11 * b) * c;
     }
-    plane(z, out) {                                        // NX*NY slice at height z
-      out = out || new Float32Array(NX * NY);
-      const fz = clamp(z / DZ - 0.5, 0, NZ - 1.001), k = Math.floor(fz), c = fz - k, L = NX * NY, C = this.C;
+    plane(z, out, C) {                                     // NX*NY slice at height z, of the dust (default) or the harm field
+      out = out || new Float32Array(NX * NY); C = C || this.C;
+      const fz = clamp(z / DZ - 0.5, 0, NZ - 1.001), k = Math.floor(fz), c = fz - k, L = NX * NY;
       for (let n = 0; n < L; n++) out[n] = C[n + L * k] * (1 - c) + C[n + L * (k + 1)] * c;
       return out;
     }
@@ -345,7 +355,15 @@
   }
 
   // ------------------------------------------------------------------ the robot
-  const POWER = { idle: 9, drive: 8, mast: 6, charge: 60, capacity: 100 };   // W and Wh: design targets
+  // ------------------------------------------------------------------ one robot's unit economics (section 10; planning assumptions)
+  // hw: parts and assembly, EUR; fee: monthly fee; cart: cartridges per month; pc: cartridge price (made for half of it);
+  // svc: service and cloud cost per month; life: months in service
+  function unitEconomics(o) {
+    const gm = o.fee - o.svc + o.cart * o.pc / 2, pay = gm > 0 ? o.hw / gm : Infinity;
+    return { gm, pay, ltv: gm * o.life - o.hw };
+  }
+
+  const POWER = { idle: 15, drive: 8, mast: 6, charge: 60, capacity: 100 };  // W and Wh: design targets (idle includes the 6 W cell bay)
   class Robot {
     constructor(policy, rng) {
       this.policy = policy; this.rng = rng; this.x = 6.6; this.y = 3.0; this.th = Math.PI; this.v = 0;
@@ -436,6 +454,53 @@
     }
   }
 
+  // ------------------------------------------------------------------ the Living Air Sensor (concept model, after X. Cao)
+  // Two 4-well glass chamber slides (1.7 cm2 per well, the Millicell EZ SLIDE format) of respiratory epithelial cells at
+  // the air-liquid interface, eight wells in all, read optically in a dark
+  // chamber: excitation from below, emission read from above. Air drawn in at the mast head flows over four exposed wells;
+  // two control wells receive the same air through a HEPA filter; one well holds a fluorescent reference (lamp drift);
+  // one is cell-free (the particles' own glow). A mitochondrial stress dye glows brighter as oxidative stress rises.
+  // Each cycle: inhale, expose, read, exhale through the robot's filter. Illustrative numbers only: no experimental data.
+  const BIO = { cycle: 600, flow: 2.0, eta: 0.24, area: 1.7, Rmax: 1.5, EC50: 6, hill: 1.6, repair: 6 * 3600, life: 7 * 144,   // a cartridge lasts a week of 10-minute cycles
+    roles: ["exposed", "exposed", "exposed", "exposed", "control", "control", "reference", "blank"] };
+  class LivingSensor {
+    constructor(seed) {
+      this.rng = rngOf(seed); this.n = 0; this.hist = []; this.dose = 0; this.doseMass = 0;
+      this.F0 = BIO.roles.map(r => r === "blank" ? 40 : r === "reference" ? 800 : 1000 * (1 + 0.06 * this.rng.gauss()));
+      this.k = BIO.roles.map(() => 1 + 0.12 * this.rng.gauss());          // culture-to-culture sensitivity
+      this.read(0, 0, 0);
+    }
+    cycle(cMass, cTox, t) {                                // mean mass and toxicity-weighted concentration the inlet saw
+      const perWell = c => c * 1e-3 * BIO.flow * (BIO.cycle / 60) * BIO.eta / BIO.area;   // µg/m3 -> µg/cm2 per cycle
+      const keep = Math.exp(-BIO.cycle / BIO.repair);                                      // cells slowly recover
+      this.dose = this.dose * keep + perWell(cTox); this.doseMass = this.doseMass * keep + perWell(cMass);
+      this.n++;
+      return this.read(cMass, cTox, t);
+    }
+    read(cMass, cTox, t) {
+      const g = this.rng.gauss, lamp = (1 - 0.0015 * this.n) * (1 + 0.004 * g());      // bleaching and lamp noise
+      const R = BIO.Rmax * Math.pow(this.dose, BIO.hill) / (Math.pow(BIO.EC50, BIO.hill) + Math.pow(this.dose, BIO.hill));
+      const F = BIO.roles.map((role, i) => {
+        if (role === "exposed") return this.F0[i] * lamp * (1 + R * this.k[i]) * (1 + 0.015 * g()) + 3 * this.doseMass;
+        if (role === "control") return this.F0[i] * lamp * (1 + 0.015 * g());
+        if (role === "reference") return this.F0[i] * lamp;
+        return this.F0[i] + 3 * this.doseMass;
+      });
+      // what the robot computes: lamp-corrected, blank-subtracted relative change, exposed minus control
+      const lampRel = F[6] / this.F0[6], blank = F[7] - this.F0[7];
+      const rel = i => ((F[i] - (i < 4 ? blank : 0)) / lampRel - this.F0[i]) / this.F0[i];
+      const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
+      const exp = [0, 1, 2, 3].map(rel), ctl = [4, 5].map(rel), dExp = mean(exp), dCtl = mean(ctl), corrected = dExp - dCtl;
+      const sd = Math.sqrt(exp.reduce((s, v) => s + (v - dExp) * (v - dExp), 0) / (exp.length - 1));
+      this.last = { n: this.n, t, cMass, cTox, F, F0: this.F0.slice(), exp, ctl, dExp, dCtl, corrected, sd,
+        index: clamp(100 * corrected / BIO.Rmax, 0, 100), Fexp: mean(F.slice(0, 4)), F0exp: mean(this.F0.slice(0, 4)),
+        Fctl: mean(F.slice(4, 6)), dose: this.dose, doseMass: this.doseMass, toxPerMass: cMass > 1 ? cTox / cMass : null,
+        life: Math.max(0, 1 - this.n / BIO.life) };
+      this.hist.push(this.last); if (this.hist.length > 400) this.hist.shift();
+      return this.last;
+    }
+  }
+
   // ------------------------------------------------------------------ an observer: sensors, maybe a robot, a map
   class Observer {
     constructor(name, sensors, policy, rng) {
@@ -472,6 +537,7 @@
       this.dose = {}; for (const p of LAYOUT.people) this.dose[p.id] = 0;
       this.hist = []; this.lastHist = -1e9; this.follow = false; this.pending = null; this.log = [];
       this.advice = null; this.lastAdvice = -1e9; this.nextAuto = 0;
+      this.bio = new LivingSensor((o.seed || 1) + 7919); this.bioAcc = { m: 0, o: 0, s: 0 }; this.nextBio = BIO.cycle;
     }
     get live() { return this.observers[0]; }
     set(patch) {
@@ -504,6 +570,7 @@
         const dt = Math.min(1, tEnd - this.t);
         for (const e of this.events) if (!e.done && this.t >= e.t) { this.set(e.patch); e.done = true; }
         this.air.advance(dt); this.boxStep(dt); this.t = this.air.t;
+        this.bioStep(dt);
         for (const p of LAYOUT.people) this.dose[p.id] += this.air.at(p.x, p.y, p.z) * p.vE * dt / 3600;
         for (const ob of this.observers) {
           for (const s of ob.sensors) if (this.t >= s.next) {
@@ -517,6 +584,12 @@
         if (opts.advice !== false && this.t - this.lastAdvice >= 20) { this.advice = advise(this); this.lastAdvice = this.t; this.followAdvice(); }
         if (opts.history !== false && this.t - this.lastHist >= 10) this.record();
       }
+    }
+    bioStep(dt) {                                          // the cartridge breathes the air at the mast head
+      const r = this.live.robot, p = r ? [r.x, r.y, r.mast + 0.05] : [LAYOUT.monitor.x, LAYOUT.monitor.y, LAYOUT.monitor.z];
+      const a = this.bioAcc;
+      a.m += this.air.at(p[0], p[1], p[2]) * dt; a.o += this.air.opAt(p[0], p[1], p[2]) * dt; a.s += dt;
+      if (this.t >= this.nextBio) { this.bio.cycle(a.m / a.s, a.o / a.s, this.t); this.bioAcc = { m: 0, o: 0, s: 0 }; this.nextBio += BIO.cycle; }
     }
     autoPurifier() {                                       // Oddech switches a connected purifier by the people's estimated air
       const worst = Math.max(...exposures(this).map(e => e.c));
@@ -605,13 +678,16 @@
     const none = worst.c <= 15 ? "Nothing to do for now." : "Keep the purifier running; it is doing the right thing.";
     const noneN = worst.c <= 15 ? "No action needed." : "Keep the purifier running.";
     const srcTxt = fromWindow ? "Most of it comes in through the open window." : ratio > 1.4 ? `The air is worst near ${zone}.` : "It is spread evenly through the room.";
+    const b = world.bio.last, smoky = b.n > 0 && b.index >= 25 && b.toxPerMass !== null && b.toxPerMass > 1.2;
+    const bioN = b.n > 0 ? ` Living sensor: stress ${r0(b.index)}/100${smoky ? ", high for this amount of dust" : ""}.` : "";
+    const bioW = b.n > 0 && b.index >= 25 ? (smoky ? " My living cells react more than the dust count alone suggests: it behaves like smoke." : " My living cells are reacting to this air.") : "";
     const T = {
-      neutral_stated: `${cap(place)}: PM2.5 ${r0(worst.c)} µg/m³ (likely ${rng}). ${srcTxt}` + (act ? ` Recommended: ${act}.` : ` ${noneN}`) + ` Next check in ${next} min.`,
-      neutral_hidden: `${cap(place)}: PM2.5 ${r0(worst.c)} µg/m³. ${srcTxt}` + (act ? ` Recommended: ${act}.` : ` ${noneN}`) + ` Next check in ${next} min.`,
-      warm_stated: `Ania, the air on ${place} is ${lvl}: my best guess is ${r0(worst.c)}, somewhere between ${rngW}. ${srcTxt}` + (act ? ` Shall we ${act}?` : ` ${none}`) + ` I'll check again in ${next} minutes.`,
-      warm_hidden: `Ania, the air on ${place} is ${lvl} (${r0(worst.c)}). ${srcTxt}` + (act ? ` Shall we ${act}?` : ` ${none}`) + ` I'll check again in ${next} minutes.`,
+      neutral_stated: `${cap(place)}: PM2.5 ${r0(worst.c)} µg/m³ (likely ${rng}). ${srcTxt}${bioN}` + (act ? ` Recommended: ${act}.` : ` ${noneN}`) + ` Next check in ${next} min.`,
+      neutral_hidden: `${cap(place)}: PM2.5 ${r0(worst.c)} µg/m³. ${srcTxt}${bioN}` + (act ? ` Recommended: ${act}.` : ` ${noneN}`) + ` Next check in ${next} min.`,
+      warm_stated: `Ania, the air on ${place} is ${lvl}: my best guess is ${r0(worst.c)}, somewhere between ${rngW}. ${srcTxt}${bioW}` + (act ? ` Shall we ${act}?` : ` ${none}`) + ` I'll check again in ${next} minutes.`,
+      warm_hidden: `Ania, the air on ${place} is ${lvl} (${r0(worst.c)}). ${srcTxt}${bioW}` + (act ? ` Shall we ${act}?` : ` ${none}`) + ` I'll check again in ${next} minutes.`,
     };
-    return { t: world.t, worst, ex, zone, hot, median, ratio, level: lvl, actions, text: T, hotspot: { x: hx, y: hy } };
+    return { t: world.t, worst, ex, zone, hot, median, ratio, level: lvl, actions, text: T, hotspot: { x: hx, y: hy }, bio: b };
   }
 
   // ------------------------------------------------------------------ H1 benchmark: the same air, three ways of sensing it
@@ -641,6 +717,6 @@
     return r;
   }
 
-  return { ROOM, NX, NY, NZ, DX, DY, DZ, VROOM, PHYS, LAYOUT, MAST, POWER, SCENARIOS, ZONES, LOG, EXP,
+  return { ROOM, NX, NY, NZ, DX, DY, DZ, VROOM, PHYS, TOX, BIO, LivingSensor, unitEconomics, LAYOUT, MAST, POWER, SCENARIOS, ZONES, LOG, EXP,
     rngOf, makeFlow, Air, FieldMap, occupancy, astar, Robot, World, exposures, mapError, advise, zoneOf, benchRun, band };
 });

@@ -82,7 +82,33 @@ for (const cfg of [{}, { purifierOn: true, cadr: 600 / 3600 }, { stoveOn: true }
   console.log("smog log:", s.log.map(l => `${Math.round(l.t)} s ${l.text}`).join("; "));
 }
 
-// 7. H1 benchmark: 4 fixed sensors vs 3 fixed + Oddech vs 3 fixed + a robot going to random places
+// 7. the harm field: sources weighted by relative harm; candle smoke is worse per gram than cooking
+{
+  const a = new S.Air({ cout: 0, candleOn: true }), b = new S.Air({ cout: 0, stoveOn: true });
+  a.advance(600); b.advance(600);
+  const ra = a.O.reduce((s, v) => s + v, 0) / a.C.reduce((s, v) => s + v, 0), rb = b.O.reduce((s, v) => s + v, 0) / b.C.reduce((s, v) => s + v, 0);
+  assert(Math.abs(ra - S.TOX.candle) < 0.02 && Math.abs(rb - S.TOX.stove) < 0.02, `harm per mass candle ${ra}, stove ${rb}`);
+}
+
+// 8. the Living Air Sensor: same dust mass, smoke-like air stresses the cells more; clean air barely; controls stay flat
+{
+  const run = (m, tox) => { const L = new S.LivingSensor(3); for (let i = 0; i < 36; i++) L.cycle(m, m * tox, i * 600); return L.last; };
+  const smoke = run(70, 1.4), cook = run(70, 0.7), clean = run(8, 1.0);
+  assert(smoke.index > 1.5 * cook.index && cook.index > clean.index && clean.index < 10, `index smoke ${smoke.index} cook ${cook.index} clean ${clean.index}`);
+  assert(Math.abs(smoke.dCtl) < 0.05, `controls drift ${smoke.dCtl}`);
+  assert(smoke.life > 0.9, "a cartridge lasts a week");
+  const wc = new S.World({ scenario: "candle", seed: 4 }), wk = new S.World({ scenario: "cooking", seed: 4 }); wc.advance(1800); wk.advance(1800);
+  assert(wc.bio.last.n >= 2 && wc.bio.last.toxPerMass > wk.bio.last.toxPerMass, `cycles ${wc.bio.last.n}; harm per mass candle ${wc.bio.last.toxPerMass}, cooking ${wk.bio.last.toxPerMass}`);
+  console.log(`living sensor, 6 h at 70 µg/m3: smoke-like ${smoke.index.toFixed(0)}, cooking-like ${cook.index.toFixed(0)}; clean 8 µg/m3: ${clean.index.toFixed(0)} / 100`);
+}
+
+// 9. unit economics at the page's default sliders
+{
+  const u = S.unitEconomics({ hw: 1100, fee: 120, cart: 4, pc: 25, svc: 20, life: 36 });
+  assert(u.gm === 150 && Math.abs(u.pay - 7.333) < 0.01 && u.ltv === 4300, JSON.stringify(u));
+}
+
+// 10. H1 benchmark: 4 fixed sensors vs 3 fixed + Oddech vs 3 fixed + a robot going to random places
 {
   const seeds = +(process.env.SEEDS || 24), minutes = 20, rows = [];
   for (let s = 1; s <= seeds; s++) rows.push(S.benchRun(s, minutes));

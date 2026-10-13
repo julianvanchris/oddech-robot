@@ -24,6 +24,7 @@
   const ERR = ramp([[0, "#262422"], [0.4, "#7a4a35"], [0.7, "#c0582c"], [1, "#f2c7a3"]]);
   const CMAX = 300, TICKS = [5, 15, 35, 75, 150, 300];
   const tC = c => Math.log(1 + Math.max(0, c) / 4) / Math.log(1 + CMAX / 4);
+  window.OddechColors = { CONC, SDR, ERR, tC, TICKS };             // shared with results.js and cloud.js
   const hexOf = rgb => (Math.round(rgb[0]) << 16) | (Math.round(rgb[1]) << 8) | Math.round(rgb[2]);
   const fmt = v => (v === null || v === undefined || !isFinite(v)) ? "–" : v < 10 ? v.toFixed(1) : Math.round(v).toString();
   const clock = t => { t = Math.floor(t); const h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, s = t % 60; return (h ? h + ":" : "") + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0"); };
@@ -338,7 +339,7 @@
         for (let q = 0; q < 300; q++) { const c = SDR(g.sd[q] / 0.75); sdData[4 * q] = c[0]; sdData[4 * q + 1] = c[1]; sdData[4 * q + 2] = c[2]; sdData[4 * q + 3] = 215; }
         sdTex.needsUpdate = true; if (sliceM.map !== sdTex) { sliceM.map = sdTex; sliceM.needsUpdate = true; }
       } else {
-        const truth = world.air.plane(z), g = (layer !== "truth" && m.ready) ? m.grid(z, world.t, NX, NY, false) : null;
+        const truth = world.air.plane(z, null, layer === "harm" ? world.air.O : null), g = (layer !== "truth" && layer !== "harm" && m.ready) ? m.grid(z, world.t, NX, NY, false) : null;
         for (let q = 0; q < NX * NY; q++) {
           let c, a;
           if (layer === "err" && g) { c = ERR(Math.abs(g.mu[q] - LOG(truth[q]))); a = 205; }
@@ -354,7 +355,7 @@
       const cv = $("legendCanvas"), g = cv.getContext("2d"), w = cv.width, h = cv.height;
       for (let x = 0; x < w; x++) { const t = x / (w - 1), c = layer === "sd" ? SDR(t) : layer === "err" ? ERR(t) : CONC(t); g.fillStyle = `rgb(${c[0] | 0},${c[1] | 0},${c[2] | 0})`; g.fillRect(x, 0, 1, h); }
       cv.style.visibility = $("legendTicks").style.visibility = layer === "off" ? "hidden" : "visible";
-      const names = { truth: "Simulated PM2.5 at ", est: "Oddech's map of PM2.5 at ", sd: "Map uncertainty at ", err: "Map error at ", off: "Particles only, coloured by the simulated PM2.5 at " };
+      const names = { truth: "Simulated PM2.5 at ", harm: "Harm-weighted PM2.5 (dust × relative harm of its source) at ", est: "Oddech's map of PM2.5 at ", sd: "Map uncertainty at ", err: "Map error at ", off: "Particles only, coloured by the simulated PM2.5 at " };
       $("legendName").textContent = names[layer] + sliceZ.toFixed(1) + " m" + (layer === "sd" ? "" : layer === "err" ? ", as a factor" : ", µg/m³");
       let html;
       if (layer === "sd") html = `<span style="left:6%">sure</span><span style="left:94%">unsure</span>`;
@@ -498,7 +499,7 @@
       $("kOut").textContent = fmt(cfg.cout) + " µg/m³"; $("kMean").textContent = fmt(s / n) + " µg/m³";
       const ch = ex[0];
       $("kChild").textContent = ch.c === null ? "–" : `${fmt(ch.c)} (${fmt(ch.lo)}–${fmt(ch.hi)})`; $("kChildT").textContent = fmt(ch.truth) + " µg/m³";
-      $("kMon").textContent = mon && mon.last !== null ? fmt(mon.last) + " µg/m³" : "–";
+      const b = world.bio.last; $("kBio").textContent = b.n ? `${Math.round(b.index)} / 100` : "first breath at 10 min";
       $("kErr").textContent = last && last.err !== null ? "×" + Math.exp(last.err).toFixed(2) : "–";
       $("kRobot").textContent = `${Math.round(r.pct)} % · ${STATE[r.state] || r.state}`;
       $("kPur").textContent = (cfg.purifierOn ? "on · " + Math.round(cfg.cadr * 3600) + " m³/h" : "off") + (world.purifierMode === "auto" ? " · auto" : "");
@@ -531,18 +532,21 @@
       PRESET.orbit.r = 22 * Math.pow(Math.max(1, 1600 / w, 900 / h), 0.6);          // smaller screens: the panels take more room
       if (camMode === "orbit" && !zoomed) goal.r = PRESET.orbit.r;
     }
-    new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible) { resize(); last = performance.now(); } }, { threshold: 0.12 }).observe(stageEl);
+    let below = false;                                             // the live maps under the stage keep the model running
+    const io = new IntersectionObserver(es => { for (const e of es) { if (e.target === stageEl) { visible = e.isIntersecting; if (visible) resize(); } else below = e.isIntersecting; } }, { threshold: 0.12 });
+    io.observe(stageEl); if ($("mapTruth")) io.observe($("mapTruth").closest(".results"));
     window.addEventListener("resize", resize);
     function frame(now) {
       requestAnimationFrame(frame);
       const dtR = Math.min(0.1, (now - last) / 1000); last = now;
-      if (!visible || document.hidden) return;
+      if ((!visible && !below) || document.hidden) return;
       let dtS = 0;
       if (running) { dtS = Math.min(dtR * speed, 4); world.advance(dtS); }
+      if (!visible) return;
       if (now - tCdf > 500) { buildCdf(world.air.C); tCdf = now; }
       if (showParticles) updateParticles(dtS);
       updateScene(now);
-      if (now - tSlice > (layer === "truth" ? 120 : 450)) { paintSlice(); tSlice = now; }
+      if (now - tSlice > (layer === "truth" || layer === "harm" ? 120 : 450)) { paintSlice(); tSlice = now; }
       if (now - tHud > 250) { updateHud(); renderAdvice(false); tHud = now; }
       if (now - tChart > 1000) { drawCharts(); tChart = now; }
       if (camMode === "follow") { const r = world.live.robot; goal.t.copy(P(r.x, r.y, 0.5)); goal.r = 3.6; goal.ph = 1.0; goal.th = r.th - Math.PI / 2; }

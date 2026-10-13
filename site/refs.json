@@ -1,78 +1,261 @@
 [
- {"key": "kicinska2025", "short": "Kicińska & Jawdyńska 2025", "doi": "10.24425/ams.2025.154160",
-  "entry": "Kicińska, A., Jawdyńska, J. (2025). Ban on the burning of solid fuels in domestic furnaces and its impact on air quality: example of Krakow. Archives of Mining Sciences, 3–28."},
- {"key": "samek2017", "short": "Samek et al. 2017", "doi": "10.1007/s11270-017-3483-5",
-  "entry": "Samek, L., Stegowski, Z., Styszko, K., et al. (2017). Quantitative assessment of PM2.5 sources and their seasonal variation in Krakow. Water, Air, & Soil Pollution 228, 290."},
- {"key": "scibor2020", "short": "Ścibor et al. 2020", "doi": "10.1007/s11869-020-00816-8",
-  "entry": "Ścibor, M., Bokwa, A., Balcerzak, B. (2020). Impact of wind speed and apartment ventilation on indoor concentrations of PM10 and PM2.5 in Kraków, Poland. Air Quality, Atmosphere & Health 13, 553–562."},
- {"key": "danek2021", "short": "Danek & Zaręba 2021", "doi": "10.3390/s21155208",
-  "entry": "Danek, T., Zaręba, M. (2021). The use of public data from low-cost sensors for the geospatial analysis of air pollution from solid fuel heating during the COVID-19 pandemic spring period in Krakow, Poland. Sensors 21(15), 5208."},
- {"key": "zareba2022", "short": "Zaręba & Danek 2022", "doi": "10.1038/s41598-022-15160-3",
-  "entry": "Zaręba, M., Danek, T. (2022). The influence of meteorological factors and terrain on air pollution concentration and migration: a geostatistical case study from Krakow, Poland. Scientific Reports 12, 11498."},
- {"key": "casotto2022", "short": "Casotto et al. 2023", "doi": "10.1016/j.scitotenv.2022.158655",
-  "entry": "Casotto, R., Skiba, A., Rauber, M., et al. (2023). Organic aerosol sources in Krakow, Poland, before implementation of a solid fuel residential heating ban. Science of the Total Environment 855, 158655."},
- {"key": "blaszczyk2017", "short": "Błaszczyk et al. 2017", "doi": "10.1007/s11869-017-0505-9",
-  "entry": "Błaszczyk, E., Rogula-Kozłowska, W., Klejnowski, K., et al. (2017). Indoor air quality in urban and rural kindergartens: short-term studies in Silesia, Poland. Air Quality, Atmosphere & Health 10, 1207–1220."},
- {"key": "klepeis2001", "short": "Klepeis et al. 2001", "doi": "10.1038/sj.jea.7500165",
-  "entry": "Klepeis, N. E., Nelson, W. C., Ott, W. R., et al. (2001). The National Human Activity Pattern Survey (NHAPS): a resource for assessing exposure to environmental pollutants. Journal of Exposure Analysis and Environmental Epidemiology 11, 231–252."},
- {"key": "rivas2014", "short": "Rivas et al. 2014", "doi": "10.1016/j.envint.2014.04.009",
-  "entry": "Rivas, I., Viana, M., Moreno, T., et al. (2014). Child exposure to indoor and outdoor air pollutants in schools in Barcelona, Spain. Environment International 69, 200–212."},
- {"key": "acevedo2011", "short": "Acevedo-Bolton et al. 2011", "doi": "10.1039/c1em10521c",
-  "entry": "Acevedo-Bolton, V., Cheng, K.-C., Jiang, R.-T., Ott, W. R., et al. (2012). Measurement of the proximity effect for indoor air pollutant sources in two homes. Journal of Environmental Monitoring 14, 94–104."},
- {"key": "lakey2021", "short": "Lakey et al. 2021", "doi": "10.1038/s42004-021-00548-5",
-  "entry": "Lakey, P. S. J., Won, Y., Shaw, D., et al. (2021). Spatial and temporal scales of variability for indoor air constituents. Communications Chemistry 4, 110."},
- {"key": "nazaroff2004", "short": "Nazaroff 2004", "doi": "10.1111/j.1600-0668.2004.00286.x",
-  "entry": "Nazaroff, W. W. (2004). Indoor particle dynamics. Indoor Air 14(s7), 175–183."},
- {"key": "simona2025", "short": "Simona et al. 2025", "doi": "10.1038/s41370-025-00743-9",
-  "entry": "Simona, S. C., Bartell, S. M., Vieira, V. M., et al. (2025). Classroom air quality in a randomized crossover trial with portable HEPA air cleaners. Journal of Exposure Science & Environmental Epidemiology."},
- {"key": "castell2017", "short": "Castell et al. 2017", "doi": "10.1016/j.envint.2016.12.007",
-  "entry": "Castell, N., Dauge, F. R., Schneider, P., et al. (2017). Can commercial low-cost sensor platforms contribute to air quality monitoring and exposure estimates? Environment International 99, 293–302."},
- {"key": "jayaratne2018", "short": "Jayaratne et al. 2018", "doi": "10.5194/amt-11-4883-2018",
-  "entry": "Jayaratne, R., Liu, X., Thai, P., Dunbabin, M., Morawska, L. (2018). The influence of humidity on the performance of a low-cost air particle mass sensor and the effect of atmospheric fog. Atmospheric Measurement Techniques 11, 4883–4890."},
- {"key": "crilley2018", "short": "Crilley et al. 2018", "doi": "10.5194/amt-11-709-2018",
-  "entry": "Crilley, L. R., Shaw, M., Pound, R., et al. (2018). Evaluation of a low-cost optical particle counter (Alphasense OPC-N2) for ambient air monitoring. Atmospheric Measurement Techniques 11, 709–720."},
- {"key": "petters2007", "short": "Petters & Kreidenweis 2007", "doi": "10.5194/acp-7-1961-2007",
-  "entry": "Petters, M. D., Kreidenweis, S. M. (2007). A single parameter representation of hygroscopic growth and cloud condensation nucleus activity. Atmospheric Chemistry and Physics 7, 1961–1971."},
- {"key": "daellenbach2020", "short": "Daellenbach et al. 2020", "doi": "10.1038/s41586-020-2902-8",
-  "entry": "Daellenbach, K. R., Uzu, G., Jiang, J., et al. (2020). Sources of particulate-matter air pollution and its oxidative potential in Europe. Nature 587, 414–419."},
- {"key": "gao2021", "short": "Gao et al. 2022", "doi": "10.1016/j.envpol.2021.118464",
-  "entry": "Gao, M., Liang, C., Hong, W., et al. (2022). Biomass-related PM2.5 induces mitochondrial fragmentation and dysfunction in human airway epithelial cells. Environmental Pollution 292, 118464."},
- {"key": "puthussery2018", "short": "Puthussery et al. 2018", "doi": "10.5194/amt-11-5767-2018",
-  "entry": "Puthussery, J. V., Zhang, C., Verma, V. (2018). Development and field testing of an online instrument for measuring the real-time oxidative potential of ambient particulate matter based on dithiothreitol assay. Atmospheric Measurement Techniques 11, 5767–5780."},
- {"key": "huang2021", "short": "Huang et al. 2021", "doi": "10.1093/eep/dvaa022",
-  "entry": "Huang, S. K., Tripathi, P., Koneva, L. A., et al. (2021). Effect of concentration and duration of particulate matter exposure on the transcriptome and DNA methylome of bronchial epithelial cells. Environmental Epigenetics 7(1), dvaa022."},
- {"key": "sotty2019", "short": "Sotty et al. 2019", "doi": "10.1016/j.envres.2019.108538",
-  "entry": "Sotty, J., Garçon, G., Denayer, F. O., et al. (2019). Toxicological effects of ambient fine (PM2.5–0.18) and ultrafine (PM0.18) particles in healthy and diseased 3D organo-typic mucocilary-phenotype models. Environmental Research 176, 108538."},
- {"key": "bair1995", "short": "Bair 1995", "doi": "10.1093/oxfordjournals.rpd.a082732",
-  "entry": "Bair, W. J. (1995). The ICRP human respiratory tract model for radiological protection. Radiation Protection Dosimetry 60(4), 307–310."},
- {"key": "raissi2019", "short": "Raissi et al. 2019", "doi": "10.1016/j.jcp.2018.10.045",
-  "entry": "Raissi, M., Perdikaris, P., Karniadakis, G. E. (2019). Physics-informed neural networks: a deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations. Journal of Computational Physics 378, 686–707."},
- {"key": "yang2021", "short": "Yang et al. 2021", "doi": "10.1016/j.jcp.2020.109913",
-  "entry": "Yang, L., Meng, X., Karniadakis, G. E. (2021). B-PINNs: Bayesian physics-informed neural networks for forward and inverse PDE problems with noisy data. Journal of Computational Physics 425, 109913."},
- {"key": "guestrin2005", "short": "Guestrin et al. 2005", "doi": "10.1145/1102351.1102385",
-  "entry": "Guestrin, C., Krause, A., Singh, A. P. (2005). Near-optimal sensor placements in Gaussian processes. Proceedings of the 22nd International Conference on Machine Learning, 265–272."},
- {"key": "francis2022", "short": "Francis et al. 2022", "doi": "10.1002/rob.22109",
-  "entry": "Francis, A., Li, S., Griffiths, C., Sienz, J. (2022). Gas source localization and mapping with mobile robots: a review. Journal of Field Robotics 39(8), 1341–1373."},
- {"key": "lee2004", "short": "Lee & See 2004", "doi": "10.1518/hfes.46.1.50_30392",
-  "entry": "Lee, J. D., See, K. A. (2004). Trust in automation: designing for appropriate reliance. Human Factors 46(1), 50–80."},
- {"key": "go2019", "short": "Go & Sundar 2019", "doi": "10.1016/j.chb.2019.01.020",
-  "entry": "Go, E., Sundar, S. S. (2019). Humanizing chatbots: the effects of visual, identity and conversational cues on humanness perceptions. Computers in Human Behavior 97, 304–316."},
- {"key": "ho2018", "short": "Ho et al. 2018", "doi": "10.1093/joc/jqy026",
-  "entry": "Ho, A., Hancock, J., Miner, A. S. (2018). Psychological, relational, and emotional effects of self-disclosure after conversations with a chatbot. Journal of Communication 68(4), 712–733."},
- {"key": "guzman2020", "short": "Guzman & Lewis 2020", "doi": "10.1177/1461444819858691",
-  "entry": "Guzman, A. L., Lewis, S. C. (2020). Artificial intelligence and communication: a Human–Machine Communication research agenda. New Media & Society 22(1), 70–86."},
- {"key": "cohen2013", "short": "Cohen 2013", "doi": "10.4324/9780203771587",
-  "entry": "Cohen, J. (2013). Statistical power analysis for the behavioral sciences. Routledge."},
- {"key": "who2021", "short": "WHO 2021", "url": "https://www.who.int/publications/i/item/9789240034228", "accessed": "13 Oct 2026",
-  "entry": "World Health Organization (2021). WHO global air quality guidelines: particulate matter (PM2.5 and PM10), ozone, nitrogen dioxide, sulfur dioxide and carbon monoxide. Geneva: WHO."},
- {"key": "eu2024", "short": "Directive (EU) 2024/2881", "url": "http://data.europa.eu/eli/dir/2024/2881/oj", "accessed": "13 Oct 2026",
-  "entry": "Directive (EU) 2024/2881 of the European Parliament and of the Council of 23 October 2024 on ambient air quality and cleaner air for Europe (recast). Official Journal of the European Union."},
- {"key": "ecovacs", "short": "Ecovacs, AIRBOT Z1", "url": "https://www.ecovacs.com/de/airbot-z1", "accessed": "13 Oct 2026",
-  "entry": "ECOVACS Robotics. AIRBOT Z1 product page (Germany)."},
- {"key": "airly", "short": "Airly", "url": "https://airly.org/en/", "accessed": "13 Oct 2026",
-  "entry": "Airly. Air quality monitoring and data platform (company website); a Kraków-founded company."},
- {"key": "ballie", "short": "Engadget 2026", "url": "https://www.engadget.com/home/smart-home/you-wont-be-able-to-buy-samsungs-household-ballie-robot-after-all-104529942.html", "accessed": "13 Oct 2026",
-  "entry": "Engadget (2026). You won't be able to buy Samsung's household Ballie robot after all."},
- {"key": "astro", "short": "GeekWire 2024", "url": "https://www.geekwire.com/2024/amazon-discontinues-astro-for-business-robot-security-guard-to-focus-on-astro-home-robot/", "accessed": "13 Oct 2026",
-  "entry": "GeekWire (3 July 2024). Amazon discontinues Astro for Business robot security guard to focus on Astro home robot."}
+ {
+  "key": "kicinska2025",
+  "short": "Kicińska & Jawdyńska 2025",
+  "doi": "10.24425/ams.2025.154160",
+  "entry": "Kicińska, A., Jawdyńska, J. (2025). Ban on the burning of solid fuels in domestic furnaces and its impact on air quality: example of Krakow. Archives of Mining Sciences, 3–28."
+ },
+ {
+  "key": "samek2017",
+  "short": "Samek et al. 2017",
+  "doi": "10.1007/s11270-017-3483-5",
+  "entry": "Samek, L., Stegowski, Z., Styszko, K., et al. (2017). Quantitative assessment of PM2.5 sources and their seasonal variation in Krakow. Water, Air, & Soil Pollution 228, 290."
+ },
+ {
+  "key": "scibor2020",
+  "short": "Ścibor et al. 2020",
+  "doi": "10.1007/s11869-020-00816-8",
+  "entry": "Ścibor, M., Bokwa, A., Balcerzak, B. (2020). Impact of wind speed and apartment ventilation on indoor concentrations of PM10 and PM2.5 in Kraków, Poland. Air Quality, Atmosphere & Health 13, 553–562."
+ },
+ {
+  "key": "danek2021",
+  "short": "Danek & Zaręba 2021",
+  "doi": "10.3390/s21155208",
+  "entry": "Danek, T., Zaręba, M. (2021). The use of public data from low-cost sensors for the geospatial analysis of air pollution from solid fuel heating during the COVID-19 pandemic spring period in Krakow, Poland. Sensors 21(15), 5208."
+ },
+ {
+  "key": "zareba2022",
+  "short": "Zaręba & Danek 2022",
+  "doi": "10.1038/s41598-022-15160-3",
+  "entry": "Zaręba, M., Danek, T. (2022). The influence of meteorological factors and terrain on air pollution concentration and migration: a geostatistical case study from Krakow, Poland. Scientific Reports 12, 11498."
+ },
+ {
+  "key": "casotto2022",
+  "short": "Casotto et al. 2023",
+  "doi": "10.1016/j.scitotenv.2022.158655",
+  "entry": "Casotto, R., Skiba, A., Rauber, M., et al. (2023). Organic aerosol sources in Krakow, Poland, before implementation of a solid fuel residential heating ban. Science of the Total Environment 855, 158655."
+ },
+ {
+  "key": "blaszczyk2017",
+  "short": "Błaszczyk et al. 2017",
+  "doi": "10.1007/s11869-017-0505-9",
+  "entry": "Błaszczyk, E., Rogula-Kozłowska, W., Klejnowski, K., et al. (2017). Indoor air quality in urban and rural kindergartens: short-term studies in Silesia, Poland. Air Quality, Atmosphere & Health 10, 1207–1220."
+ },
+ {
+  "key": "klepeis2001",
+  "short": "Klepeis et al. 2001",
+  "doi": "10.1038/sj.jea.7500165",
+  "entry": "Klepeis, N. E., Nelson, W. C., Ott, W. R., et al. (2001). The National Human Activity Pattern Survey (NHAPS): a resource for assessing exposure to environmental pollutants. Journal of Exposure Analysis and Environmental Epidemiology 11, 231–252."
+ },
+ {
+  "key": "rivas2014",
+  "short": "Rivas et al. 2014",
+  "doi": "10.1016/j.envint.2014.04.009",
+  "entry": "Rivas, I., Viana, M., Moreno, T., et al. (2014). Child exposure to indoor and outdoor air pollutants in schools in Barcelona, Spain. Environment International 69, 200–212."
+ },
+ {
+  "key": "acevedo2011",
+  "short": "Acevedo-Bolton et al. 2011",
+  "doi": "10.1039/c1em10521c",
+  "entry": "Acevedo-Bolton, V., Cheng, K.-C., Jiang, R.-T., Ott, W. R., et al. (2012). Measurement of the proximity effect for indoor air pollutant sources in two homes. Journal of Environmental Monitoring 14, 94–104."
+ },
+ {
+  "key": "lakey2021",
+  "short": "Lakey et al. 2021",
+  "doi": "10.1038/s42004-021-00548-5",
+  "entry": "Lakey, P. S. J., Won, Y., Shaw, D., et al. (2021). Spatial and temporal scales of variability for indoor air constituents. Communications Chemistry 4, 110."
+ },
+ {
+  "key": "nazaroff2004",
+  "short": "Nazaroff 2004",
+  "doi": "10.1111/j.1600-0668.2004.00286.x",
+  "entry": "Nazaroff, W. W. (2004). Indoor particle dynamics. Indoor Air 14(s7), 175–183."
+ },
+ {
+  "key": "simona2025",
+  "short": "Simona et al. 2025",
+  "doi": "10.1038/s41370-025-00743-9",
+  "entry": "Simona, S. C., Bartell, S. M., Vieira, V. M., et al. (2025). Classroom air quality in a randomized crossover trial with portable HEPA air cleaners. Journal of Exposure Science & Environmental Epidemiology."
+ },
+ {
+  "key": "castell2017",
+  "short": "Castell et al. 2017",
+  "doi": "10.1016/j.envint.2016.12.007",
+  "entry": "Castell, N., Dauge, F. R., Schneider, P., et al. (2017). Can commercial low-cost sensor platforms contribute to air quality monitoring and exposure estimates? Environment International 99, 293–302."
+ },
+ {
+  "key": "jayaratne2018",
+  "short": "Jayaratne et al. 2018",
+  "doi": "10.5194/amt-11-4883-2018",
+  "entry": "Jayaratne, R., Liu, X., Thai, P., Dunbabin, M., Morawska, L. (2018). The influence of humidity on the performance of a low-cost air particle mass sensor and the effect of atmospheric fog. Atmospheric Measurement Techniques 11, 4883–4890."
+ },
+ {
+  "key": "crilley2018",
+  "short": "Crilley et al. 2018",
+  "doi": "10.5194/amt-11-709-2018",
+  "entry": "Crilley, L. R., Shaw, M., Pound, R., et al. (2018). Evaluation of a low-cost optical particle counter (Alphasense OPC-N2) for ambient air monitoring. Atmospheric Measurement Techniques 11, 709–720."
+ },
+ {
+  "key": "petters2007",
+  "short": "Petters & Kreidenweis 2007",
+  "doi": "10.5194/acp-7-1961-2007",
+  "entry": "Petters, M. D., Kreidenweis, S. M. (2007). A single parameter representation of hygroscopic growth and cloud condensation nucleus activity. Atmospheric Chemistry and Physics 7, 1961–1971."
+ },
+ {
+  "key": "daellenbach2020",
+  "short": "Daellenbach et al. 2020",
+  "doi": "10.1038/s41586-020-2902-8",
+  "entry": "Daellenbach, K. R., Uzu, G., Jiang, J., et al. (2020). Sources of particulate-matter air pollution and its oxidative potential in Europe. Nature 587, 414–419."
+ },
+ {
+  "key": "gao2021",
+  "short": "Gao et al. 2022",
+  "doi": "10.1016/j.envpol.2021.118464",
+  "entry": "Gao, M., Liang, C., Hong, W., et al. (2022). Biomass-related PM2.5 induces mitochondrial fragmentation and dysfunction in human airway epithelial cells. Environmental Pollution 292, 118464."
+ },
+ {
+  "key": "puthussery2018",
+  "short": "Puthussery et al. 2018",
+  "doi": "10.5194/amt-11-5767-2018",
+  "entry": "Puthussery, J. V., Zhang, C., Verma, V. (2018). Development and field testing of an online instrument for measuring the real-time oxidative potential of ambient particulate matter based on dithiothreitol assay. Atmospheric Measurement Techniques 11, 5767–5780."
+ },
+ {
+  "key": "huang2021",
+  "short": "Huang et al. 2021",
+  "doi": "10.1093/eep/dvaa022",
+  "entry": "Huang, S. K., Tripathi, P., Koneva, L. A., et al. (2021). Effect of concentration and duration of particulate matter exposure on the transcriptome and DNA methylome of bronchial epithelial cells. Environmental Epigenetics 7(1), dvaa022."
+ },
+ {
+  "key": "sotty2019",
+  "short": "Sotty et al. 2019",
+  "doi": "10.1016/j.envres.2019.108538",
+  "entry": "Sotty, J., Garçon, G., Denayer, F. O., et al. (2019). Toxicological effects of ambient fine (PM2.5–0.18) and ultrafine (PM0.18) particles in healthy and diseased 3D organo-typic mucocilary-phenotype models. Environmental Research 176, 108538."
+ },
+ {
+  "key": "bair1995",
+  "short": "Bair 1995",
+  "doi": "10.1093/oxfordjournals.rpd.a082732",
+  "entry": "Bair, W. J. (1995). The ICRP human respiratory tract model for radiological protection. Radiation Protection Dosimetry 60(4), 307–310."
+ },
+ {
+  "key": "raissi2019",
+  "short": "Raissi et al. 2019",
+  "doi": "10.1016/j.jcp.2018.10.045",
+  "entry": "Raissi, M., Perdikaris, P., Karniadakis, G. E. (2019). Physics-informed neural networks: a deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations. Journal of Computational Physics 378, 686–707."
+ },
+ {
+  "key": "yang2021",
+  "short": "Yang et al. 2021",
+  "doi": "10.1016/j.jcp.2020.109913",
+  "entry": "Yang, L., Meng, X., Karniadakis, G. E. (2021). B-PINNs: Bayesian physics-informed neural networks for forward and inverse PDE problems with noisy data. Journal of Computational Physics 425, 109913."
+ },
+ {
+  "key": "guestrin2005",
+  "short": "Guestrin et al. 2005",
+  "doi": "10.1145/1102351.1102385",
+  "entry": "Guestrin, C., Krause, A., Singh, A. P. (2005). Near-optimal sensor placements in Gaussian processes. Proceedings of the 22nd International Conference on Machine Learning, 265–272."
+ },
+ {
+  "key": "francis2022",
+  "short": "Francis et al. 2022",
+  "doi": "10.1002/rob.22109",
+  "entry": "Francis, A., Li, S., Griffiths, C., Sienz, J. (2022). Gas source localization and mapping with mobile robots: a review. Journal of Field Robotics 39(8), 1341–1373."
+ },
+ {
+  "key": "lee2004",
+  "short": "Lee & See 2004",
+  "doi": "10.1518/hfes.46.1.50_30392",
+  "entry": "Lee, J. D., See, K. A. (2004). Trust in automation: designing for appropriate reliance. Human Factors 46(1), 50–80."
+ },
+ {
+  "key": "go2019",
+  "short": "Go & Sundar 2019",
+  "doi": "10.1016/j.chb.2019.01.020",
+  "entry": "Go, E., Sundar, S. S. (2019). Humanizing chatbots: the effects of visual, identity and conversational cues on humanness perceptions. Computers in Human Behavior 97, 304–316."
+ },
+ {
+  "key": "ho2018",
+  "short": "Ho et al. 2018",
+  "doi": "10.1093/joc/jqy026",
+  "entry": "Ho, A., Hancock, J., Miner, A. S. (2018). Psychological, relational, and emotional effects of self-disclosure after conversations with a chatbot. Journal of Communication 68(4), 712–733."
+ },
+ {
+  "key": "guzman2020",
+  "short": "Guzman & Lewis 2020",
+  "doi": "10.1177/1461444819858691",
+  "entry": "Guzman, A. L., Lewis, S. C. (2020). Artificial intelligence and communication: a Human–Machine Communication research agenda. New Media & Society 22(1), 70–86."
+ },
+ {
+  "key": "cohen2013",
+  "short": "Cohen 2013",
+  "doi": "10.4324/9780203771587",
+  "entry": "Cohen, J. (2013). Statistical power analysis for the behavioral sciences. Routledge."
+ },
+ {
+  "key": "who2021",
+  "short": "WHO 2021",
+  "url": "https://www.who.int/publications/i/item/9789240034228",
+  "accessed": "13 Oct 2026",
+  "entry": "World Health Organization (2021). WHO global air quality guidelines: particulate matter (PM2.5 and PM10), ozone, nitrogen dioxide, sulfur dioxide and carbon monoxide. Geneva: WHO."
+ },
+ {
+  "key": "eu2024",
+  "short": "Directive (EU) 2024/2881",
+  "url": "http://data.europa.eu/eli/dir/2024/2881/oj",
+  "accessed": "13 Oct 2026",
+  "entry": "Directive (EU) 2024/2881 of the European Parliament and of the Council of 23 October 2024 on ambient air quality and cleaner air for Europe (recast). Official Journal of the European Union."
+ },
+ {
+  "key": "ecovacs",
+  "short": "Ecovacs, AIRBOT Z1",
+  "url": "https://www.ecovacs.com/de/airbot-z1",
+  "accessed": "13 Oct 2026",
+  "entry": "ECOVACS Robotics. AIRBOT Z1 product page (Germany)."
+ },
+ {
+  "key": "airly",
+  "short": "Airly",
+  "url": "https://airly.org/en/",
+  "accessed": "13 Oct 2026",
+  "entry": "Airly. Air quality monitoring and data platform (company website); a Kraków-founded company."
+ },
+ {
+  "key": "ballie",
+  "short": "Engadget 2026",
+  "url": "https://www.engadget.com/home/smart-home/you-wont-be-able-to-buy-samsungs-household-ballie-robot-after-all-104529942.html",
+  "accessed": "13 Oct 2026",
+  "entry": "Engadget (2026). You won't be able to buy Samsung's household Ballie robot after all."
+ },
+ {
+  "key": "astro",
+  "short": "GeekWire 2024",
+  "url": "https://www.geekwire.com/2024/amazon-discontinues-astro-for-business-robot-security-guard-to-focus-on-astro-home-robot/",
+  "accessed": "13 Oct 2026",
+  "entry": "GeekWire (3 July 2024). Amazon discontinues Astro for Business robot security guard to focus on Astro home robot."
+ },
+ {
+  "key": "anderson2020",
+  "short": "Anderson et al. 2020",
+  "doi": "10.1088/1748-3190/abbd81",
+  "entry": "Anderson, M. J., Sullivan, J. G., Horiuchi, T. K., Fuller, S. B., Daniel, T. L. (2020). A bio-hybrid odor-guided autonomous palm-sized air vehicle. Bioinspiration & Biomimetics 16(2), 026002."
+ },
+ {
+  "key": "ihantola2022",
+  "short": "Ihantola et al. 2022",
+  "doi": "10.1016/j.scitotenv.2021.150489",
+  "entry": "Ihantola, T., Hirvonen, M.-R., Ihalainen, M., Hakkarainen, H., Sippula, O., et al. (2022). Genotoxic and inflammatory effects of spruce and brown coal briquettes combustion aerosols on lung cells at the air-liquid interface. Science of the Total Environment 806, 150489."
+ },
+ {
+  "key": "upadhyay2018",
+  "short": "Upadhyay & Palmberg 2018",
+  "doi": "10.1093/toxsci/kfy053",
+  "entry": "Upadhyay, S., Palmberg, L. (2018). Air-liquid interface: relevant in vitro models for investigating air pollutant-induced pulmonary toxicity. Toxicological Sciences 164(1), 21–30."
+ },
+ {
+  "key": "millicell",
+  "short": "Merck, Millicell EZ SLIDE",
+  "url": "https://www.sigmaaldrich.com/US/en/product/mm/pezgs0416",
+  "accessed": "13 Oct 2026",
+  "entry": "Merck Millipore. Millicell EZ SLIDE 4-well glass chamber slide, 1.7 cm²/well, sterile (PEZGS0416), product page."
+ }
 ]

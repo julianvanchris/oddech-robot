@@ -87,13 +87,17 @@ CLAIMS = [  # key, words in the abstract or title, words on the page
     ("puthussery2018", "syringe pump", "syringe pumps"),
     ("huang2021", "30 μg/cm2", "1 and 30 μg/cm²"),
     ("sotty2019", "especially copd", "especially copd"),
-    ("guestrin2005", "np-complete", "np-complete"),
-    ("francis2022", "aerial robots", "aerial robots are used for gas mapping"),
+    ("guestrin2005", "np-complete", "a famously hard problem"),
+    ("francis2022", "aerial robots", "gas mapping and source localisation with ground and aerial robots"),
     ("lee2004", "appropriately", "rely on automation appropriately"),
     ("ho2018", "equivalent whether participants thought they were disclosing to a chatbot or to a person", "same effects as disclosing them to a person"),
     ("nazaroff2004", "deposition onto indoor surfaces", "mass balance"),
     ("casotto2022", "pollution hot-spot in europe", "a pollution hot spot in europe"),
     ("guzman2020", "communicators", "a machine as a communicator"),
+    ("anderson2020", "first odor-sensing biohybrid robot system to fly", "first odour-sensing biohybrid robot to fly"),
+    ("ihantola2022", "notable genotoxic effects", "notable genotoxic effects"),
+    ("ihantola2022", "after one-hour exposure", "after one-hour exposure"),
+    ("upadhyay2018", "air-liquid interface", "air-liquid interface"),
 ]
 DOI = {r["key"]: r.get("doi") for r in REFS}
 abstracts = {}
@@ -115,7 +119,8 @@ for key, in_abs, on_page in CLAIMS:
 print(f"2. claims: {len(CLAIMS)} checked against {len(abstracts)} abstracts")
 
 # ---------------------------------------------------------------- 3. web sources
-WEB = [("ecovacs", ["600", "PM2.5"]), ("ballie", ["innovation platform"]), ("astro", ["Astro for Business"]), ("airly", ["Airly"])]
+WEB = [("ecovacs", ["600", "PM2.5"]), ("ballie", ["innovation platform"]), ("astro", ["Astro for Business"]), ("airly", ["Airly"]),
+       ("millicell", ["1.7", "4"])]
 URL = {r["key"]: r.get("url") for r in REFS}
 for key, words in WEB:
     resp, text = None, ""

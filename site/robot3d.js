@@ -64,6 +64,16 @@
     }
     // charging contacts
     for (const s of [-1, 1]) { const c = new T.Mesh(new T.BoxGeometry(0.004, 0.012, 0.03), metal); c.position.set(-0.171, 0.06, s * 0.04); add("chassis", c, 0.06); }
+    // Living Air Sensor bay: a dark window on the front of the body, and the 8-well cartridge inside (lifts out when exploded)
+    const bay = new T.Mesh(new T.BoxGeometry(0.03, 0.07, 0.12), M(0x0d0c0b, { roughness: 0.2, metalness: 0.2 })); bay.position.set(0.148, 0.27, 0); add("bio", bay, 0.66);
+    const slide = new T.Mesh(new T.BoxGeometry(0.075, 0.006, 0.11), new T.MeshStandardMaterial({ color: 0xdfe6ec, transparent: true, opacity: 0.55, roughness: 0.1 }));
+    slide.position.set(0.07, 0.29, 0); add("bio", slide, 0.98);
+    const wellM = new T.MeshStandardMaterial({ color: 0xe9a0b4, emissive: 0xff8a5c, emissiveIntensity: 0.7, roughness: 0.5 });
+    for (let k = 0; k < 8; k++) { const w = new T.Mesh(new T.BoxGeometry(0.022, 0.008, 0.022), wellM); w.position.set(0.07 + (k < 4 ? 0.017 : -0.017), 0.295, -0.039 + (k % 4) * 0.026); add("bio", w, 0.98); }
+    // lungs: HEPA and carbon filter at the back of the chassis, behind an exhaust grille
+    const filt = new T.Mesh(new T.CylinderGeometry(0.04, 0.04, 0.03, 32), M(0xEDE8DF, { roughness: 0.95 })); filt.rotation.z = Math.PI / 2; filt.position.set(-0.135, 0.08, 0); add("vent", filt, 0.06);
+    const vent = new T.Mesh(new T.CylinderGeometry(0.1715, 0.1715, 0.05, 32, 1, true, 1.5 * Math.PI - 0.82, 1.64), M(0x3a3631, { side: T.DoubleSide, roughness: 0.9 }));
+    vent.position.y = 0.1; add("vent", vent, 0.06);
 
     let mastH = 0.4, explode = 0;
     function place() {
@@ -89,7 +99,8 @@
         const up = explode * 0.7;
         const A = { head: [0.0, mastH + 0.06 + up, 0], mast: [0.0, (DECK + mastH) / 2 + up, 0.03], ring: [0.13, DECK - 0.01 + explode * 0.66, 0.08],
           lidar: [0.16, 0.145 + explode * 0.14, 0.05], compute: [0.02, 0.23 + explode * 0.5, 0.05], battery: [-0.03, 0.07 + explode * 0.34, 0.06],
-          drive: [-0.02, 0.045, 0.17], sampler: [-0.2, 0.25 + explode * 0.66, 0] }[name];
+          drive: [-0.02, 0.045, 0.17], sampler: [-0.2, 0.25 + explode * 0.66, 0],
+          bio: [0.165, 0.27 + explode * 0.66, 0.04], vent: [-0.172, 0.1 + explode * 0.06, 0.06] }[name];
         return A ? new T.Vector3(A[0], A[1], A[2]) : null;
       },
     };
@@ -124,7 +135,7 @@
     for (const s of [-1, 1]) { const leg = new T.Mesh(new T.CapsuleGeometry(0.065, 0.72, 4, 10), ghost); leg.position.set(0, 0.45, s * 0.09); fig.add(leg); }
     fig.position.set(-0.2, 0, 0.72); scene.add(fig);
 
-    const names = ["head", "mast", "ring", "lidar", "compute", "battery", "drive", "sampler"];
+    const names = ["head", "mast", "bio", "vent", "ring", "lidar", "compute", "battery"];   // the order of the spec rows on the page
     const pins = names.map((n, i) => { const d = document.createElement("div"); d.className = "rlab"; d.textContent = i + 1; labelsEl.appendChild(d); return d; });
     const rulerLabels = ticks.map(([, t]) => { const d = document.createElement("div"); d.className = "rlab-h"; d.innerHTML = t + "<i></i>"; labelsEl.appendChild(d); return d; });
 

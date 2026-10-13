@@ -36,6 +36,15 @@
   }).join("");
 
   // ---------------------------------------------------------------- navigation, progress, side index, presentation mode
+  // In-page links. Inside Streamlit the page is an iframe srcdoc, whose base URL is the parent app: a plain "#id" link would
+  // load the app again inside the frame (the page looked as if it reset). Every "#..." link scrolls instead.
+  document.addEventListener("click", e => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    const id = decodeURIComponent(a.getAttribute("href").slice(1)), el = id ? document.getElementById(id) : null;
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); else if (!id) window.scrollTo({ top: 0, behavior: "smooth" });
+  });
   const sections = $$("main > section"), idx = $("sideIndex");
   idx.innerHTML = sections.map(s => `<a href="#${s.id}" data-id="${s.id}"><span>${s.dataset.title}</span><i></i></a>`).join("");
   let current = 0;
@@ -167,7 +176,7 @@
       r.addEventListener("pointerenter", () => {
         v.highlight(r.dataset.part); r.classList.add("on");
         if (r.dataset.part === "head" || r.dataset.part === "mast") set(1.6);
-        if (["battery", "compute"].indexOf(r.dataset.part) >= 0 && !ex) { v.setExplode(true); r._ex = true; }
+        if (["battery", "compute", "bio", "vent"].indexOf(r.dataset.part) >= 0 && !ex) { v.setExplode(true); r._ex = true; }
       });
       r.addEventListener("pointerleave", () => { v.highlight(null); r.classList.remove("on"); if (r._ex && !ex) { v.setExplode(false); r._ex = false; } });
     });
@@ -178,10 +187,10 @@
     }, { threshold: 0.3 }).observe($("robotCanvas"));
   })();
   function bindCalc(ids, fn) { ids.forEach(id => $(id).addEventListener("input", fn)); fn(); }
-  bindCalc(["pbWh", "pbBase", "pbDrive", "pbMast"], () => {
-    const wh = +$("pbWh").value, base = +$("pbBase").value, dr = +$("pbDrive").value / 100, ms = +$("pbMast").value / 100;
-    const avg = base + 8 * dr + 6 * ms, hrs = wh * 0.8 / avg;
-    $("pbWhV").textContent = wh + " Wh"; $("pbBaseV").textContent = base + " W"; $("pbDriveV").textContent = Math.round(dr * 100) + " %"; $("pbMastV").textContent = Math.round(ms * 100) + " %";
+  bindCalc(["pbWh", "pbBase", "pbBio", "pbDrive", "pbMast"], () => {
+    const wh = +$("pbWh").value, base = +$("pbBase").value, bio = +$("pbBio").value, dr = +$("pbDrive").value / 100, ms = +$("pbMast").value / 100;
+    const avg = base + bio + 8 * dr + 6 * ms, hrs = wh * 0.8 / avg;
+    $("pbWhV").textContent = wh + " Wh"; $("pbBaseV").textContent = base + " W"; $("pbBioV").textContent = bio + " W"; $("pbDriveV").textContent = Math.round(dr * 100) + " %"; $("pbMastV").textContent = Math.round(ms * 100) + " %";
     $("pbAvg").textContent = avg.toFixed(1) + " W"; $("pbHours").textContent = hrs.toFixed(1) + " h";
   });
   bindCalc(["stH", "stM"], () => {
@@ -189,11 +198,12 @@
     $("stHV").textContent = h.toFixed(2) + " m"; $("stMV").textContent = m.toFixed(2) + " kg";
     $("stCog").textContent = cog.toFixed(2) + " m"; $("stAcc").textContent = a.toFixed(1) + " m/s²"; $("stMar").textContent = "×" + a.toFixed(1);
   });
-  bindCalc(["ueBom", "ueAsm", "ueFee", "ueSvc", "ueLife"], () => {
-    const bom = +$("ueBom").value, asm = +$("ueAsm").value, fee = +$("ueFee").value, svc = +$("ueSvc").value, life = +$("ueLife").value;
-    const gm = fee - svc, capex = bom + asm, pay = gm > 0 ? capex / gm : Infinity, ltv = gm * life - capex;
+  bindCalc(["ueHw", "ueFee", "ueCart", "uePc", "ueSvc", "ueLife"], () => {
+    const o = { hw: +$("ueHw").value, fee: +$("ueFee").value, cart: +$("ueCart").value, pc: +$("uePc").value, svc: +$("ueSvc").value, life: +$("ueLife").value };
+    const { gm, pay, ltv } = window.OddechSim.unitEconomics(o), life = o.life;
     const eur = v => (v < 0 ? "−" : "") + "€" + Math.abs(Math.round(v)).toLocaleString("en-GB");
-    $("ueBomV").textContent = eur(bom); $("ueAsmV").textContent = eur(asm); $("ueFeeV").textContent = eur(fee); $("ueSvcV").textContent = eur(svc); $("ueLifeV").textContent = life + " months";
+    $("ueHwV").textContent = eur(o.hw); $("ueFeeV").textContent = eur(o.fee); $("ueCartV").textContent = o.cart; $("uePcV").textContent = `${eur(o.pc)} · ${eur(o.pc / 2)}`;
+    $("ueSvcV").textContent = eur(o.svc); $("ueLifeV").textContent = life + " months";
     $("ueGm").textContent = eur(gm); $("uePay").textContent = isFinite(pay) ? pay.toFixed(1) + " months" : "never"; $("ueLtv").textContent = eur(ltv);
     $("uePay").style.color = isFinite(pay) && pay <= life ? "" : "#B4532A";
   });
@@ -204,7 +214,8 @@
     const rows = [["Covers the whole room", [0, 2, 0, 2, 1, 2]], ["Reads at several heights", [0, 1, 0, 2, 0, 2]],
       ["Leaves the air undisturbed while reading", [2, 2, 2, 0, 0, 1]], ["Runs for hours", [2, 2, 1, 0, 2, 2]],
       ["Safe and quiet near small children", [2, 2, 2, 0, 1, 1]], ["One calibrated instrument, no unit-to-unit spread", [2, 0, 2, 2, 2, 2]],
-      ["Measures one person's own exposure", [0, 0, 2, 0, 0, 1]], ["Can act on the air", [0, 0, 0, 0, 2, 1]], ["Low cost for one room", [2, 1, 2, 0, 1, 1]]];
+      ["Measures one person's own exposure", [0, 0, 2, 0, 0, 1]], ["Can act on the air", [0, 0, 0, 0, 2, 1]], ["Low cost for one room", [2, 1, 2, 0, 1, 1]],
+      ["Measures harm to living cells, not only mass", [0, 0, 0, 0, 0, 2]]];
     const us = cols.length - 1;
     $("platformMatrix").innerHTML = "<thead><tr><th>Question</th>" + cols.map((c, i) => `<th class="${i === us ? "us" : ""}">${c}</th>`).join("") + "</tr></thead><tbody>" +
       rows.map(([q, v]) => `<tr><td>${q}</td>` + v.map((x, i) => `<td class="${i === us ? "us" : ""}"><span class="dot f${x}" title="${["no", "partly", "yes"][x]}"></span></td>`).join("") + "</tr>").join("") + "</tbody>";
@@ -215,7 +226,7 @@
     const svg = $("posMap"); if (!svg) return;
     const x0 = 64, x1 = 580, y0 = 400, y1 = 20, X = u => x0 + (x1 - x0) * u, Y = v => y0 - (y0 - y1) * v;
     const pts = [["City networks and apps", 0.06, 0.30], ["Indoor monitors", 0.2, 0.15], ["Smart purifiers", 0.22, 0.45], ["Mobile purifier robot", 0.5, 0.55],
-      ["General home robots", 0.44, 0.25], ["Research robots", 0.84, 0.15], ["Oddech", 0.86, 0.86, true]];
+      ["General home robots", 0.44, 0.25], ["Research robots", 0.84, 0.15], ["Laboratory toxicity tests", 0.08, 0.66], ["Oddech", 0.86, 0.86, true]];
     let s = `<g font-family="Inter Tight, Helvetica Neue, Arial, sans-serif">`;
     s += `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y0}" stroke="#1F1D1A"/><line x1="${x0}" y1="${y0}" x2="${x0}" y2="${y1}" stroke="#1F1D1A"/>`;
     s += `<line x1="${X(0.5)}" y1="${y0}" x2="${X(0.5)}" y2="${y1}" stroke="rgba(31,29,26,.14)" stroke-dasharray="3 4"/><line x1="${x0}" y1="${Y(0.5)}" x2="${x1}" y2="${Y(0.5)}" stroke="rgba(31,29,26,.14)" stroke-dasharray="3 4"/>`;

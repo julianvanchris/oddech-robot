@@ -12,7 +12,7 @@ import streamlit.components.v1 as components
 
 HERE = Path(__file__).parent
 SITE = HERE / "site"
-SCRIPTS = ["robot3d.js", "hero.js", "sensor.js", "scene.js", "main.js"]   # after three.min.js and sim.js
+SCRIPTS = ["robot3d.js", "hero.js", "sensor.js", "bio.js", "scene.js", "results.js", "cloud.js", "deck.js", "main.js"]   # after three.min.js and sim.js
 
 st.set_page_config(page_title="Oddech · a robot that reads the air", page_icon=str(HERE / "assets" / "icon.png"),
                    layout="wide", initial_sidebar_state="collapsed")
