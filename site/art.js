@@ -198,6 +198,33 @@
     return s + `</svg>`;
   }
 
+  // ---------------------------------------------------------------- how fast each way of reading the air answers, on a log time axis
+  function timeLadder(dark) {
+    const P = pal(dark), W = 1120, H = 300, x0 = 40, x1 = W - 40, ya = 150, T1 = 604800;   // 1 s to one week
+    const X = t => x0 + (x1 - x0) * Math.log10(t) / Math.log10(T1);
+    let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Time each method takes to answer, from one second to one week: dust counter every second, Oddech's living cells every ten minutes, a laboratory oxidative-potential instrument hourly, a cell test in a laboratory a day or more">`;
+    s += `<line x1="${x0}" y1="${ya}" x2="${x1}" y2="${ya}" stroke="${P.ink2}" stroke-width="1.4"/>`;
+    for (const [t, l] of [[1, "1 s"], [60, "1 min"], [600, "10 min"], [3600, "1 h"], [86400, "1 day"], [T1, "1 week"]])
+      s += `<line x1="${X(t).toFixed(1)}" y1="${ya - 6}" x2="${X(t).toFixed(1)}" y2="${ya + 6}" stroke="${P.ink2}"/><text x="${X(t).toFixed(1)}" y="${ya + 24}" ${mono} font-size="12" fill="${P.grey}" text-anchor="middle">${l}</text>`;
+    // the cells answer within minutes: a band from one to ten minutes
+    s += `<rect x="${X(60).toFixed(1)}" y="${ya - 9}" width="${(X(600) - X(60)).toFixed(1)}" height="18" rx="9" fill="${P.acc}" fill-opacity=".22"/>`;
+    const mark = (t, up, title, sub, hot) => {
+      const x = X(t), y = up ? ya - 62 : ya + 62, a = up ? "end" : "start", tx = x;
+      let m = `<line x1="${x.toFixed(1)}" y1="${ya}" x2="${x.toFixed(1)}" y2="${(up ? y + 10 : y - 22).toFixed(1)}" stroke="${hot ? P.acc : P.grey}" stroke-dasharray="${hot ? "0" : "3 3"}"/>`;
+      m += `<circle cx="${x.toFixed(1)}" cy="${ya}" r="${hot ? 10 : 6}" fill="${hot ? P.acc : P.bg}" stroke="${hot ? P.acc : P.ink2}" stroke-width="1.6"/>`;
+      const anchor = t === 1 ? "start" : t === 600 || t >= 86400 ? "end" : "middle";
+      m += `<text x="${tx.toFixed(1)}" y="${(up ? y - 12 : y).toFixed(1)}" text-anchor="${anchor}"><tspan ${serif} font-size="${hot ? 26 : 21}" fill="${hot ? P.acc : P.ink}">${title}</tspan>`
+        + `<tspan x="${tx.toFixed(1)}" dy="18" ${sans} font-size="13" fill="${P.ink2}">${sub}</tspan></text>`;
+      return m;
+    };
+    s += mark(1, false, "Dust counter, every second", "how much dust, never how harmful");
+    s += mark(600, true, "Oddech's living cells, every 10 minutes", "how harmful the air is, while there is time to act", true);
+    s += mark(3600, false, "Lab instrument, hourly", "a chemical stand-in, lab-sized");
+    s += mark(86400, true, "Cell test in a lab, a day or more", "a 24-hour exposure, then the analysis");
+    s += `<text x="${((X(60) + X(600)) / 2).toFixed(1)}" y="${ya + 44}" ${mono} font-size="11" fill="${P.acc}" text-anchor="middle">cells answer within minutes</text>`;
+    return s + `</svg>`;
+  }
+
   // ---------------------------------------------------------------- the QR code to this site, with its quiet zone
   function qr(dark, size) {
     const Q = window.ODDECH_QR; if (!Q) return "";
@@ -210,5 +237,5 @@
     return src ? `<img src="${src}" alt="${alt}" style="${style || ""}" decoding="sync">` : "";
   };
 
-  window.OddechArt = { cells, room, plan, setups, SETUPS, airLoop, cartridgeLoop, qr, img };
+  window.OddechArt = { cells, room, plan, setups, SETUPS, airLoop, cartridgeLoop, timeLadder, qr, img };
 })();

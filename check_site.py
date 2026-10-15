@@ -103,6 +103,12 @@ CLAIMS = [  # key, words in the abstract or title, words on the page
     ("juarez2024", "enable field studies", "built to enable field studies"),
     ("chidekel2012", "exposure to low humidity results in reduced epithelial cell function and increased inflammation", "dry air alone reduced airway-cell function and raised inflammation"),
     ("jeannet2015", "temperature and humidity conditioning, preventing cellular stress during exposure", "preventing cellular stress"),
+    ("milici2021", "within minutes of application", "within minutes of application"),
+    ("gibbs2013", "imaged in real time", "watched in real time"),
+    ("corteselli2018", "temporal resolution that is not possible using conventional methods", "a time resolution conventional methods cannot reach"),
+    ("corteselli2018", "destruction of the sample", "destroy the sample"),
+    ("puthussery2018", "hourly measurements", "hourly readings"),
+    ("huang2021", "pm2.5 for 24 h", "for 24 h"),
 ]
 DOI = {r["key"]: r.get("doi") for r in REFS}
 abstracts = {}

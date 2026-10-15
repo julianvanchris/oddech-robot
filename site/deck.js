@@ -1,4 +1,4 @@
-/* Section 15: the pitch deck. Fifteen 1280×720 slides, scaled to the frame; arrow keys, thumbnails, Present (full screen,
+/* Section 15: the pitch deck. Sixteen 1280×720 slides, scaled to the frame; arrow keys, thumbnails, Present (full screen,
    key F) and print to PDF (one slide per page). One message per slide, in plain words; numbers only where they carry the
    point, and never with a minus sign. Pictures come from art.js (cells, the room, today's setups, the air loop, the
    cartridge loop, the QR code) and from the robot's 3D model (site/img), so the slides and the page show the same things.
@@ -23,7 +23,8 @@
     let best = F[0]; for (const f of F) if (Math.abs(f[0] - v) < Math.abs(best[0] - v)) best = f;
     return (Math.abs(best[0] - v) > 0.012 ? "about " : "") + best[1];
   }
-  const ue = S && S.unitEconomics ? S.unitEconomics({ hw: 1100, fee: 120, cart: 4, pc: 25, svc: 20, life: 36 }) : null;
+  const PLAN = { hw: 1100, fee: 120, cart: 4, pc: 25, svc: 20, life: 36 };   // the business section's default inputs: planning assumptions, not quotes
+  const ue = S && S.unitEconomics ? S.unitEconomics(PLAN) : null;
 
   // ---------------------------------------------------------------- charts and pictures made from the model's own numbers
   const RUN = (m, tox) => { const L = new S.LivingSensor(3), out = [0]; for (let i = 0; i < 36; i++) out.push(L.cycle(m, m * tox, i * 600).index); return out; };
@@ -160,9 +161,20 @@
     </div>
     <p class="sl-take">Every air monitor weighs the dust. <em>Oddech asks living cells how much it hurts.</em></p>
     ${foot("Concept model after X. Cao, no experimental data · cells at the air-liquid interface: Upadhyay & Palmberg 2018")}`]);
+  const reads = 7 * 24 * 6, centsRead = 100 * PLAN.pc / reads, childDay = 100 * (PLAN.fee + PLAN.cart * PLAN.pc) / 30.4 / 20;   // a room of twenty children
+  SL.push(["Minutes and cents", "s-dark", `${head("06 · How fast, and at what price")}
+    <h2 data-m="t">Read in minutes, <em>for cents a reading.</em></h2>
+    <div class="sl-ladder2">${A.timeLadder(true)}</div>
+    <div class="sl-notes4">
+      <div><b>Within minutes</b><span>In lab studies, airway cells react to particles within minutes, far faster than classic toxicity tests.</span></div>
+      <div><b>Read alive</b><span>Live-cell readouts follow stress in real time; classic lab tests use the cells up.</span></div>
+      <div><b>About ${centsRead.toFixed(1)} cents a reading</b><span>One €${PLAN.pc} cartridge gives about 1,000 readings a week.</span></div>
+      <div><b>About ${Math.round(childDay)} cents a child a day</b><span>A room of twenty, with the robot and a fresh cartridge every week.</span></div>
+    </div>
+    ${foot("Sources: Milici 2021; Corteselli 2018; Puthussery 2018; Huang 2021 · prices: planning assumptions, not quotes")}`]);
   if (ok) {
     const all = CARE.wins.corner === CARE.seeds;
-    SL.push(["What changes", "s-dark", `${head("06 · What changes for the child · in our room model")}
+    SL.push(["What changes", "s-dark", `${head("07 · What changes for the child · in our room model")}
       <h2 data-m="t" style="font-size:52px">Same flat, same purifier: <em>the child breathes ${words(CARE.median.cutCorner)} less dust.</em></h2>
       <div class="sl-eve2">
         <div class="sl-evechart">${evening()}</div>
@@ -174,7 +186,7 @@
       </div>
       ${foot("Room model with random sources, windows and purifiers; the family acts on the advice after 90 s · the method, not field evidence")}`]);
     const r = Math.exp(B.median.oddech_people) - 1, f = Math.exp(B.median.fixed4_people) - 1, less = r / f < 0.5 ? "less than half the error" : `${words(1 - r / f)} less error`;
-    SL.push(["One robot, not more sensors", "s-paper", `${head("07 · Why one robot, not more sensors")}
+    SL.push(["One robot, not more sensors", "s-paper", `${head("08 · Why one robot, not more sensors")}
       <h2 data-m="t" style="font-size:52px">One robot that moves <em>beats four sensors that stay put.</em></h2>
       <div class="sl-vs">
         <div class="sl-vspics">${vsArt()}</div>
@@ -186,7 +198,7 @@
         </ul>
       </div>
       ${foot("Room model, minutes 5 to 20: three fixed sensors and Oddech against four fixed sensors · the method, not field evidence")}`]);
-    SL.push(["For every user", "s-paper", `${head("08 · The product · robot at the edge, every room in the cloud")}
+    SL.push(["For every user", "s-paper", `${head("09 · The product · robot at the edge, every room in the cloud")}
       <h2 data-m="t" style="font-size:52px">Each user gets <em>what they can act on.</em></h2>
       <div class="sl-arch">${archArt()}</div>
       <div class="sl-users">
@@ -202,7 +214,7 @@
       </div>
       ${foot("Phone message: Oddech's own words from the model evening · dashboard: working design on our site, demonstration values")}`]);
   }
-  SL.push(["Customers", "s-paper", `${head("09 · Customers and why now")}
+  SL.push(["Customers", "s-paper", `${head("10 · Customers and why now")}
     <h2 data-m="t" style="font-size:52px">Start where the risk is highest <em>and someone can act.</em></h2>
     <div class="sl-grid2">
       <ul class="sl-list">
@@ -216,7 +228,7 @@
           <dt>Hears</dt><dd>parents: phone alerts and a monthly air report</dd><dt>Gains</dt><dd>the children: cleaner air where they breathe</dd></dl></div>
     </div>
     ${foot("Source: Directive (EU) 2024/2881")}`]);
-  SL.push(["Business model", "s-paper2", `${head("10 · Business model")}
+  SL.push(["Business model", "s-paper2", `${head("11 · Business model")}
     <h2 data-m="t">Rent the robot, <em>refill the living sensor.</em></h2>
     <div class="sl-biz">
       <div class="sl-bizloop">${A.cartridgeLoop(false)}</div>
@@ -231,7 +243,7 @@
       </div>
     </div>
     ${foot("Planning assumptions, not quotes · used cartridges handled as laboratory waste: WHO Laboratory Biosafety Manual 2020")}`]);
-  SL.push(["Risks", "s-dark", `${head("11 · Risks, and what we do about them")}
+  SL.push(["Risks", "s-dark", `${head("12 · Risks, and what we do about them")}
     <h2 data-m="t">What could go wrong, <em>and our answer.</em></h2>
     <table class="sl-risk"><tbody>
       <tr><th>Cells drift or tire</th><td>Controls, a lamp reference and a blank in every cartridge; a fresh cartridge each week.</td></tr>
@@ -242,7 +254,7 @@
     </tbody></table>
     <div class="sl-planb"><i>Plan B</i><span>Rooms evenly mixed: <b>Oddech Station</b>, a fixed living sensor.</span><span>Cells too fragile: the robot <b>collects filters</b> for a lab.</span><span>No one pays: <b>license</b> the robot's brain to purifier makers.</span></div>
     ${foot("Sources: Juárez-Facio et al. 2024; Chidekel et al. 2012; WHO Laboratory Biosafety Manual 2020")}`]);
-  SL.push(["Roadmap", "s-dark", `${head("12 · Roadmap")}
+  SL.push(["Roadmap", "s-dark", `${head("13 · Roadmap")}
     <h2 data-m="t">From Kraków <em>to a first room.</em></h2>
     <div class="sl-tl">
       <div><i>14 Oct</i><b>Field visit, Kraków</b></div><div><i>16 Oct</i><b>Final presentation</b></div><div><i>27 Nov</i><b>Student Research Day, TUAT</b></div>
@@ -250,7 +262,7 @@
     </div>
     <ol class="sl-ladder"><li class="done"><b>Simulation</b><span>a known truth; this site</span></li><li><b>Lab and chamber</b><span>calibrate the cells; a sealed room</span></li><li><b>One real room</b><span>a kindergarten, with consent</span></li><li><b>Pilot</b><span>several rooms, one smog season</span></li></ol>
     ${foot("Programme dates from the FL schedule; 2027 is our plan, not yet arranged")}`]);
-  SL.push(["Team and ask", "s-paper", `${head("13 · Team and our ask")}
+  SL.push(["Team and ask", "s-paper", `${head("14 · Team and our ask")}
     <h2 data-m="t" style="font-size:46px">Physics, robotics, biology, communication. <em>Take one away and the chain breaks.</em></h2>
     <div class="sl-team">
       <div><i>Physics-informed AI</i><b>Julian Evan Chrisnanto</b><span>TUAT, Japan · room map, robot's choices, dose</span></div>
@@ -262,7 +274,7 @@
     <p class="sl-thanks">Dziękujemy. Thank you. ありがとうございました。</p>
     ${foot("Oddech · FL Joint Programme 2026")}`]);
   const Q = window.ODDECH_QR, host = Q ? Q.url.replace(/^https?:\/\//, "").replace(/\/$/, "") : "";
-  SL.push(["Live demonstration", "s-dark", `${head("14 · Live demonstration")}
+  SL.push(["Live demonstration", "s-dark", `${head("15 · Live demonstration")}
     <h2 data-m="t">Open the loop, <em>run it yourself.</em></h2>
     <div class="sl-live">
       <div>

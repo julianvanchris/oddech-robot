@@ -653,6 +653,7 @@ html.deck-vt .slide { transition: none; }
 .sl-verbs span { font-size: 15px; line-height: 1.4; color: #CFC8BC; }
 .sl-verbs .hot b { color: var(--accent2); }
 .sl-loop svg { width: 1100px; height: auto; display: block; margin: 0 auto; }
+.sl-ladder2 { margin: 8px 0 6px; } .sl-ladder2 svg { width: 1120px; height: auto; display: block; }
 .sl-notes4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; margin-top: 6px; border-top: 1px solid var(--nightHair); }
 .sl-notes4 div { padding-top: 12px; }
 .sl-notes4 b { display: block; font: 400 24px/1.1 var(--serif); color: var(--nightText); margin-bottom: 4px; }
@@ -802,6 +803,7 @@ html.deck-vt .slide { transition: none; }
 .climate .mono { font-size: 20px; color: var(--accent2); } .climate h4 { font: 400 24px/1.1 var(--serif); margin: 8px 0; color: var(--nightText); }
 .climate p { margin: 0; font-size: 14px; color: #CFC8BC; }
 .cells-art svg { width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto; }
+.ladder-art { margin-bottom: 28px; overflow-x: auto; scrollbar-width: thin; } .ladder-art svg { width: 100%; min-width: 820px; height: auto; display: block; }   /* phones scroll it sideways, at a size that can be read */
 .waste { display: grid; grid-template-columns: minmax(0, 600px) 1fr; gap: clamp(24px, 4vw, 64px); align-items: center; }
 .waste-art svg { width: 100%; height: auto; display: block; }
 .waste-steps { list-style: none; counter-reset: w; margin: 0; padding: 0; border-top: 1px solid var(--nightHair); }

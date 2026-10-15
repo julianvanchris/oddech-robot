@@ -148,7 +148,7 @@
   (function pictures() {
     const A = window.OddechArt; if (!A) return;
     const put = (id, html) => { const el = $(id); if (el) el.innerHTML = html; };
-    put("breathArt", A.airLoop(true)); put("cellsArt", A.cells(true)); put("loopArt", A.cartridgeLoop(true));
+    put("breathArt", A.airLoop(true)); put("cellsArt", A.cells(true)); put("loopArt", A.cartridgeLoop(true)); put("ladderArt", A.timeLadder(true));
     const steps = Array.from(document.querySelectorAll(".breath-steps li")); let k = 0;
     if (steps.length) setInterval(() => { steps.forEach((li, i) => li.classList.toggle("on", i === k)); k = (k + 1) % steps.length; }, 1600);
   })();

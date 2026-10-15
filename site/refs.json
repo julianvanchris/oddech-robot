@@ -282,5 +282,23 @@
   "url": "https://www.who.int/publications/i/item/9789240011311",
   "accessed": "16 Oct 2026",
   "entry": "World Health Organization (2020). Laboratory biosafety manual, fourth edition; monograph: Decontamination and waste management. Geneva: WHO."
+ },
+ {
+  "key": "milici2021",
+  "short": "Milici et al. 2021",
+  "doi": "10.3390/ijms221810173",
+  "entry": "Milici, A., Sanchez, A., Talavera, K. (2021). Silica nanoparticles inhibit responses to ATP in human airway epithelial 16HBE cells. International Journal of Molecular Sciences, 22(18), 10173."
+ },
+ {
+  "key": "gibbs2013",
+  "short": "Gibbs-Flournoy et al. 2013",
+  "doi": "10.1289/ehp.1206039",
+  "entry": "Gibbs-Flournoy, E. A., Simmons, S. O., Bromberg, P. A., Dick, T. P., Samet, J. M. (2013). Monitoring intracellular redox changes in ozone-exposed airway epithelial cells. Environmental Health Perspectives, 121(3), 312–317."
+ },
+ {
+  "key": "corteselli2018",
+  "short": "Corteselli et al. 2018",
+  "doi": "10.3791/56945",
+  "entry": "Corteselli, E. M., Samet, J. M., Gibbs-Flournoy, E. A. (2018). Imaging approaches to assessments of toxicological oxidative stress using genetically-encoded fluorogenic sensors. Journal of Visualized Experiments, 132, e56945."
  }
 ]

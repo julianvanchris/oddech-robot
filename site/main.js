@@ -224,6 +224,12 @@
     }
     if ($("liveRobot")) $("liveRobot").innerHTML = A.img("robot_hero", "Oddech, rendered from its 3D model", "height:420px;width:auto");
     if ($("liveQr")) $("liveQr").innerHTML = A.qr(true, 220);
+    if ($("priceRead") && $("ueFee")) {                    // section 05's price, from the business section's default inputs
+      const fee = +$("ueFee").defaultValue, cart = +$("ueCart").defaultValue, pc = +$("uePc").defaultValue, reads = 7 * 24 * 6;
+      const child = 100 * (fee + cart * pc) / 30.4 / 20;
+      $("priceRead").textContent = `${(100 * pc / reads).toFixed(1)} cents`;
+      $("priceText").textContent = `One €${pc} cartridge gives about 1,000 readings a week. A room of twenty children, with the robot and a fresh cartridge every week, comes to about ${Math.round(child)} cents a child a day. Planning assumptions, not quotes.`;
+    }
   })();
 
   // ---------------------------------------------------------------- platform matrix (section 04)
