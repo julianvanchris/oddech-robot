@@ -1,0 +1,57 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Cell Size: 0.1
+      Plane Cell Count: 40
+      Color: 126; 152; 188
+      Alpha: 0.4
+    - Class: rviz_default_plugins/RobotModel
+      Name: Oddech
+      Enabled: true
+      Description Source: Topic
+      Description Topic:
+        Value: /robot_description
+    - Class: rviz_default_plugins/TF
+      Name: Frames
+      Enabled: false
+      Marker Scale: 0.15
+    - Class: rviz_default_plugins/LaserScan
+      Name: Laser scan
+      Enabled: true
+      Topic:
+        Value: /scan
+      Size (m): 0.03
+      Style: Flat Squares
+      Color Transformer: FlatColor
+      Color: 217; 135; 92
+    - Class: rviz_default_plugins/Odometry
+      Name: Odometry
+      Enabled: false
+      Topic:
+        Value: /odom
+  Global Options:
+    Fixed Frame: base_footprint
+    Background Color: 18; 58; 99
+    Frame Rate: 30
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Name: Current View
+      Distance: 2.6
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0.6
+      Pitch: 0.3
+      Yaw: 0.8
+Window Geometry:
+  Width: 1400
+  Height: 900

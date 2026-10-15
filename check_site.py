@@ -57,7 +57,7 @@ print(f"1. Crossref: {sum(1 for r in REFS if r.get('doi'))} DOIs checked")
 
 # ---------------------------------------------------------------- 2. quoted figures: abstract and page
 CLAIMS = [  # key, words in the abstract or title, words on the page
-    ("kicinska2025", "decreased by 42%, 40%", "-40 %"),
+    ("kicinska2025", "decreased by 42%, 40%", "40 % less annual mean pm2.5"),
     ("kicinska2025", "were not met", "limit was still not met"),
     ("samek2017", "february 2014-70", "≈70 vs ≈10"),
     ("samek2017", "about 31", "≈31"),

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>oddech_gazebo</name>
+  <version>1.0.0</version>
+  <description>Oddech in Gazebo Harmonic: the model flat of the Oddech website, the robot as a self-contained SDF model, a demo world with keyboard driving, a timed sampling patrol, the ROS 2 launch file and the topic bridge.</description>
+  <maintainer email="s254167v@st.go.tuat.ac.jp">Julian Evan Chrisnanto</maintainer>
+  <license>Proprietary (Team Oddech; choose an open licence before publishing)</license>
+  <author>Team Oddech, FL Joint Programme 2026</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <exec_depend>oddech_description</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>xacro</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

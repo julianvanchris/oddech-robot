@@ -1,0 +1,1837 @@
+{
+ "name": "Oddech",
+ "model": "OD-1",
+ "date": "2026-10-15",
+ "frames": "REP 103: x forward, y left, z up; metres",
+ "colors": {
+  "shell": "F1ECE3",
+  "shell2": "E4DED3",
+  "dark": "26231F",
+  "mid": "5E5850",
+  "metal": "B7B0A4",
+  "accent": "B4532A",
+  "indigo": "2E4A6E",
+  "board": "2F4236",
+  "cell": "8C8378",
+  "lidar": "121110",
+  "bay": "0D0C0B",
+  "glass": "DFE6EC",
+  "well": "E9A0B4",
+  "filter": "EDE8DF",
+  "vent": "3A3631",
+  "stage": "D9D3C8"
+ },
+ "parts": [
+  {
+   "name": "tyre_left",
+   "link": "wheel_left_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.045,
+    "r2": 0.045,
+    "h": 0.028,
+    "seg": 48
+   },
+   "xyz": [
+    0,
+    0,
+    0
+   ],
+   "col": "dark",
+   "axis": "y",
+   "internal": false,
+   "glow": false,
+   "group": "drive",
+   "dy": 0.0,
+   "label": "left drive wheel"
+  },
+  {
+   "name": "hub_left",
+   "link": "wheel_left_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.022,
+    "r2": 0.022,
+    "h": 0.031,
+    "seg": 32
+   },
+   "xyz": [
+    0,
+    0,
+    0
+   ],
+   "col": "metal",
+   "axis": "y",
+   "internal": false,
+   "glow": false,
+   "group": "drive",
+   "dy": 0.0,
+   "label": "left hub motor"
+  },
+  {
+   "name": "hub_mark_left",
+   "link": "wheel_left_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.008,
+    "sy": 0.033,
+    "sz": 0.006
+   },
+   "xyz": [
+    0.012,
+    0,
+    0
+   ],
+   "col": "accent",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "drive",
+   "dy": 0.0,
+   "label": "hub mark (shows the wheel turning)"
+  },
+  {
+   "name": "tyre_right",
+   "link": "wheel_right_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.045,
+    "r2": 0.045,
+    "h": 0.028,
+    "seg": 48
+   },
+   "xyz": [
+    0,
+    0,
+    0
+   ],
+   "col": "dark",
+   "axis": "y",
+   "internal": false,
+   "glow": false,
+   "group": "drive",
+   "dy": 0.0,
+   "label": "right drive wheel"
+  },
+  {
+   "name": "hub_right",
+   "link": "wheel_right_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.022,
+    "r2": 0.022,
+    "h": 0.031,
+    "seg": 32
+   },
+   "xyz": [
+    0,
+    0,
+    0
+   ],
+   "col": "metal",
+   "axis": "y",
+   "internal": false,
+   "glow": false,
+   "group": "drive",
+   "dy": 0.0,
+   "label": "right hub motor"
+  },
+  {
+   "name": "hub_mark_right",
+   "link": "wheel_right_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.008,
+    "sy": 0.033,
+    "sz": 0.006
+   },
+   "xyz": [
+    0.012,
+    0,
+    0
+   ],
+   "col": "accent",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "drive",
+   "dy": 0.0,
+   "label": "hub mark (shows the wheel turning)"
+  },
+  {
+   "name": "caster_front",
+   "link": "caster_front_link",
+   "shape": "sphere",
+   "dims": {
+    "r": 0.018,
+    "seg": 20
+   },
+   "xyz": [
+    0,
+    0,
+    0
+   ],
+   "col": "metal",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "drive",
+   "dy": 0.0,
+   "label": "front ball caster"
+  },
+  {
+   "name": "caster_rear",
+   "link": "caster_rear_link",
+   "shape": "sphere",
+   "dims": {
+    "r": 0.018,
+    "seg": 20
+   },
+   "xyz": [
+    0,
+    0,
+    0
+   ],
+   "col": "metal",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "drive",
+   "dy": 0.0,
+   "label": "rear ball caster"
+  },
+  {
+   "name": "chassis",
+   "link": "base_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.168,
+    "r2": 0.17,
+    "h": 0.1,
+    "seg": 96
+   },
+   "xyz": [
+    0,
+    0,
+    0.08
+   ],
+   "col": "shell2",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "chassis",
+   "dy": 0.06,
+   "label": "chassis"
+  },
+  {
+   "name": "bumper",
+   "link": "base_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.173,
+    "r2": 0.173,
+    "h": 0.05,
+    "seg": 96,
+    "arc": [
+     -1.427996660722633,
+     2.855993321445266
+    ],
+    "t": 0.004
+   },
+   "xyz": [
+    0,
+    0,
+    0.07
+   ],
+   "col": "mid",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "chassis",
+   "dy": 0.06,
+   "label": "front bumper"
+  },
+  {
+   "name": "contact_left",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.004,
+    "sy": 0.03,
+    "sz": 0.012
+   },
+   "xyz": [
+    -0.171,
+    0.04,
+    0.06
+   ],
+   "col": "metal",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "chassis",
+   "dy": 0.06,
+   "label": "charging contact"
+  },
+  {
+   "name": "contact_right",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.004,
+    "sy": 0.03,
+    "sz": 0.012
+   },
+   "xyz": [
+    -0.171,
+    -0.04,
+    0.06
+   ],
+   "col": "metal",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "chassis",
+   "dy": 0.06,
+   "label": "charging contact"
+  },
+  {
+   "name": "exhaust_grille",
+   "link": "base_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.1735,
+    "r2": 0.1735,
+    "h": 0.05,
+    "seg": 96,
+    "arc": [
+     2.3215926535897933,
+     1.64
+    ],
+    "t": 0.003
+   },
+   "xyz": [
+    0,
+    0,
+    0.1
+   ],
+   "col": "vent",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "vent",
+   "dy": 0.06,
+   "label": "exhaust grille: cleaned air out"
+  },
+  {
+   "name": "hepa_filter",
+   "link": "base_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.04,
+    "r2": 0.04,
+    "h": 0.03,
+    "seg": 40
+   },
+   "xyz": [
+    -0.135,
+    0,
+    0.08
+   ],
+   "col": "filter",
+   "axis": "x",
+   "internal": true,
+   "glow": false,
+   "group": "vent",
+   "dy": 0.06,
+   "label": "HEPA and carbon filter"
+  },
+  {
+   "name": "lidar_band",
+   "link": "base_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.166,
+    "r2": 0.166,
+    "h": 0.03,
+    "seg": 96
+   },
+   "xyz": [
+    0,
+    0,
+    0.145
+   ],
+   "col": "lidar",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "lidar",
+   "dy": 0.14,
+   "label": "laser scanner window"
+  },
+  {
+   "name": "battery",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.16,
+    "sy": 0.11,
+    "sz": 0.05
+   },
+   "xyz": [
+    -0.03,
+    0,
+    0.07
+   ],
+   "col": "cell",
+   "axis": "z",
+   "internal": true,
+   "glow": false,
+   "group": "battery",
+   "dy": 0.34,
+   "label": "battery, 14.4 V, about 100 Wh"
+  },
+  {
+   "name": "computer",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.1,
+    "sy": 0.08,
+    "sz": 0.012
+   },
+   "xyz": [
+    0.02,
+    0,
+    0.22
+   ],
+   "col": "board",
+   "axis": "z",
+   "internal": true,
+   "glow": false,
+   "group": "compute",
+   "dy": 0.5,
+   "label": "on-board computer"
+  },
+  {
+   "name": "processor",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.03,
+    "sy": 0.03,
+    "sz": 0.008
+   },
+   "xyz": [
+    0.02,
+    0,
+    0.23
+   ],
+   "col": "dark",
+   "axis": "z",
+   "internal": true,
+   "glow": false,
+   "group": "compute",
+   "dy": 0.5,
+   "label": "processor"
+  },
+  {
+   "name": "body",
+   "link": "base_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.164,
+    "r2": 0.15,
+    "h": 0.19,
+    "seg": 96
+   },
+   "xyz": [
+    0,
+    0,
+    0.256
+   ],
+   "col": "shell",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "body",
+   "dy": 0.66,
+   "label": "upper body"
+  },
+  {
+   "name": "deck",
+   "link": "base_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.15,
+    "r2": 0.148,
+    "h": 0.012,
+    "seg": 96
+   },
+   "xyz": [
+    0,
+    0,
+    0.349
+   ],
+   "col": "shell2",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "body",
+   "dy": 0.66,
+   "label": "deck"
+  },
+  {
+   "name": "light_ring",
+   "link": "base_link",
+   "shape": "torus",
+   "dims": {
+    "R": 0.151,
+    "r": 0.0065,
+    "seg": 96,
+    "tube": 12
+   },
+   "xyz": [
+    0,
+    0,
+    0.33999999999999997
+   ],
+   "col": "indigo",
+   "axis": "z",
+   "internal": false,
+   "glow": true,
+   "group": "ring",
+   "dy": 0.66,
+   "label": "light ring"
+  },
+  {
+   "name": "speaker_grille",
+   "link": "base_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.1644684210526316,
+    "r2": 0.16152105263157895,
+    "h": 0.04,
+    "seg": 64,
+    "arc": [
+     -0.7,
+     1.4
+    ],
+    "t": 0.003
+   },
+   "xyz": [
+    0,
+    0,
+    0.195
+   ],
+   "col": "mid",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "ring",
+   "dy": 0.66,
+   "label": "speaker and microphones"
+  },
+  {
+   "name": "cell_window",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.03,
+    "sy": 0.12,
+    "sz": 0.07
+   },
+   "xyz": [
+    0.148,
+    0,
+    0.27
+   ],
+   "col": "bay",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "bio",
+   "dy": 0.66,
+   "label": "Living Air Sensor bay"
+  },
+  {
+   "name": "cartridge",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.075,
+    "sy": 0.11,
+    "sz": 0.006
+   },
+   "xyz": [
+    0.07,
+    0,
+    0.29
+   ],
+   "col": "glass",
+   "axis": "z",
+   "internal": true,
+   "glow": false,
+   "group": "bio",
+   "dy": 0.98,
+   "label": "8-well living-cell cartridge"
+  },
+  {
+   "name": "well_1",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.022,
+    "sy": 0.022,
+    "sz": 0.008
+   },
+   "xyz": [
+    0.08700000000000001,
+    0.039,
+    0.295
+   ],
+   "col": "well",
+   "axis": "z",
+   "internal": true,
+   "glow": true,
+   "group": "bio",
+   "dy": 0.98,
+   "label": "exposed well"
+  },
+  {
+   "name": "well_2",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.022,
+    "sy": 0.022,
+    "sz": 0.008
+   },
+   "xyz": [
+    0.08700000000000001,
+    0.013000000000000001,
+    0.295
+   ],
+   "col": "well",
+   "axis": "z",
+   "internal": true,
+   "glow": true,
+   "group": "bio",
+   "dy": 0.98,
+   "label": "exposed well"
+  },
+  {
+   "name": "well_3",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.022,
+    "sy": 0.022,
+    "sz": 0.008
+   },
+   "xyz": [
+    0.08700000000000001,
+    -0.012999999999999998,
+    0.295
+   ],
+   "col": "well",
+   "axis": "z",
+   "internal": true,
+   "glow": true,
+   "group": "bio",
+   "dy": 0.98,
+   "label": "exposed well"
+  },
+  {
+   "name": "well_4",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.022,
+    "sy": 0.022,
+    "sz": 0.008
+   },
+   "xyz": [
+    0.08700000000000001,
+    -0.039,
+    0.295
+   ],
+   "col": "well",
+   "axis": "z",
+   "internal": true,
+   "glow": true,
+   "group": "bio",
+   "dy": 0.98,
+   "label": "exposed well"
+  },
+  {
+   "name": "well_5",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.022,
+    "sy": 0.022,
+    "sz": 0.008
+   },
+   "xyz": [
+    0.053000000000000005,
+    0.039,
+    0.295
+   ],
+   "col": "well",
+   "axis": "z",
+   "internal": true,
+   "glow": true,
+   "group": "bio",
+   "dy": 0.98,
+   "label": "control and reference well"
+  },
+  {
+   "name": "well_6",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.022,
+    "sy": 0.022,
+    "sz": 0.008
+   },
+   "xyz": [
+    0.053000000000000005,
+    0.013000000000000001,
+    0.295
+   ],
+   "col": "well",
+   "axis": "z",
+   "internal": true,
+   "glow": true,
+   "group": "bio",
+   "dy": 0.98,
+   "label": "control and reference well"
+  },
+  {
+   "name": "well_7",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.022,
+    "sy": 0.022,
+    "sz": 0.008
+   },
+   "xyz": [
+    0.053000000000000005,
+    -0.012999999999999998,
+    0.295
+   ],
+   "col": "well",
+   "axis": "z",
+   "internal": true,
+   "glow": true,
+   "group": "bio",
+   "dy": 0.98,
+   "label": "control and reference well"
+  },
+  {
+   "name": "well_8",
+   "link": "base_link",
+   "shape": "box",
+   "dims": {
+    "sx": 0.022,
+    "sy": 0.022,
+    "sz": 0.008
+   },
+   "xyz": [
+    0.053000000000000005,
+    -0.039,
+    0.295
+   ],
+   "col": "well",
+   "axis": "z",
+   "internal": true,
+   "glow": true,
+   "group": "bio",
+   "dy": 0.98,
+   "label": "control and reference well"
+  },
+  {
+   "name": "sampler",
+   "link": "base_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.024,
+    "r2": 0.024,
+    "h": 0.05,
+    "seg": 32
+   },
+   "xyz": [
+    -0.175,
+    0,
+    0.25
+   ],
+   "col": "mid",
+   "axis": "x",
+   "internal": false,
+   "glow": false,
+   "group": "sampler",
+   "dy": 0.66,
+   "label": "filter sampler"
+  },
+  {
+   "name": "sampler_face",
+   "link": "base_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.019,
+    "r2": 0.019,
+    "h": 0.004,
+    "seg": 32
+   },
+   "xyz": [
+    -0.201,
+    0,
+    0.25
+   ],
+   "col": "accent",
+   "axis": "x",
+   "internal": false,
+   "glow": false,
+   "group": "sampler",
+   "dy": 0.66,
+   "label": "sampler filter face"
+  },
+  {
+   "name": "stage_1",
+   "link": "mast_stage_1",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.024,
+    "r2": 0.024,
+    "h": 0.32,
+    "seg": 32
+   },
+   "xyz": [
+    0,
+    0,
+    0.16
+   ],
+   "col": "stage",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "mast",
+   "dy": 0.0,
+   "label": "mast stage 1"
+  },
+  {
+   "name": "stage_2",
+   "link": "mast_stage_2",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.0195,
+    "r2": 0.0195,
+    "h": 0.32,
+    "seg": 32
+   },
+   "xyz": [
+    0,
+    0,
+    0.16
+   ],
+   "col": "metal",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "mast",
+   "dy": 0.0,
+   "label": "mast stage 2"
+  },
+  {
+   "name": "stage_3",
+   "link": "mast_stage_3",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.015,
+    "r2": 0.015,
+    "h": 0.32,
+    "seg": 32
+   },
+   "xyz": [
+    0,
+    0,
+    0.16
+   ],
+   "col": "stage",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "mast",
+   "dy": 0.0,
+   "label": "mast stage 3"
+  },
+  {
+   "name": "stage_4",
+   "link": "mast_stage_4",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.0105,
+    "r2": 0.0105,
+    "h": 0.32,
+    "seg": 32
+   },
+   "xyz": [
+    0,
+    0,
+    0.16
+   ],
+   "col": "metal",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "mast",
+   "dy": 0.0,
+   "label": "mast stage 4"
+  },
+  {
+   "name": "head_body",
+   "link": "head_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.046,
+    "r2": 0.05,
+    "h": 0.06,
+    "seg": 48
+   },
+   "xyz": [
+    0,
+    0,
+    -0.008
+   ],
+   "col": "shell",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "head",
+   "dy": 0.0,
+   "label": "sensor head"
+  },
+  {
+   "name": "air_inlet",
+   "link": "head_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.0505,
+    "r2": 0.0505,
+    "h": 0.014,
+    "seg": 48
+   },
+   "xyz": [
+    0,
+    0,
+    0.026
+   ],
+   "col": "dark",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "head",
+   "dy": 0.0,
+   "label": "air inlet slots"
+  },
+  {
+   "name": "head_cap",
+   "link": "head_link",
+   "shape": "cyl",
+   "dims": {
+    "r1": 0.05,
+    "r2": 0.044,
+    "h": 0.01,
+    "seg": 48
+   },
+   "xyz": [
+    0,
+    0,
+    0.038
+   ],
+   "col": "shell2",
+   "axis": "z",
+   "internal": false,
+   "glow": false,
+   "group": "head",
+   "dy": 0.0,
+   "label": "head cap"
+  },
+  {
+   "name": "status_led",
+   "link": "head_link",
+   "shape": "sphere",
+   "dims": {
+    "r": 0.006,
+    "seg": 12
+   },
+   "xyz": [
+    0.049,
+    0,
+    -0.01
+   ],
+   "col": "accent",
+   "axis": "z",
+   "internal": false,
+   "glow": true,
+   "group": "head",
+   "dy": 0.0,
+   "label": "status light"
+  }
+ ],
+ "links": {
+  "base_footprint": null,
+  "base_link": {
+   "m": 4.2,
+   "com": [
+    -0.015,
+    0,
+    0.12
+   ]
+  },
+  "wheel_left_link": {
+   "m": 0.28,
+   "com": [
+    0,
+    0,
+    0
+   ]
+  },
+  "wheel_right_link": {
+   "m": 0.28,
+   "com": [
+    0,
+    0,
+    0
+   ]
+  },
+  "caster_front_link": {
+   "m": 0.02,
+   "com": [
+    0,
+    0,
+    0
+   ]
+  },
+  "caster_rear_link": {
+   "m": 0.02,
+   "com": [
+    0,
+    0,
+    0
+   ]
+  },
+  "head_link": {
+   "m": 0.3,
+   "com": [
+    0,
+    0,
+    0.0025
+   ]
+  },
+  "lidar_link": null,
+  "imu_link": null,
+  "cartridge_link": null,
+  "mast_stage_1": {
+   "m": 0.1303,
+   "com": [
+    0,
+    0,
+    0.16
+   ]
+  },
+  "mast_stage_2": {
+   "m": 0.1059,
+   "com": [
+    0,
+    0,
+    0.16
+   ]
+  },
+  "mast_stage_3": {
+   "m": 0.0814,
+   "com": [
+    0,
+    0,
+    0.16
+   ]
+  },
+  "mast_stage_4": {
+   "m": 0.057,
+   "com": [
+    0,
+    0,
+    0.16
+   ]
+  }
+ },
+ "joints": [
+  {
+   "name": "base_joint",
+   "type": "fixed",
+   "parent": "base_footprint",
+   "child": "base_link",
+   "xyz": [
+    0,
+    0,
+    0
+   ],
+   "axis": null,
+   "limit": null
+  },
+  {
+   "name": "wheel_left_joint",
+   "type": "continuous",
+   "parent": "base_link",
+   "child": "wheel_left_link",
+   "xyz": [
+    -0.02,
+    0.152,
+    0.045
+   ],
+   "axis": [
+    0,
+    1,
+    0
+   ],
+   "limit": null
+  },
+  {
+   "name": "wheel_right_joint",
+   "type": "continuous",
+   "parent": "base_link",
+   "child": "wheel_right_link",
+   "xyz": [
+    -0.02,
+    -0.152,
+    0.045
+   ],
+   "axis": [
+    0,
+    1,
+    0
+   ],
+   "limit": null
+  },
+  {
+   "name": "caster_front_joint",
+   "type": "fixed",
+   "parent": "base_link",
+   "child": "caster_front_link",
+   "xyz": [
+    0.12,
+    0,
+    0.018
+   ],
+   "axis": null,
+   "limit": null
+  },
+  {
+   "name": "caster_rear_joint",
+   "type": "fixed",
+   "parent": "base_link",
+   "child": "caster_rear_link",
+   "xyz": [
+    -0.13,
+    0,
+    0.0185
+   ],
+   "axis": null,
+   "limit": null
+  },
+  {
+   "name": "mast_joint_1",
+   "type": "prismatic",
+   "parent": "base_link",
+   "child": "mast_stage_1",
+   "xyz": [
+    0,
+    0,
+    0.032
+   ],
+   "axis": [
+    0,
+    0,
+    1
+   ],
+   "limit": {
+    "lower": 0.0,
+    "upper": 0.3,
+    "effort": 60.0,
+    "velocity": 0.0625
+   }
+  },
+  {
+   "name": "mast_joint_2",
+   "type": "prismatic",
+   "parent": "mast_stage_1",
+   "child": "mast_stage_2",
+   "xyz": [
+    0,
+    0,
+    0.003
+   ],
+   "axis": [
+    0,
+    0,
+    1
+   ],
+   "limit": {
+    "lower": 0.0,
+    "upper": 0.3,
+    "effort": 60.0,
+    "velocity": 0.0625
+   }
+  },
+  {
+   "name": "mast_joint_3",
+   "type": "prismatic",
+   "parent": "mast_stage_2",
+   "child": "mast_stage_3",
+   "xyz": [
+    0,
+    0,
+    0.003
+   ],
+   "axis": [
+    0,
+    0,
+    1
+   ],
+   "limit": {
+    "lower": 0.0,
+    "upper": 0.3,
+    "effort": 60.0,
+    "velocity": 0.0625
+   }
+  },
+  {
+   "name": "mast_joint_4",
+   "type": "prismatic",
+   "parent": "mast_stage_3",
+   "child": "mast_stage_4",
+   "xyz": [
+    0,
+    0,
+    0.003
+   ],
+   "axis": [
+    0,
+    0,
+    1
+   ],
+   "limit": {
+    "lower": 0.0,
+    "upper": 0.3,
+    "effort": 60.0,
+    "velocity": 0.0625
+   }
+  },
+  {
+   "name": "head_joint",
+   "type": "fixed",
+   "parent": "mast_stage_4",
+   "child": "head_link",
+   "xyz": [
+    0,
+    0,
+    0.359
+   ],
+   "axis": null,
+   "limit": null
+  },
+  {
+   "name": "lidar_joint",
+   "type": "fixed",
+   "parent": "base_link",
+   "child": "lidar_link",
+   "xyz": [
+    0,
+    0,
+    0.145
+   ],
+   "axis": null,
+   "limit": null
+  },
+  {
+   "name": "imu_joint",
+   "type": "fixed",
+   "parent": "base_link",
+   "child": "imu_link",
+   "xyz": [
+    0,
+    0,
+    0.1
+   ],
+   "axis": null,
+   "limit": null
+  },
+  {
+   "name": "cartridge_joint",
+   "type": "fixed",
+   "parent": "base_link",
+   "child": "cartridge_link",
+   "xyz": [
+    0.07,
+    0,
+    0.29
+   ],
+   "axis": null,
+   "limit": null
+  }
+ ],
+ "dims": {
+  "diameter": 0.346,
+  "height_stowed": 0.443,
+  "height_max": 1.643,
+  "deck": 0.355,
+  "wheel_d": 0.09,
+  "track": 0.304,
+  "mast_travel": 1.2,
+  "stage": 0.32,
+  "stages": 4,
+  "nose": [
+   0.4,
+   1.1,
+   1.6
+  ],
+  "lidar": {
+   "samples": 360,
+   "rmin": 0.2,
+   "rmax": 8.0,
+   "rate": 10,
+   "z": 0.145
+  },
+  "mass": 5.47,
+  "v_max": 0.3,
+  "w_max": 1.6,
+  "a_max": 0.5,
+  "mast_v": 0.25
+ },
+ "patrol": [
+  [
+   1.0,
+   "/cmd_vel",
+   "v",
+   0.25
+  ],
+  [
+   6.85,
+   "/cmd_vel",
+   "v",
+   0.0
+  ],
+  [
+   7.5,
+   "/cmd_vel",
+   "w",
+   0.8
+  ],
+  [
+   8.335,
+   "/cmd_vel",
+   "w",
+   0.0
+  ],
+  [
+   8.6,
+   "/cmd_vel",
+   "v",
+   0.25
+  ],
+  [
+   13.69,
+   "/cmd_vel",
+   "v",
+   0.0
+  ],
+  [
+   14.5,
+   "/mast/cmd",
+   "m",
+   0.175
+  ],
+  [
+   18.5,
+   "/mast/cmd",
+   "m",
+   0.3
+  ],
+  [
+   22.5,
+   "/mast/cmd",
+   "m",
+   0.0
+  ],
+  [
+   28.0,
+   "/cmd_vel",
+   "w",
+   -0.8
+  ],
+  [
+   29.333,
+   "/cmd_vel",
+   "w",
+   0.0
+  ],
+  [
+   29.6,
+   "/cmd_vel",
+   "v",
+   0.25
+  ],
+  [
+   38.09,
+   "/cmd_vel",
+   "v",
+   0.0
+  ],
+  [
+   39.0,
+   "/mast/cmd",
+   "m",
+   0.175
+  ],
+  [
+   45.0,
+   "/mast/cmd",
+   "m",
+   0.0
+  ],
+  [
+   51.0,
+   "/cmd_vel",
+   "w",
+   -0.8
+  ],
+  [
+   51.761,
+   "/cmd_vel",
+   "w",
+   0.0
+  ],
+  [
+   52.0,
+   "/cmd_vel",
+   "v",
+   0.25
+  ],
+  [
+   59.35,
+   "/cmd_vel",
+   "v",
+   0.0
+  ],
+  [
+   60.0,
+   "/mast/cmd",
+   "m",
+   0.175
+  ],
+  [
+   64.0,
+   "/mast/cmd",
+   "m",
+   0.3
+  ],
+  [
+   68.0,
+   "/mast/cmd",
+   "m",
+   0.0
+  ],
+  [
+   75.0,
+   "/cmd_vel",
+   "w",
+   0.8
+  ],
+  [
+   77.0,
+   "/cmd_vel",
+   "w",
+   0.0
+  ]
+ ],
+ "files": [
+  {
+   "path": "docs/gazebo_run.json",
+   "bytes": 97117
+  },
+  {
+   "path": "docs/oddech_general_arrangement.pdf",
+   "bytes": 39196
+  },
+  {
+   "path": "docs/oddech_general_arrangement.png",
+   "bytes": 252391
+  },
+  {
+   "path": "docs/oddech_general_arrangement.svg",
+   "bytes": 152382
+  },
+  {
+   "path": "oddech_description/CMakeLists.txt",
+   "bytes": 386
+  },
+  {
+   "path": "oddech_description/hooks/oddech_description.dsv.in",
+   "bytes": 49
+  },
+  {
+   "path": "oddech_description/launch/display.launch.py",
+   "bytes": 1027
+  },
+  {
+   "path": "oddech_description/meshes/parts/air_inlet.stl",
+   "bytes": 9684
+  },
+  {
+   "path": "oddech_description/meshes/parts/battery.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/body.stl",
+   "bytes": 19284
+  },
+  {
+   "path": "oddech_description/meshes/parts/bumper.stl",
+   "bytes": 17884
+  },
+  {
+   "path": "oddech_description/meshes/parts/cartridge.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/caster_front.stl",
+   "bytes": 18084
+  },
+  {
+   "path": "oddech_description/meshes/parts/caster_rear.stl",
+   "bytes": 18084
+  },
+  {
+   "path": "oddech_description/meshes/parts/cell_window.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/chassis.stl",
+   "bytes": 19284
+  },
+  {
+   "path": "oddech_description/meshes/parts/computer.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/contact_left.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/contact_right.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/deck.stl",
+   "bytes": 19284
+  },
+  {
+   "path": "oddech_description/meshes/parts/exhaust_grille.stl",
+   "bytes": 10684
+  },
+  {
+   "path": "oddech_description/meshes/parts/head_body.stl",
+   "bytes": 9684
+  },
+  {
+   "path": "oddech_description/meshes/parts/head_cap.stl",
+   "bytes": 9684
+  },
+  {
+   "path": "oddech_description/meshes/parts/hepa_filter.stl",
+   "bytes": 8084
+  },
+  {
+   "path": "oddech_description/meshes/parts/hub_left.stl",
+   "bytes": 6484
+  },
+  {
+   "path": "oddech_description/meshes/parts/hub_mark_left.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/hub_mark_right.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/hub_right.stl",
+   "bytes": 6484
+  },
+  {
+   "path": "oddech_description/meshes/parts/lidar_band.stl",
+   "bytes": 19284
+  },
+  {
+   "path": "oddech_description/meshes/parts/light_ring.stl",
+   "bytes": 115284
+  },
+  {
+   "path": "oddech_description/meshes/parts/processor.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/sampler.stl",
+   "bytes": 6484
+  },
+  {
+   "path": "oddech_description/meshes/parts/sampler_face.stl",
+   "bytes": 6484
+  },
+  {
+   "path": "oddech_description/meshes/parts/speaker_grille.stl",
+   "bytes": 6284
+  },
+  {
+   "path": "oddech_description/meshes/parts/stage_1.stl",
+   "bytes": 6484
+  },
+  {
+   "path": "oddech_description/meshes/parts/stage_2.stl",
+   "bytes": 6484
+  },
+  {
+   "path": "oddech_description/meshes/parts/stage_3.stl",
+   "bytes": 6484
+  },
+  {
+   "path": "oddech_description/meshes/parts/stage_4.stl",
+   "bytes": 6484
+  },
+  {
+   "path": "oddech_description/meshes/parts/status_led.stl",
+   "bytes": 6084
+  },
+  {
+   "path": "oddech_description/meshes/parts/tyre_left.stl",
+   "bytes": 9684
+  },
+  {
+   "path": "oddech_description/meshes/parts/tyre_right.stl",
+   "bytes": 9684
+  },
+  {
+   "path": "oddech_description/meshes/parts/well_1.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/well_2.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/well_3.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/well_4.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/well_5.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/well_6.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/well_7.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/parts/well_8.stl",
+   "bytes": 684
+  },
+  {
+   "path": "oddech_description/meshes/stl/base.stl",
+   "bytes": 241284
+  },
+  {
+   "path": "oddech_description/meshes/stl/caster.stl",
+   "bytes": 18084
+  },
+  {
+   "path": "oddech_description/meshes/stl/head.stl",
+   "bytes": 34884
+  },
+  {
+   "path": "oddech_description/meshes/stl/mast_stage_1.stl",
+   "bytes": 6484
+  },
+  {
+   "path": "oddech_description/meshes/stl/mast_stage_2.stl",
+   "bytes": 6484
+  },
+  {
+   "path": "oddech_description/meshes/stl/mast_stage_3.stl",
+   "bytes": 6484
+  },
+  {
+   "path": "oddech_description/meshes/stl/mast_stage_4.stl",
+   "bytes": 6484
+  },
+  {
+   "path": "oddech_description/meshes/stl/wheel.stl",
+   "bytes": 16684
+  },
+  {
+   "path": "oddech_description/meshes/visual/base.dae",
+   "bytes": 820349
+  },
+  {
+   "path": "oddech_description/meshes/visual/caster.dae",
+   "bytes": 73636
+  },
+  {
+   "path": "oddech_description/meshes/visual/head.dae",
+   "bytes": 108959
+  },
+  {
+   "path": "oddech_description/meshes/visual/mast_stage_1.dae",
+   "bytes": 18643
+  },
+  {
+   "path": "oddech_description/meshes/visual/mast_stage_2.dae",
+   "bytes": 18768
+  },
+  {
+   "path": "oddech_description/meshes/visual/mast_stage_3.dae",
+   "bytes": 18728
+  },
+  {
+   "path": "oddech_description/meshes/visual/mast_stage_4.dae",
+   "bytes": 19078
+  },
+  {
+   "path": "oddech_description/meshes/visual/wheel.dae",
+   "bytes": 48939
+  },
+  {
+   "path": "oddech_description/package.xml",
+   "bytes": 954
+  },
+  {
+   "path": "oddech_description/rviz/oddech.rviz",
+   "bytes": 1290
+  },
+  {
+   "path": "oddech_description/urdf/oddech.gazebo.xacro",
+   "bytes": 3800
+  },
+  {
+   "path": "oddech_description/urdf/oddech.urdf",
+   "bytes": 11907
+  },
+  {
+   "path": "oddech_description/urdf/oddech.urdf.xacro",
+   "bytes": 8646
+  },
+  {
+   "path": "oddech_gazebo/CMakeLists.txt",
+   "bytes": 395
+  },
+  {
+   "path": "oddech_gazebo/config/ros_gz_bridge.yaml",
+   "bytes": 1653
+  },
+  {
+   "path": "oddech_gazebo/hooks/oddech_gazebo.dsv.in",
+   "bytes": 70
+  },
+  {
+   "path": "oddech_gazebo/launch/sim.launch.py",
+   "bytes": 2968
+  },
+  {
+   "path": "oddech_gazebo/models/oddech/meshes/base.dae",
+   "bytes": 820349
+  },
+  {
+   "path": "oddech_gazebo/models/oddech/meshes/caster.dae",
+   "bytes": 73636
+  },
+  {
+   "path": "oddech_gazebo/models/oddech/meshes/head.dae",
+   "bytes": 108959
+  },
+  {
+   "path": "oddech_gazebo/models/oddech/meshes/mast_stage_1.dae",
+   "bytes": 18643
+  },
+  {
+   "path": "oddech_gazebo/models/oddech/meshes/mast_stage_2.dae",
+   "bytes": 18768
+  },
+  {
+   "path": "oddech_gazebo/models/oddech/meshes/mast_stage_3.dae",
+   "bytes": 18728
+  },
+  {
+   "path": "oddech_gazebo/models/oddech/meshes/mast_stage_4.dae",
+   "bytes": 19078
+  },
+  {
+   "path": "oddech_gazebo/models/oddech/meshes/wheel.dae",
+   "bytes": 48939
+  },
+  {
+   "path": "oddech_gazebo/models/oddech/model.config",
+   "bytes": 417
+  },
+  {
+   "path": "oddech_gazebo/models/oddech/model.sdf",
+   "bytes": 11004
+  },
+  {
+   "path": "oddech_gazebo/models/oddech_flat/model.config",
+   "bytes": 446
+  },
+  {
+   "path": "oddech_gazebo/models/oddech_flat/model.sdf",
+   "bytes": 15512
+  },
+  {
+   "path": "oddech_gazebo/package.xml",
+   "bytes": 1033
+  },
+  {
+   "path": "oddech_gazebo/worlds/oddech_demo.sdf",
+   "bytes": 4816
+  },
+  {
+   "path": "oddech_gazebo/worlds/oddech_flat.sdf",
+   "bytes": 2246
+  },
+  {
+   "path": "oddech_gazebo/worlds/oddech_patrol.sdf",
+   "bytes": 8993
+  },
+  {
+   "path": "README.md",
+   "bytes": 7554
+  },
+  {
+   "path": "tools/build_model.py",
+   "bytes": 57755
+  },
+  {
+   "path": "tools/check_model.py",
+   "bytes": 6656
+  },
+  {
+   "path": "tools/gz_log_to_replay.py",
+   "bytes": 3426
+  }
+ ]
+}

@@ -1,103 +1,89 @@
-/* Oddech robot: a Three.js model shared by the robot viewer (section 04) and the simulation (section 06),
-   and the viewer itself. Units are metres; the origin is on the floor under the robot's centre; local +X is forward.
-   Geometry follows the design targets on the page: body diameter 0.34 m, stowed height 0.42 m, sensor inlet 0.40 to 1.60 m
-   on a four-stage telescoping mast (stages 0.32 m long, so they stow inside the chassis and upper body). */
+/* Oddech robot: a Three.js model shared by the robot viewer (section 04), the simulation (section 06), the blueprint and
+   the Gazebo twin (section 04·b), and the viewer itself. It is drawn from the same part list as the Gazebo model:
+   gazebo/blueprint.json (window.ODDECH_ROBOT), written by gazebo/tools/build_model.py. That list uses ROS frames
+   (x forward, y left, z up); three.js here is y up, so a ROS point (x, y, z) is drawn at (x, z, -y). Units are metres;
+   the origin is on the floor under the robot's centre; local +X is forward. */
 (function () {
   "use strict";
-  const T = window.THREE;
-  const COL = { shell: 0xF1ECE3, shell2: 0xE4DED3, dark: 0x26231F, mid: 0x5E5850, metal: 0xB7B0A4, accent: 0xB4532A, indigo: 0x2E4A6E, board: 0x2F4236, cell: 0x8C8378 };
-  const DECK = 0.352, STAGE = 0.32;
+  const T = window.THREE, R = window.ODDECH_ROBOT;
+  const COL = {}; for (const k in R.colors) COL[k] = parseInt(R.colors[k], 16);
+  const STOWED = 0.4;                                     // nose height with the mast down
+  const P3 = v => new T.Vector3(v[0], v[2], -v[1]);       // ROS point -> three.js
 
-  function M(color, o) { return new T.MeshStandardMaterial(Object.assign({ color, roughness: 0.5, metalness: 0.04 }, o || {})); }
+  function linkOrigin(name, q) {                          // a link's origin (ROS) at mast extension q per stage
+    if (name === "base_footprint") return [0, 0, 0];
+    const j = R.joints.find(x => x.child === name), o = linkOrigin(j.parent, q);
+    return [o[0] + j.xyz[0], o[1] + j.xyz[1], o[2] + j.xyz[2] + (j.type === "prismatic" ? q : 0)];
+  }
+  function partGeometry(p) {
+    const d = p.dims; let g;
+    if (p.shape === "cyl") {
+      const arc = d.arc;                                  // ROS azimuth from +x towards +y = three.js theta - pi/2
+      g = arc ? new T.CylinderGeometry(d.r2, d.r1, d.h, Math.max(8, Math.round(d.seg * arc[1] / (2 * Math.PI))), 1, true, arc[0] + Math.PI / 2, arc[1])
+        : new T.CylinderGeometry(d.r2, d.r1, d.h, d.seg);
+      if (p.axis === "x") g.rotateZ(-Math.PI / 2); else if (p.axis === "y") g.rotateX(-Math.PI / 2);
+    } else if (p.shape === "box") g = new T.BoxGeometry(d.sx, d.sz, d.sy);
+    else if (p.shape === "sphere") g = new T.SphereGeometry(d.r, d.seg, Math.max(6, d.seg >> 1));
+    else { g = new T.TorusGeometry(d.R, d.r, d.tube, d.seg); g.rotateX(Math.PI / 2); }
+    return g;
+  }
+  const MAT = {};
+  function partMaterial(p) {
+    const key = p.col + (p.glow ? "*" : "") + (p.dims.arc ? "~" : "");
+    if (MAT[key]) return MAT[key];
+    const c = COL[p.col], o = { color: c, roughness: 0.45, metalness: 0.04 };
+    if (p.col === "metal") Object.assign(o, { metalness: 0.6, roughness: 0.32 });
+    if (p.col === "stage") Object.assign(o, { metalness: 0.3, roughness: 0.3 });
+    if (p.col === "lidar") Object.assign(o, { roughness: 0.15, metalness: 0.3, emissive: 0x1a1210 });
+    if (p.col === "bay") Object.assign(o, { roughness: 0.2, metalness: 0.2 });
+    if (p.col === "glass") Object.assign(o, { transparent: true, opacity: 0.55, roughness: 0.1 });
+    if (p.col === "dark" || p.col === "mid" || p.col === "vent") o.roughness = 0.7;
+    if (p.col === "filter") o.roughness = 0.95;
+    if (p.glow) Object.assign(o, { emissive: p.col === "well" ? 0xff8a5c : c, emissiveIntensity: p.col === "indigo" ? 1.2 : 0.7 });
+    if (p.dims.arc) o.side = T.DoubleSide;
+    return (MAT[key] = new T.MeshStandardMaterial(o));
+  }
 
   function buildRobot(opts) {
     opts = Object.assign({ sampler: true, shadows: true }, opts || {});
-    const g = new T.Group(), parts = {};
-    const add = (name, mesh, dy) => {
-      mesh.userData = { part: name, base: mesh.position.clone(), dy: dy || 0 };
-      if (opts.shadows) { mesh.castShadow = true; mesh.receiveShadow = true; }
-      g.add(mesh); (parts[name] = parts[name] || []).push(mesh);
-      return mesh;
+    const g = new T.Group(), parts = {}, links = {}, shells = [];
+    const linkGroup = name => {
+      if (name === "base_link") return g;
+      if (!links[name]) { links[name] = new T.Group(); links[name].position.copy(P3(linkOrigin(name, 0))); g.add(links[name]); }
+      return links[name];
     };
-    const dark = M(COL.dark, { roughness: 0.6 }), metal = M(COL.metal, { metalness: 0.6, roughness: 0.32 });
-
-    // drive: two hub wheels and a front caster
-    const wheelG = new T.CylinderGeometry(0.045, 0.045, 0.028, 28);
-    for (const s of [-1, 1]) { const w = new T.Mesh(wheelG, dark); w.rotation.x = Math.PI / 2; w.position.set(-0.02, 0.045, s * 0.152); add("drive", w, 0); }
-    const caster = new T.Mesh(new T.SphereGeometry(0.018, 16, 12), metal); caster.position.set(0.12, 0.018, 0); add("drive", caster, 0);
-    // chassis and bumper
-    const chassisM = M(COL.shell2, { roughness: 0.45 });
-    const chassis = new T.Mesh(new T.CylinderGeometry(0.17, 0.168, 0.10, 64), chassisM); chassis.position.y = 0.08; add("chassis", chassis, 0.06);
-    const bumper = new T.Mesh(new T.CylinderGeometry(0.173, 0.173, 0.05, 64, 1, true, -Math.PI / 2.2, Math.PI / 1.1), M(COL.mid, { side: T.DoubleSide })); bumper.position.y = 0.07; add("chassis", bumper, 0.06);
-    // laser scanner band
-    const lidar = new T.Mesh(new T.CylinderGeometry(0.166, 0.166, 0.03, 64), M(0x121110, { roughness: 0.15, metalness: 0.3, emissive: 0x1a1210 })); lidar.position.y = 0.145; add("lidar", lidar, 0.14);
-    // internals, seen in the exploded view
-    const battery = new T.Mesh(new T.BoxGeometry(0.16, 0.05, 0.11), M(COL.cell, { roughness: 0.7 })); battery.position.set(-0.03, 0.07, 0); add("battery", battery, 0.34);
-    const board = new T.Mesh(new T.BoxGeometry(0.10, 0.012, 0.08), M(COL.board, { roughness: 0.5 })); board.position.set(0.02, 0.22, 0); add("compute", board, 0.5);
-    const chip = new T.Mesh(new T.BoxGeometry(0.03, 0.008, 0.03), dark); chip.position.set(0.02, 0.23, 0); add("compute", chip, 0.5);
-    // upper body, deck, light ring, speaker grille
-    const bodyM = M(COL.shell, { roughness: 0.38 }), deckM = M(COL.shell2, { roughness: 0.45 });
-    const body = new T.Mesh(new T.CylinderGeometry(0.15, 0.164, 0.19, 64), bodyM); body.position.y = 0.256; add("body", body, 0.66);
-    const deck = new T.Mesh(new T.CylinderGeometry(0.148, 0.15, 0.012, 64), deckM); deck.position.y = DECK - 0.003; add("body", deck, 0.66);
-    const ringM = new T.MeshStandardMaterial({ color: COL.indigo, emissive: COL.indigo, emissiveIntensity: 1.2, roughness: 0.3 });
-    const ring = new T.Mesh(new T.TorusGeometry(0.151, 0.0065, 10, 96), ringM); ring.rotation.x = Math.PI / 2; ring.position.y = DECK - 0.012; add("ring", ring, 0.66);
-    const grille = new T.Mesh(new T.CylinderGeometry(0.1505, 0.1505, 0.07, 32, 1, true, -0.55, 1.1), M(COL.mid, { side: T.DoubleSide, roughness: 0.8 }));
-    grille.rotation.y = Math.PI / 2; grille.position.y = 0.25; add("ring", grille, 0.66);
-    // mast: four nested stages
-    const stages = [];
-    [0.024, 0.0195, 0.015, 0.0105].forEach((r, k) => {
-      const s = new T.Mesh(new T.CylinderGeometry(r, r, STAGE, 24), k % 2 ? metal : M(0xD9D3C8, { metalness: 0.3, roughness: 0.3 }));
-      add("mast", s, 0.7); stages.push(s);
-    });
-    // sensor head: slotted inlet at the top, cap, status LED
-    const head = new T.Group(), headM = M(COL.shell, { roughness: 0.38 });
-    const hb = new T.Mesh(new T.CylinderGeometry(0.05, 0.046, 0.06, 40), headM); hb.position.y = -0.008; head.add(hb);
-    const slots = new T.Mesh(new T.CylinderGeometry(0.0505, 0.0505, 0.014, 40), dark); slots.position.y = 0.026; head.add(slots);
-    const cap = new T.Mesh(new T.CylinderGeometry(0.044, 0.05, 0.01, 40), M(COL.shell2)); cap.position.y = 0.038; head.add(cap);
-    const led = new T.Mesh(new T.SphereGeometry(0.006, 10, 8), new T.MeshBasicMaterial({ color: COL.accent })); led.position.set(0.049, -0.01, 0); head.add(led);
-    if (opts.shadows) head.traverse(m => { if (m.isMesh) m.castShadow = true; });
-    g.add(head); parts.head = [head];
-    // optional filter sampler on the back
-    if (opts.sampler) {
-      const smp = new T.Mesh(new T.CylinderGeometry(0.024, 0.024, 0.05, 28), M(COL.mid)); smp.rotation.z = Math.PI / 2; smp.position.set(-0.175, 0.25, 0); add("sampler", smp, 0.66);
-      const face = new T.Mesh(new T.CylinderGeometry(0.019, 0.019, 0.004, 28), M(COL.accent, { roughness: 0.6 })); face.rotation.z = Math.PI / 2; face.position.set(-0.201, 0.25, 0); add("sampler", face, 0.66);
+    for (const p of R.parts) {
+      if (!opts.sampler && p.group === "sampler") continue;
+      let m = partMaterial(p);
+      if (["body", "deck", "chassis"].indexOf(p.name) >= 0) { m = m.clone(); shells.push({ m, k: p.name === "chassis" ? 0.6 : 0.78 }); }
+      const mesh = new T.Mesh(partGeometry(p), m);         // shells fade in the exploded view, so they get their own material
+      mesh.position.copy(P3(p.xyz));
+      mesh.userData = { part: p.group, base: mesh.position.clone(), dy: p.dy || 0, spec: p };
+      if (opts.shadows) { mesh.castShadow = true; mesh.receiveShadow = !p.glow; }
+      linkGroup(p.link).add(mesh);
+      (parts[p.group] = parts[p.group] || []).push(mesh);
     }
-    // charging contacts
-    for (const s of [-1, 1]) { const c = new T.Mesh(new T.BoxGeometry(0.004, 0.012, 0.03), metal); c.position.set(-0.171, 0.06, s * 0.04); add("chassis", c, 0.06); }
-    // Living Air Sensor bay: a dark window on the front of the body, and the 8-well cartridge inside (lifts out when exploded)
-    const bay = new T.Mesh(new T.BoxGeometry(0.03, 0.07, 0.12), M(0x0d0c0b, { roughness: 0.2, metalness: 0.2 })); bay.position.set(0.148, 0.27, 0); add("bio", bay, 0.66);
-    const slide = new T.Mesh(new T.BoxGeometry(0.075, 0.006, 0.11), new T.MeshStandardMaterial({ color: 0xdfe6ec, transparent: true, opacity: 0.55, roughness: 0.1 }));
-    slide.position.set(0.07, 0.29, 0); add("bio", slide, 0.98);
-    const wellM = new T.MeshStandardMaterial({ color: 0xe9a0b4, emissive: 0xff8a5c, emissiveIntensity: 0.7, roughness: 0.5 });
-    for (let k = 0; k < 8; k++) { const w = new T.Mesh(new T.BoxGeometry(0.022, 0.008, 0.022), wellM); w.position.set(0.07 + (k < 4 ? 0.017 : -0.017), 0.295, -0.039 + (k % 4) * 0.026); add("bio", w, 0.98); }
-    // lungs: HEPA and carbon filter at the back of the chassis, behind an exhaust grille
-    const filt = new T.Mesh(new T.CylinderGeometry(0.04, 0.04, 0.03, 32), M(0xEDE8DF, { roughness: 0.95 })); filt.rotation.z = Math.PI / 2; filt.position.set(-0.135, 0.08, 0); add("vent", filt, 0.06);
-    const vent = new T.Mesh(new T.CylinderGeometry(0.1715, 0.1715, 0.05, 32, 1, true, 1.5 * Math.PI - 0.82, 1.64), M(0x3a3631, { side: T.DoubleSide, roughness: 0.9 }));
-    vent.position.y = 0.1; add("vent", vent, 0.06);
-
-    let mastH = 0.4, explode = 0;
+    const ring = parts.ring.find(m => m.userData.spec.name === "light_ring").material, head = links.head_link;
+    let mastH = STOWED, explode = 0;
     function place() {
-      const e = Math.max(0, mastH - 0.4), up = explode * 0.7;
+      const q = Math.max(0, mastH - STOWED) / 4, up = explode * 0.7;
       for (const name in parts) {
         if (name === "mast" || name === "head") continue;
         for (const m of parts[name]) m.position.y = m.userData.base.y + explode * m.userData.dy;
       }
-      stages.forEach((s, k) => { s.position.y = up + DECK + e * (k + 1) / 4 - STAGE / 2 + 0.003 * k; });
-      head.position.y = up + mastH;
-      const ex = explode > 0.01;
-      bodyM.transparent = deckM.transparent = chassisM.transparent = ex;
-      bodyM.opacity = deckM.opacity = 1 - 0.78 * explode; chassisM.opacity = 1 - 0.6 * explode;
-      bodyM.depthWrite = deckM.depthWrite = explode < 0.5;
+      for (const k of ["mast_stage_1", "mast_stage_2", "mast_stage_3", "mast_stage_4", "head_link"]) { links[k].position.copy(P3(linkOrigin(k, q))); links[k].position.y += up; }
+      for (const s of shells) { s.m.transparent = explode > 0.01; s.m.opacity = 1 - s.k * explode; s.m.depthWrite = s.k < 0.7 || explode < 0.5; }
     }
     place();
     return {
-      group: g, parts, head,
-      setMast(h) { mastH = Math.min(1.6, Math.max(0.4, h)); place(); },
+      group: g, parts, head, links,
+      setMast(h) { mastH = Math.min(1.6, Math.max(STOWED, h)); place(); },
       setExplode(t) { explode = t; place(); },
-      setRing(hex) { ringM.color.setHex(hex); ringM.emissive.setHex(hex); },
+      setRing(hex) { ring.color.setHex(hex); ring.emissive.setHex(hex); },
+      setWheels(l, r) { links.wheel_left_link.rotation.z = -l; links.wheel_right_link.rotation.z = -r; },   // ROS +y axle = three.js -z
       anchor(name) {                                       // a local point to pin a label on
         const up = explode * 0.7;
-        const A = { head: [0.0, mastH + 0.06 + up, 0], mast: [0.0, (DECK + mastH) / 2 + up, 0.03], ring: [0.13, DECK - 0.01 + explode * 0.66, 0.08],
+        const A = { head: [0.0, mastH + 0.06 + up, 0], mast: [0.0, (0.352 + mastH) / 2 + up, 0.03], ring: [0.13, 0.34 + explode * 0.66, 0.08],
           lidar: [0.16, 0.145 + explode * 0.14, 0.05], compute: [0.02, 0.23 + explode * 0.5, 0.05], battery: [-0.03, 0.07 + explode * 0.34, 0.06],
           drive: [-0.02, 0.045, 0.17], sampler: [-0.2, 0.25 + explode * 0.66, 0],
           bio: [0.165, 0.27 + explode * 0.66, 0.04], vent: [-0.172, 0.1 + explode * 0.06, 0.06] }[name];
@@ -175,5 +161,5 @@
     return { setMast(h) { mastGoal = h; }, setExplode(on) { explodeGoal = on ? 1 : 0; }, highlight(n) { active = n; }, setRing(hex) { rob.setRing(hex); } };
   }
 
-  window.OddechRobot = { buildRobot, viewer, COL };
+  window.OddechRobot = { buildRobot, viewer, COL, partGeometry, linkOrigin, P3 };
 })();

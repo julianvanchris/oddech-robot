@@ -13,7 +13,8 @@ import streamlit.components.v1 as components
 
 HERE = Path(__file__).parent
 SITE = HERE / "site"
-SCRIPTS = ["robot3d.js", "hero.js", "sensor.js", "bio.js", "scene.js", "results.js", "cloud.js", "deck.js", "main.js"]   # after three.min.js and sim.js
+SCRIPTS = ["robot3d.js", "hero.js", "sensor.js", "bio.js", "scene.js", "results.js", "cloud.js", "blueprint.js", "twin.js", "deck.js", "main.js"]   # after three.min.js and sim.js
+GZ = HERE / "gazebo"                             # the Gazebo package: the robot's part list, a recorded run, the drawing
 
 st.set_page_config(page_title="Oddech · a robot that reads the air", page_icon=str(HERE / "assets" / "icon.png"),
                    layout="wide", initial_sidebar_state="collapsed")
@@ -34,6 +35,7 @@ def page(stamp: float) -> str:
     safe = lambda s: s.replace("</script", "<\\/script")
     sim = read(SITE / "sim.js")
     data = (f"window.ODDECH_REFS={read(SITE / 'refs.json')};window.ODDECH_BENCH={read(SITE / 'bench.json')};"
+            f"window.ODDECH_ROBOT={read(GZ / 'blueprint.json')};window.ODDECH_GZRUN={read(GZ / 'docs' / 'gazebo_run.json')};"
             f"window.ODDECH_SIM_SRC={json.dumps(sim)};")
     scripts = [read(HERE / "vendor" / "three.min.js"), sim] + [read(SITE / f) for f in SCRIPTS]
     html = read(SITE / "index.html")
@@ -45,6 +47,10 @@ def page(stamp: float) -> str:
         f'srcdoc="{film}"></iframe>'
     )
     html = html.replace("<!--LIVING_AIR_SENSOR-->", film_frame)
+    sheet = read(GZ / "docs" / "oddech_general_arrangement.svg")
+    sheet = sheet[sheet.index("<svg"):].replace('width="1190.88pt" height="841.68pt"', 'class="bp-svg" role="img" aria-label="General arrangement drawing of Oddech OD-1"', 1)
+    assert html.count("<!--BLUEPRINT_SVG-->") == 1
+    html = html.replace("<!--BLUEPRINT_SVG-->", sheet)
     for mark, block in (("<!--STYLE-->", f"<style>{read(SITE / 'style.css')}</style>"),
                         ("<!--DATA-->", f"<script>{safe(data)}</script>"),
                         ("<!--SCRIPTS-->", "".join(f"<script>{safe(s)}</script>" for s in scripts))):
@@ -53,5 +59,6 @@ def page(stamp: float) -> str:
     return html
 
 
-stamp = max(p.stat().st_mtime for p in [*SITE.iterdir(), HERE / "vendor" / "three.min.js"])
+stamp = max(p.stat().st_mtime for p in [*SITE.iterdir(), HERE / "vendor" / "three.min.js", GZ / "blueprint.json", GZ / "docs" / "gazebo_run.json",
+                                         GZ / "docs" / "oddech_general_arrangement.svg"])
 components.html(page(stamp), height=900, scrolling=True)

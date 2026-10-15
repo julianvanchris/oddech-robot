@@ -486,13 +486,14 @@
         if (role === "reference") return this.F0[i] * lamp;
         return this.F0[i] + 3 * this.doseMass;
       });
-      // what the robot computes: lamp-corrected, blank-subtracted relative change, exposed minus control
+      // what the robot computes: lamp-corrected, blank-free glow of each well against its own start, then exposed over the
+      // filtered controls (fold change; the controls are the 1.00x baseline)
       const lampRel = F[6] / this.F0[6], blank = F[7] - this.F0[7];
       const rel = i => ((F[i] - (i < 4 ? blank : 0)) / lampRel - this.F0[i]) / this.F0[i];
       const mean = a => a.reduce((s, v) => s + v, 0) / a.length;
-      const exp = [0, 1, 2, 3].map(rel), ctl = [4, 5].map(rel), dExp = mean(exp), dCtl = mean(ctl), corrected = dExp - dCtl;
+      const exp = [0, 1, 2, 3].map(rel), ctl = [4, 5].map(rel), dExp = mean(exp), dCtl = mean(ctl), fold = (1 + dExp) / (1 + dCtl), corrected = fold - 1;
       const sd = Math.sqrt(exp.reduce((s, v) => s + (v - dExp) * (v - dExp), 0) / (exp.length - 1));
-      this.last = { n: this.n, t, cMass, cTox, F, F0: this.F0.slice(), exp, ctl, dExp, dCtl, corrected, sd,
+      this.last = { n: this.n, t, cMass, cTox, F, F0: this.F0.slice(), exp, ctl, dExp, dCtl, fold, corrected, sd, lampRel, blank,
         index: clamp(100 * corrected / BIO.Rmax, 0, 100), Fexp: mean(F.slice(0, 4)), F0exp: mean(this.F0.slice(0, 4)),
         Fctl: mean(F.slice(4, 6)), dose: this.dose, doseMass: this.doseMass, toxPerMass: cMass > 1 ? cTox / cMass : null,
         life: Math.max(0, 1 - this.n / BIO.life) };

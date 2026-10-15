@@ -223,7 +223,7 @@
         const ww = (slideW * .78 - 30) / 4, wy = y0 + 12, wh = slideH - 24;
         for (let i = 0; i < 4; i++) {
           const k = s * 4 + i, x = x0 + slideW * .2 + i * (ww + 10), role = S.BIO.roles[k];
-          const rel = role === "blank" ? 0 : (L.F[k] - L.F0[k]) / L.F0[k];
+          const fold = k < 4 ? (1 + L.exp[k]) / (1 + L.dCtl) : k < 6 ? (1 + L.ctl[k - 4]) / (1 + L.dCtl) : 1, rel = fold - 1;   // lamp-corrected, over the controls
           g.fillStyle = role === "blank" ? "rgba(255,255,255,.04)" : role === "reference" ? "rgba(126,152,188,.35)" : "rgba(233,160,180,.30)";
           rr(g, x, wy, ww, wh, 8); g.fill(); g.strokeStyle = "rgba(255,255,255,.35)"; g.stroke();
           if (role === "exposed" || role === "control") {
@@ -236,7 +236,8 @@
           }
           if (role === "reference") { g.fillStyle = "rgba(160,190,230,.55)"; g.beginPath(); g.arc(x + ww / 2, wy + wh / 2, ww * .22, 0, 2 * Math.PI); g.fill(); }
           g.fillStyle = "#EDE8DF"; g.font = "600 10.5px 'JetBrains Mono', monospace"; g.textAlign = "center"; g.fillText(names[k], x + ww / 2, wy + wh + 13);
-          if (role !== "blank") { g.fillStyle = rel > 0.05 ? "#D9875C" : "#9C958A"; g.font = "500 10px 'JetBrains Mono', monospace"; g.fillText((rel >= 0 ? "+" : "") + (100 * rel).toFixed(0) + " %", x + ww / 2, wy + 12); }
+          const tag = role === "reference" ? `lamp ${(100 * L.lampRel).toFixed(0)} %` : role === "blank" ? `glow ${Math.max(0, L.blank).toFixed(0)}` : fold.toFixed(2) + "×";
+          g.fillStyle = role === "exposed" && rel > 0.05 ? "#D9875C" : "#9C958A"; g.font = "500 10px 'JetBrains Mono', monospace"; g.fillText(tag, x + ww / 2, wy + 12);
         }
       }
       g.fillStyle = "#9C958A"; g.font = "500 10.5px 'JetBrains Mono', monospace"; g.textAlign = "left";
@@ -245,7 +246,7 @@
     function drawChart() {
       const { g, w, h } = fit(bc), H = sensor.hist; g.clearRect(0, 0, w, h);
       const x0 = 46, x1 = w - 46, y0 = h - 26, y1 = 14, N = CYCLES;
-      let ymax = 1200; for (const r of H) ymax = Math.max(ymax, r.Fexp * 1.08);
+      let ymax = 1200; for (const r of H) ymax = Math.max(ymax, r.F0exp * (1 + Math.max(...r.exp)) * 1.08);
       const X = n => x0 + (x1 - x0) * n / N, Y = v => y0 - (y0 - y1) * v / ymax, Yi = v => y0 - (y0 - y1) * v / 100;
       g.textBaseline = "alphabetic"; g.strokeStyle = "rgba(237,232,223,.12)"; g.lineWidth = 1; g.font = "500 10px 'JetBrains Mono', monospace"; g.fillStyle = "#9C958A"; g.textAlign = "right";
       for (let v = 0; v <= ymax; v += 500) { g.beginPath(); g.moveTo(x0, Y(v)); g.lineTo(x1, Y(v)); g.stroke(); g.fillText(v, x0 - 6, Y(v) + 3); }
@@ -255,24 +256,26 @@
       if (!H.length) return;
       const F0 = H[0].F0exp; g.setLineDash([4, 4]); g.strokeStyle = "rgba(237,232,223,.4)"; g.beginPath(); g.moveTo(x0, Y(F0)); g.lineTo(x1, Y(F0)); g.stroke(); g.setLineDash([]);
       g.fillStyle = "#EDE8DF"; g.fillText("F₀", x1 + 6, Y(F0) + 3);
-      g.fillStyle = "rgba(217,135,92,.16)"; g.beginPath();                        // spread of the four exposed wells
-      H.forEach((r, i) => { const hi = Math.max(...r.F.slice(0, 4)); i ? g.lineTo(X(r.n), Y(hi)) : g.moveTo(X(r.n), Y(hi)); });
-      for (let i = H.length - 1; i >= 0; i--) g.lineTo(X(H[i].n), Y(Math.min(...H[i].F.slice(0, 4))));
+      g.fillStyle = "rgba(217,135,92,.16)"; g.beginPath();                        // spread of the four exposed wells, lamp-corrected
+      const wcor = r => r.exp.map((e, i) => r.F0[i] * (1 + e));
+      H.forEach((r, i) => { const hi = Math.max(...wcor(r)); i ? g.lineTo(X(r.n), Y(hi)) : g.moveTo(X(r.n), Y(hi)); });
+      for (let i = H.length - 1; i >= 0; i--) g.lineTo(X(H[i].n), Y(Math.min(...wcor(H[i]))));
       g.closePath(); g.fill();
       const plot = (get, c, wdt, dash, yf = Y) => { g.strokeStyle = c; g.lineWidth = wdt; g.setLineDash(dash); g.beginPath(); H.forEach((r, i) => i ? g.lineTo(X(r.n), yf(get(r))) : g.moveTo(X(r.n), yf(get(r)))); g.stroke(); g.setLineDash([]); };
-      plot(r => r.F[7] * 10, "#77716a", 1.2, [2, 3]); plot(r => r.Fctl, "#7E98BC", 1.6, []); plot(r => r.Fexp, "#D9875C", 2.4, []); plot(r => r.index, "#E8B48F", 1.2, [5, 3], Yi);
-      const L = H[H.length - 1]; g.fillStyle = "#D9875C"; g.beginPath(); g.arc(X(L.n), Y(L.Fexp), 4, 0, 2 * Math.PI); g.fill();
+      const cF0 = r => (r.F0[4] + r.F0[5]) / 2, eC = r => r.F0exp * (1 + r.dExp), cC = r => cF0(r) * (1 + r.dCtl);   // lamp-corrected glow
+      plot(r => r.F[7] * 10, "#77716a", 1.2, [2, 3]); plot(cC, "#7E98BC", 1.6, []); plot(eC, "#D9875C", 2.4, []); plot(r => r.index, "#E8B48F", 1.2, [5, 3], Yi);
+      const L = H[H.length - 1]; g.fillStyle = "#D9875C"; g.beginPath(); g.arc(X(L.n), Y(eC(L)), 4, 0, 2 * Math.PI); g.fill();
       g.fillStyle = "#77716a"; g.textAlign = "left"; g.fillText("blank ×10", x0 + 4, Y(H[0].F[7] * 10) - 6);
     }
     function drawTable() {
-      const L = sensor.last, f = v => v.toFixed(0), pct = v => (v >= 0 ? "+" : "") + (100 * v).toFixed(1) + " %";
+      const L = sensor.last, f = v => v.toFixed(0), x = v => v.toFixed(2) + "×";   // no signed numbers: ratios to a baseline, as an assay reads
       const cF0 = (L.F0[4] + L.F0[5]) / 2;
-      $("bioTable").innerHTML = `<tr><th>wells</th><th>F₀ initial</th><th>F now</th><th>ΔF</th><th>ΔF / F₀, corrected</th></tr>
-        <tr class="hi"><td>Exposed, mean of 4</td><td>${f(L.F0exp)}</td><td>${f(L.Fexp)}</td><td>${f(L.Fexp - L.F0exp)}</td><td>${pct(L.dExp)} <span class="sd">± ${(100 * L.sd).toFixed(1)}</span></td></tr>
-        <tr><td>Filtered controls, mean of 2</td><td>${f(cF0)}</td><td>${f(L.Fctl)}</td><td>${f(L.Fctl - cF0)}</td><td>${pct(L.dCtl)}</td></tr>
-        <tr><td>Reference (lamp)</td><td>${f(L.F0[6])}</td><td>${f(L.F[6])}</td><td>${f(L.F[6] - L.F0[6])}</td><td>lamp ${pct(L.F[6] / L.F0[6] - 1)}</td></tr>
-        <tr><td>Blank, no cells</td><td>${f(L.F0[7])}</td><td>${f(L.F[7])}</td><td>${f(L.F[7] - L.F0[7])}</td><td>dust's own glow</td></tr>
-        <tr class="hi"><td><b>Exposed − control</b></td><td></td><td></td><td></td><td><b>${pct(L.corrected)}</b></td></tr>`;
+      $("bioTable").innerHTML = `<tr><th>wells</th><th>F₀ at start</th><th>F now, corrected</th><th>F / F₀</th><th>over controls</th></tr>
+        <tr class="hi"><td>Exposed, mean of 4</td><td>${f(L.F0exp)}</td><td>${f(L.F0exp * (1 + L.dExp))}</td><td>${x(1 + L.dExp)} <span class="sd">± ${L.sd.toFixed(2)}</span></td><td>${x(L.fold)}</td></tr>
+        <tr><td>Filtered controls, mean of 2</td><td>${f(cF0)}</td><td>${f(cF0 * (1 + L.dCtl))}</td><td>${x(1 + L.dCtl)}</td><td>1.00× baseline</td></tr>
+        <tr><td>Reference (lamp)</td><td>${f(L.F0[6])}</td><td>${f(L.F[6])}</td><td>lamp at ${(100 * L.lampRel).toFixed(0)} %</td><td>drift corrected</td></tr>
+        <tr><td>Blank, no cells</td><td>${f(L.F0[7])}</td><td>${f(L.F[7])}</td><td>dust glow ${f(Math.max(0, L.blank))}</td><td>taken out</td></tr>
+        <tr class="hi"><td><b>Stress signal: exposed over controls</b></td><td></td><td></td><td></td><td><b>${x(L.fold)}</b></td></tr>`;
       const idx = L.index, n = L.n, tox = AIR[air][1], dusty = AIR[air][0] > 20;
       const word = n === 0 ? "Waiting for the first breath." : idx < 12 ? "The cells are calm: this air is not stressing them." : idx < 35 ? "The cells are reacting: this air is doing harm." : "Strong stress response: harmful air. Act now.";
       const tail = n > 6 && dusty ? (tox > 1.2 ? " For this much dust the response is high: it behaves like smoke." : tox < 1 ? " Same dust count as the smog, much less stress: less harmful per gram." : "") : "";

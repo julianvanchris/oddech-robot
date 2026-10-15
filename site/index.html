@@ -19,7 +19,7 @@
 <header class="topbar">
   <a href="#hero" class="brand"><span class="brand-dot"></span>Oddech</a>
   <nav class="topnav" aria-label="Sections">
-    <a href="#problem">Problem</a><a href="#diagnosis">Questions</a><a href="#new">What is new</a><a href="#robot">Robot</a><a href="#sensor">Living sensor</a>
+    <a href="#problem">Problem</a><a href="#diagnosis">Questions</a><a href="#new">What is new</a><a href="#robot">Robot</a><a href="#blueprint">Blueprint</a><a href="#sensor">Living sensor</a>
     <a href="#simulation">Simulation</a><a href="#cloud">Cloud</a><a href="#model">Business</a><a href="#pitch">Pitch</a>
   </nav>
   <button class="present-btn" id="presentBtn" title="Presentation mode: arrow keys move section by section (P)">Present</button>
@@ -59,7 +59,7 @@
     </div>
 
     <div class="bignums" data-reveal>
-      <div class="bn"><div class="bn-v accent">−40 %</div><p>Annual mean PM2.5, 2010 to 2021, after the solid-fuel ban. The PM2.5 limit was still not met. <a class="c" data-ref="kicinska2025"></a></p></div>
+      <div class="bn"><div class="bn-v accent">40 %</div><p>less annual mean PM2.5, 2010 to 2021, after the solid-fuel ban. The PM2.5 limit was still not met. <a class="c" data-ref="kicinska2025"></a></p></div>
       <div class="bn"><div class="bn-v">≈70 <small>vs</small> ≈10</div><p>Monthly PM2.5 in µg/m³, February against August 2014, Kraków urban background: the smog is seasonal. <a class="c" data-ref="samek2017"></a></p></div>
       <div class="bn"><div class="bn-v">≈70 %</div><p>Share of the finest dust, PM2.5, in indoor PM10 in Kraków flats in the cold half-year. <a class="c" data-ref="scibor2020"></a></p></div>
       <div class="bn"><div class="bn-v">87 %</div><p>Of our time is spent inside buildings (United States survey, 9,386 people). <a class="c" data-ref="klepeis2001"></a></p></div>
@@ -255,7 +255,7 @@
       </div>
     </div>
     <div class="specstrip" data-reveal>
-      <div><span class="mono">Ø 34 cm</span>footprint</div><div><span class="mono">42 cm</span>stowed height</div><div><span class="mono">0.40–1.60 m</span>sensor height</div>
+      <div><span class="mono">Ø 35 cm</span>footprint</div><div><span class="mono">44 cm</span>stowed height</div><div><span class="mono">0.40–1.60 m</span>sensor height</div>
       <div><span class="mono">8 wells</span>living cells</div><div><span class="mono">≈ 100 Wh</span>battery</div><div><span class="mono">0</span>cameras</div>
     </div>
 
@@ -283,6 +283,85 @@
         <div class="calc-out three"><div><span class="mono big" id="stCog"></span><span>centre of mass height</span></div><div><span class="mono big accent" id="stAcc"></span><span>deceleration that would tip it</span></div><div><span class="mono big" id="stMar"></span><span>margin over a 1 m/s² stop</span></div></div>
         <p class="note">Base 6.4 kg with its centre at 0.12 m; mast and head lumped at 70 % of the mast height; tipping edge 0.10 m from the centre. Tipping deceleration a = g·b/h. Braking alone would not tip it; a door sill or a collision can briefly exceed this, so the mast stays down while it drives.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 04b BLUEPRINT AND GAZEBO TWIN -->
+<section id="blueprint" class="night bp" data-title="Blueprint">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">04·b</div>
+      <div><div class="kicker light">The blueprint · Gazebo and ROS 2</div>
+      <h2 class="sec-title">One part list. <em>A drawing, a 3D model and a robot in Gazebo.</em></h2>
+      <p class="stand">The robot on this page, its drawing, its meshes and its Gazebo model are all generated from the same 42 parts, so they cannot disagree. Turn it, open it, raise its nose.</p></div>
+    </div>
+
+    <div class="bp-view" data-reveal>
+      <div class="bp-stage">
+        <canvas id="bpCanvas" aria-label="3D line drawing of the Oddech robot; drag to turn it"></canvas>
+        <div class="bp-labels" id="bpLabels" aria-hidden="true"></div>
+        <div class="bp-corner mono" aria-hidden="true"><span>OD-1</span><span>general arrangement · mm</span></div>
+        <div class="bp-tools">
+          <div class="seg" id="bpMode"><button class="chip on" data-mode="lines">Lines</button><button class="chip" data-mode="xray">X-ray</button><button class="chip" data-mode="solid">Solid</button></div>
+          <div class="seg" id="bpMast"><button class="chip on" data-h="0.4">0.40</button><button class="chip" data-h="1.1">1.10</button><button class="chip" data-h="1.6">1.60 m</button></div>
+          <button class="chip" id="bpExplode">Explode</button><button class="chip" id="bpFrames">ROS frames</button>
+        </div>
+      </div>
+      <aside class="bp-side">
+        <div class="bp-title"><b>Oddech OD-1</b><span class="mono">design targets · rev A · 15 Oct 2026</span></div>
+        <dl class="bp-dims" id="bpDims"></dl>
+        <div class="kicker light">Parts · point to light one up</div>
+        <ol class="bp-parts" id="bpParts"></ol>
+      </aside>
+    </div>
+
+    <figure class="bp-sheet" data-reveal>
+      <!--BLUEPRINT_SVG-->
+      <figcaption class="note light">The general-arrangement sheet (A3) that ships with the package: front, side and plan at 1:5, the mast at its three heights at 1:10. Inside parts are dashed.</figcaption>
+    </figure>
+
+    <div class="sub-head" data-reveal><div class="kicker light">The Gazebo twin</div><h3 class="h3 light">A sampling round, simulated in Gazebo, played back here</h3>
+      <p class="note light">Gazebo Harmonic drove the package's robot through the model flat: to the child's play mat, the dining table and the cooktop, lifting its nose at each. We recorded its wheels and mast stages about 18 times a second; this is that run at its true speed. Or take the controls: the same robot and limits, computed in your browser.</p></div>
+    <div class="twin" data-reveal>
+      <div class="twin-stage">
+        <canvas id="twinCanvas" tabindex="0" aria-label="3D view of the Gazebo simulation of Oddech in the model flat; drag to turn, arrow keys to drive"></canvas>
+        <div class="twin-hud mono" id="twinHud" aria-live="off"></div>
+        <div class="twin-keys" id="twinKeys">
+          <div class="twin-pad" id="twinPad">
+            <button data-k="f" aria-label="Forward" class="k-f">↑</button><button data-k="l" aria-label="Turn left" class="k-l">←</button><button data-k="b" aria-label="Back" class="k-b">↓</button><button data-k="r" aria-label="Turn right" class="k-r">→</button>
+            <button data-k="1" aria-label="Nose to 0.40 m" class="k-1">0.40</button><button data-k="2" aria-label="Nose to 1.10 m" class="k-2">1.10</button><button data-k="3" aria-label="Nose to 1.60 m" class="k-3">1.60</button>
+          </div>
+          <span class="mono">arrows or WASD · 1 2 3 nose · space stops</span>
+        </div>
+        <div class="twin-tools">
+          <div class="seg" id="twinMode"><button class="chip on" data-mode="replay">Gazebo run</button><button class="chip" data-mode="drive">Drive it</button></div>
+          <button class="chip on" id="twinPlay">Pause</button><button class="chip on" id="twinScan">Laser scan</button><button class="chip" id="twinFollow">Follow</button>
+        </div>
+      </div>
+      <aside class="twin-side">
+        <div class="kicker light">Entity tree</div><pre class="twin-tree mono" id="twinTree"></pre>
+        <div class="kicker light">Topics</div><pre class="twin-topics mono" id="twinTopics"></pre>
+        <div class="kicker light">The sampling round · sim time</div><ol class="twin-log mono" id="twinLog"></ol>
+      </aside>
+    </div>
+    <p class="note light twin-note">Pose, wheels and mast come from Gazebo. The laser beams are traced here against the same room: Gazebo's scanner needs a graphics card, which the test machine could not give it. The air itself is not in Gazebo yet; section 06 runs that model.</p>
+
+    <div class="bp-pkg" data-reveal>
+      <div>
+        <div class="kicker light">For engineers</div>
+        <h3 class="h3 light">The package: open it in Gazebo, with or without ROS 2</h3>
+        <p class="body light">COLLADA and STL meshes for every link and all 42 parts, a URDF with xacro, a self-contained SDF model, the model flat as a Gazebo world, launch files for ROS 2 Jazzy and a topic bridge. One Python script regenerates all of it from the part list; another checks it.</p>
+        <div class="kicker light">Checked in Gazebo Harmonic 8.10 · 15 Oct 2026</div>
+        <ul class="bp-checks">
+          <li class="ok"><b>Valid</b><span>robot, flat and URDF pass <code>gz sdf -k</code></span></li>
+          <li class="ok"><b>Drives true</b><span>0.20 m/s asked, 0.200 m/s in <code>/odom</code>; turns in place at 0.8 rad/s</span></li>
+          <li class="ok"><b>Mast</b><span>all four stages out 0.300 m, nose at 1.60 m, in about 5 s; back to 1.10 m on command</span></li>
+          <li class="ok"><b>Sampling round</b><span>82 s of simulated time, never closer than 0.26 m to furniture, walls or people</span></li>
+          <li class="open"><b>Not yet</b><span>the laser scanner in Gazebo (needs a graphics card) and the ROS 2 launch files (no ROS on the test machine)</span></li>
+        </ul>
+      </div>
+      <pre class="bp-tree mono" id="bpTree"></pre>
     </div>
   </div>
 </section>
@@ -343,16 +422,16 @@
         </div>
       </div>
       <div class="lab-right">
-        <div class="lab-chart"><div class="ch-l"><i class="sw acc"></i>exposed wells (mean of 4) <i class="sw ind"></i>filtered controls (mean of 2) <i class="sw grey"></i>cell-free blank</div><canvas id="bioChart"></canvas></div>
+        <div class="lab-chart"><div class="ch-l"><i class="sw acc"></i>exposed wells (mean of 4) <i class="sw ind"></i>filtered controls (mean of 2), both lamp-corrected <i class="sw grey"></i>cell-free blank ×10</div><canvas id="bioChart"></canvas></div>
         <table class="biotab" id="bioTable"></table>
         <div class="bio-verdict" id="bioVerdict"></div>
       </div>
     </div>
     <div class="formula" data-reveal>
-      <div><span class="mono">ΔF / F₀</span><p>Glow change of each well against its own starting glow F₀: every culture is its own baseline.</p></div>
-      <div><span class="mono">exposed − control</span><p>Subtract the filtered control wells: what is left is the effect of the dust, not of time or handling.</p></div>
-      <div><span class="mono">÷ reference · − blank</span><p>A glowing reference well cancels lamp drift; a cell-free well removes the dust's own glow.</p></div>
-      <div><span class="mono">stress index 0–100</span><p>The corrected change as a share of the largest response the cells can give. High glow means harmful air.</p></div>
+      <div><span class="mono">F / F₀</span><p>The glow of each well against its own starting glow F₀: every culture is its own baseline.</p></div>
+      <div><span class="mono">exposed ÷ controls</span><p>Read against the filtered control wells, which stay at 1.00×: what rises above them is the dust, not time or handling.</p></div>
+      <div><span class="mono">lamp · blank</span><p>A glowing reference well corrects lamp drift; a cell-free well takes out the dust's own glow.</p></div>
+      <div><span class="mono">stress index 0–100</span><p>The rise above the controls as a share of the largest response the cells can give. High glow means harmful air.</p></div>
     </div>
     <div class="bio-notes" data-reveal>
       <div><h4>Why eight wells</h4><p>Four exposed replicates, two filtered controls, one optical reference, one blank: the logic of a good lab experiment, inside a cartridge. The format is two 4-well glass chamber slides, 1.7 cm² per well. <a class="c" data-ref="millicell"></a></p></div>

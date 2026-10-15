@@ -108,7 +108,7 @@
     [["vs the purifier left in its corner", fC, "#B4532A", 48, CARE.median.cutCorner, CARE.wins.corner], ["vs the purifier on high, all the time", fH, "#2E4A6E", 112, CARE.median.cutHigh, CARE.wins.high]].forEach(([label, f, c, y, m, wins]) => {
       s += `<text x="${x0}" y="${y - 20}" fill="#4A4640" paint-order="stroke" stroke="#EFEBE3" stroke-width="6">${label} · lower in ${wins} of ${rows.length}</text>`;
       rows.forEach((r, i) => { s += `<circle class="pop" cx="${X(f(r)).toFixed(1)}" cy="${y + ((i % 3) - 1) * 6}" r="5" fill="${c}" fill-opacity=".72"/>`; });
-      s += `<line x1="${X(m).toFixed(1)}" x2="${X(m).toFixed(1)}" y1="${y - 13}" y2="${y + 13}" stroke="${c}" stroke-width="3"/><text x="${(X(m) + 8).toFixed(1)}" y="${y + 24}" fill="${c}" font-weight="600" paint-order="stroke" stroke="#EFEBE3" stroke-width="6">median −${pct(m)} %</text>`;
+      s += `<line x1="${X(m).toFixed(1)}" x2="${X(m).toFixed(1)}" y1="${y - 13}" y2="${y + 13}" stroke="${c}" stroke-width="3"/><text x="${(X(m) + 8).toFixed(1)}" y="${y + 24}" fill="${c}" font-weight="600" paint-order="stroke" stroke="#EFEBE3" stroke-width="6">median ${pct(m)} % less</text>`;
     });
     return s + `</g></svg>`;
   }
@@ -189,7 +189,7 @@
   SL.push(["Problem", "s-paper", `${head("01 · The problem")}
     <h2 data-m="t">Kraków's smog comes indoors. <em>A number on a shelf cannot help.</em></h2>
     <div class="sl-nums">
-      <div><b class="acc">−40 %</b><span>annual PM2.5, 2010 to 2021, after the solid-fuel ban. The limit was still not met.</span></div>
+      <div><b class="acc">40 %</b><span>less annual PM2.5, 2010 to 2021, after the solid-fuel ban. The limit was still not met.</span></div>
       <div><b>≈70 %</b><span>of indoor PM10 in Kraków flats is the finest dust, PM2.5, in the cold half-year.</span></div>
       <div><b><span class="hug" data-focus>87 %</span></b><span>of our time is spent inside buildings. Children breathe at 0.4 m, below the shelf.</span></div>
     </div>
@@ -221,7 +221,7 @@
     <h2 data-m="t" style="font-size:52px">A cartridge of living cells, <em>read every ten minutes.</em></h2>
     <div class="sl-grid2" style="grid-template-columns:470px 1fr;gap:60px;margin-top:10px">
       <div><div data-m="wells">${wellsArt(470, true)}</div><p class="sl-sub" style="font-size:15px;color:#9C958A;margin-top:8px">Four wells breathe room air, two breathe the same air through a filter, one checks the lamp, one has no cells.</p></div>
-      <div>${bioCurves()}<p class="sl-sub" style="font-size:16px;margin-top:10px">Same dust mass, different harm: the index is <b>ΔF/F₀ exposed − control</b>, so the cells answer what the dust counter cannot.</p></div>
+      <div>${bioCurves()}<p class="sl-sub" style="font-size:16px;margin-top:10px">Same dust mass, different harm: the cells read <b>exposed over filtered controls</b>, so they answer what the dust counter cannot.</p></div>
     </div>
     ${foot("Concept model after X. Cao; illustrative values, no experimental data · format: 4-well chamber slides, 1.7 cm² per well")}`]);
   SL.push(["What is new", "s-paper", `${head("05 · “Isn't this an existing idea?”")}
@@ -239,7 +239,7 @@
     SL.push(["Results at a glance", "s-dark", `${head("06 · What Oddech changes · in simulation")}
       <h2 data-m="t">Cleaner air for the child, <em>in every one of ${CARE.seeds} model rooms.</em></h2>
       <div class="sl-nums four">
-        <div><b><span class="hug acc" data-m="n1" data-focus>−<span data-count="${cutC}">${cutC}</span> %</span></b><span>dust the child breathes in over ${CARE.minutes} minutes, same purifier, when the family follows Oddech's advice</span></div>
+        <div><b><span class="hug acc" data-m="n1" data-focus><span data-count="${cutC}">${cutC}</span> %</span></b><span>less dust breathed in by the child over ${CARE.minutes} minutes, same purifier, when the family follows Oddech's advice</span></div>
         <div><b><span class="hug" data-m="n2"><span data-count="${monLow}">${monLow}</span> %</span></b><span>how far too low the shelf monitor reads the child's air. Oddech's map: ${under(CARE.median.oddechLog)}.</span></div>
         <div><b><span class="hug" data-m="n3"><span data-count="${B.wins.people_vs_fixed}">${B.wins.people_vs_fixed}</span>/${B.seeds}</span></b><span>rooms where Oddech knew the air people breathe better than four fixed sensors</span></div>
         <div><b><span class="hug" data-m="n4">×<span data-count="${bioX}">${bioX}</span></span></b><span>living-cell stress for smoke-like air against cooking fumes, at the same dust mass</span></div>
@@ -261,8 +261,8 @@
           <p class="sl-pt2">The shelf monitor alone read the child's air <span class="hug" data-m="n2">${monLow} % too low</span>; Oddech's map, ${under(CARE.median.oddechLog)}.</p>
         </div>
         <div class="sl-panel">
-          <div class="sl-hl acc"><span class="hug" data-m="n1" data-focus>−${cutC} %</span></div>
-          <p class="sl-pt">dust the child breathes in over ${CARE.minutes} minutes when the family follows Oddech's advice; lower in all ${CARE.wins.corner} rooms</p>
+          <div class="sl-hl acc"><span class="hug" data-m="n1" data-focus>${cutC} %</span></div>
+          <p class="sl-pt">less dust breathed in by the child over ${CARE.minutes} minutes when the family follows Oddech's advice; lower in all ${CARE.wins.corner} rooms</p>
           ${strip()}
           <p class="sl-cap">Each dot is one room. Oddech switches the purifier on, turns it up, has it moved towards the worst air and says when to open or close the window; the family acts 90 s later.</p>
         </div>
