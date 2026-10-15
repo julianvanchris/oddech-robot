@@ -90,7 +90,7 @@
     for (let v = 0; v <= ymax + 1e-9; v += step) { const y = y0 - (y0 - y1) * v / ymax; g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke(); g.fillText(Math.round(v), x0 - 5, y + 3); }
     g.textAlign = "left"; g.fillText(unit, x0 + 4, y1 + 9); g.textAlign = "right"; g.fillText(xl, x1, h - 2);
   }
-  const nice = v => { const p = Math.pow(10, Math.floor(Math.log10(v))); return [1, 2, 2.5, 5, 10].map(k => k * p).find(s => v / s <= 5); };
+  const nice = v => { const p = Math.pow(10, Math.floor(Math.log10(v))); return [1, 2, 2.5, 5, 10].map(k => k * p).find(s => s >= v); };   // the step for about four ticks: nice(max / 4)
 
   function curveAir() {
     const f = fit($("curveAir")); if (!f) return; const { g, w, h } = f; g.clearRect(0, 0, w, h);

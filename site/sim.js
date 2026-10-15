@@ -677,7 +677,7 @@
     const lvl = band(worst.c), rng = `${r0(worst.lo)}–${r0(worst.hi)}`, rngW = `${r0(worst.lo)} and ${r0(worst.hi)}`;
     const none = worst.c <= 15 ? "Nothing to do for now." : "Keep the purifier running; it is doing the right thing.";
     const noneN = worst.c <= 15 ? "No action needed." : "Keep the purifier running.";
-    const srcTxt = fromWindow ? "Most of it comes in through the open window." : ratio > 1.4 ? `The air is worst near ${zone}.` : "It is spread evenly through the room.";
+    const srcTxt = fromWindow ? "Most of it comes in through the open window." : ratio > 1.4 ? `Of the places I have checked, it is worst near ${zone}.` : "It looks even across the places I have checked.";   // the map only knows where it measured
     const b = world.bio.last, smoky = b.n > 0 && b.index >= 25 && b.toxPerMass !== null && b.toxPerMass > 1.2;
     const bioN = b.n > 0 ? ` Living sensor: stress ${r0(b.index)}/100${smoky ? ", high for this amount of dust" : ""}.` : "";
     const bioW = b.n > 0 && b.index >= 25 ? (smoky ? " My living cells react more than the dust count alone suggests: it behaves like smoke." : " My living cells are reacting to this air.") : "";
@@ -717,6 +717,27 @@
     return r;
   }
 
+  // ------------------------------------------------------------------ H2 outcome: the same rooms, the same purifier, used three ways
+  // corner: the purifier runs in its corner and nobody acts (today). high: the same, on high the whole time.
+  // oddech: Oddech switches it, and the household follows its advice 90 s later (close the window, turn it up, move it).
+  // Also: how far the shelf monitor and Oddech's map are from the air the child breathes (log ratio, minutes 5 to the end).
+  function careRun(seed, minutes) {
+    const air = benchScenario(rngOf(1000 + seed)), kid = LAYOUT.people[0];
+    const mk = (mode, cadr, follow) => {
+      const w = new World({ seed: 1000 + seed, scenario: "none", purifierMode: mode, cadr, air: Object.assign({}, air, { purifierOn: mode === "on", cadr: cadr / 3600 }) });
+      w.events = [{ t: minutes * 60 * 0.6, patch: { stoveOn: false, candleOn: false, matOn: false } }]; w.follow = follow; return w;
+    };
+    const A = mk("on", 300, false), H = mk("on", 600, false), O = mk("auto", 300, true);
+    let mon = 0, odd = 0, n = 0;
+    for (let t = 0; t < minutes * 60; t += 30) {
+      A.advance(30, { advice: false, history: false }); H.advance(30, { advice: false, history: false }); O.advance(30, { history: false });
+      if (A.t < 300) continue;
+      const truth = LOG(A.air.at(kid.x, kid.y, kid.z));
+      mon += LOG(A.live.sensors[0].last) - truth; odd += A.live.map.predict({ x: kid.x, y: kid.y, z: kid.z, t: A.t }).mu - truth; n++;
+    }
+    return { seed, corner: A.dose.child, high: H.dose.child, oddech: O.dose.child, monitorLog: mon / n, oddechLog: odd / n, actions: O.log.map(l => l.text) };
+  }
+
   return { ROOM, NX, NY, NZ, DX, DY, DZ, VROOM, PHYS, TOX, BIO, LivingSensor, unitEconomics, LAYOUT, MAST, POWER, SCENARIOS, ZONES, LOG, EXP,
-    rngOf, makeFlow, Air, FieldMap, occupancy, astar, Robot, World, exposures, mapError, advise, zoneOf, benchRun, band };
+    rngOf, makeFlow, Air, FieldMap, occupancy, astar, Robot, World, exposures, mapError, advise, zoneOf, benchRun, benchScenario, careRun, band };
 });

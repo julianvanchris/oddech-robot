@@ -72,7 +72,7 @@
   function rules(r) {                                       // what the cloud's rules would raise from the robot's messages
     const w = r.w, ex = S.exposures(w)[0], b = w.bio.last, f = r.flags;
     if (ex.c !== null) {
-      if (ex.c > 35 && !f.heavy) { f.heavy = true; alert(r, w.t, `Children's air heavy: ${r0(ex.c)} µg/m³${w.advice ? ", worst near " + w.advice.zone : ""}`, true); }
+      if (ex.c > 35 && !f.heavy) { f.heavy = true; alert(r, w.t, `Children's air heavy: ${r0(ex.c)} µg/m³${w.advice ? ", worst measured near " + w.advice.zone : ""}`, true); }
       if (ex.c < 25 && f.heavy) { f.heavy = false; alert(r, w.t, `Children's air back to ${r0(ex.c)} µg/m³`); }
     }
     if (b.n && b.index >= 25 && !f.stress) { f.stress = true; alert(r, w.t, `Living cells reacting, stress ${r0(b.index)}/100${b.toxPerMass > 1.2 ? ": smoke-like air" : ""}`, true); }

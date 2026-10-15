@@ -1,5 +1,5 @@
 // Checks for site/sim.js, and the H1 benchmark the page quotes (written to site/bench.json).
-// Run:  node test_sim.js        (about a minute)
+// Run:  node test_sim.js        (about nine minutes; it rewrites site/bench.json, so run it with all 24 seeds before a push)
 "use strict";
 const assert = require("assert");
 const fs = require("fs");
@@ -109,17 +109,62 @@ for (const cfg of [{}, { purifierOn: true, cadr: 600 / 3600 }, { stoveOn: true }
 }
 
 // 10. H1 benchmark: 4 fixed sensors vs 3 fixed + Oddech vs 3 fixed + a robot going to random places
+const seeds = +(process.env.SEEDS || 24);
+const med = a => { const b = a.slice().sort((x, y) => x - y); return (b[(b.length - 1) >> 1] + b[b.length >> 1]) / 2; };
+let bench;
 {
-  const seeds = +(process.env.SEEDS || 24), minutes = 20, rows = [];
+  const minutes = 20, rows = [];
   for (let s = 1; s <= seeds; s++) rows.push(S.benchRun(s, minutes));
-  const med = a => { const b = a.slice().sort((x, y) => x - y); return (b[(b.length - 1) >> 1] + b[b.length >> 1]) / 2; };
-  const out = { seeds, minutes, metric: "RMSE of ln(PM2.5 + 2) at 1.1 m over the free floor, minutes 5 to 20",
+  bench = { seeds, minutes, metric: "RMSE of ln(PM2.5 + 2) at 1.1 m over the free floor, minutes 5 to 20",
     metricPeople: "mean |error| of ln(PM2.5 + 2) where the child and the adult breathe, minutes 5 to 20",
     median: {}, wins: {}, rows };
-  for (const k of ["fixed4", "oddech", "random", "fixed4_people", "oddech_people", "random_people"]) out.median[k] = med(rows.map(r => r[k]));
-  out.wins = { field_vs_fixed: rows.filter(r => r.oddech < r.fixed4).length, field_vs_random: rows.filter(r => r.oddech < r.random).length,
-               people_vs_fixed: rows.filter(r => r.oddech_people < r.fixed4_people).length, people_vs_random: rows.filter(r => r.oddech_people < r.random_people).length };
-  fs.writeFileSync(__dirname + "/site/bench.json", JSON.stringify(out, null, 1));
-  console.log("bench median", out.median, "wins of", seeds, out.wins);
+  for (const k of ["fixed4", "oddech", "random", "fixed4_people", "oddech_people", "random_people"]) bench.median[k] = med(rows.map(r => r[k]));
+  bench.wins = { field_vs_fixed: rows.filter(r => r.oddech < r.fixed4).length, field_vs_random: rows.filter(r => r.oddech < r.random).length,
+                 people_vs_fixed: rows.filter(r => r.oddech_people < r.fixed4_people).length, people_vs_random: rows.filter(r => r.oddech_people < r.random_people).length };
+  console.log("bench median", bench.median, "wins of", seeds, bench.wins);
 }
+
+// 11. H2 outcome, the deck's results slides: the same rooms and purifier, left in its corner, on high, or used as Oddech advises
+{
+  const minutes = 30, rows = [];
+  for (let s = 1; s <= seeds; s++) rows.push(S.careRun(s, minutes));
+  const cutC = r => 1 - r.oddech / r.corner, cutH = r => 1 - r.oddech / r.high;
+  const c = bench.care = { seeds, minutes,
+    metric: "child's inhaled PM2.5 dose over 30 min; monitor and map: mean ln((reading + 2) / (child's air + 2)), minutes 5 to 30",
+    median: { cutCorner: med(rows.map(cutC)), cutHigh: med(rows.map(cutH)), monitorLog: med(rows.map(r => r.monitorLog)), oddechLog: med(rows.map(r => r.oddechLog)) },
+    wins: { corner: rows.filter(r => cutC(r) > 0).length, high: rows.filter(r => cutH(r) > 0).length,
+            closer: rows.filter(r => Math.abs(r.oddechLog) < Math.abs(r.monitorLog)).length }, rows };
+  assert(c.wins.corner === seeds && c.median.cutCorner > 0.15, `dose cut ${c.median.cutCorner}, lower in ${c.wins.corner}/${seeds}`);
+  assert(c.median.monitorLog < -0.2 && c.wins.closer === seeds, `monitor ${c.median.monitorLog}, Oddech closer in ${c.wins.closer}/${seeds}`);
+  console.log(`H2: child's dose ${(-100 * c.median.cutCorner).toFixed(0)} % vs corner (${c.wins.corner}/${seeds}), ${(-100 * c.median.cutHigh).toFixed(0)} % vs high (${c.wins.high}/${seeds});`,
+    `shelf monitor ${(100 * (Math.exp(c.median.monitorLog) - 1)).toFixed(0)} %, Oddech ${(100 * (Math.exp(c.median.oddechLog) - 1)).toFixed(0)} % vs the child's air`);
+}
+
+// 12. one evening for the deck: cooking, seed 3, the same flat twice; maps at minute 10, curves every 30 s
+{
+  const kid = S.LAYOUT.people[0], r1 = v => v === null || v === undefined ? null : Math.round(v * 10) / 10, r2 = v => Math.round(v * 100) / 100;
+  const A = new S.World({ scenario: "cooking", seed: 3, purifierMode: "on" }), O = new S.World({ scenario: "cooking", seed: 3, purifierMode: "auto" });
+  O.follow = true;
+  const ex = bench.example = { scenario: "cooking", seed: 3, minutes: 30, mapMinute: 10,
+    curveCols: ["t s", "child, Oddech acting", "child, purifier left in its corner", "Oddech's estimate", "low", "high", "shelf monitor"], curve: [], advice: null };
+  for (let t = 0; t < 1800; t += 30) {
+    A.advance(30, { advice: false }); O.advance(30);
+    const e = S.exposures(O)[0], a = O.advice && O.advice.actions[0];
+    ex.curve.push([Math.round(O.t), r1(O.air.at(kid.x, kid.y, kid.z)), r1(A.air.at(kid.x, kid.y, kid.z)), r1(e.c), r1(e.lo), r1(e.hi), r1(O.live.sensors[0].last)]);
+    if (!ex.advice && a && a.id === "movePurifier") ex.advice = O.advice.text.warm_stated;
+    if (Math.round(O.t) === ex.mapMinute * 60) {
+      const m = O.live.map, r = O.live.robot, ge = m.grid(1.1, O.t, S.NX, S.NY, false), gs = m.grid(1.1, O.t, 20, 15, true);
+      ex.maps = { truth: Array.from(O.air.plane(1.1), Math.round), harm: Array.from(O.air.plane(1.1, null, O.air.O), Math.round),
+        est: Array.from(ge.mu, v => Math.round(S.EXP(v))), sd: Array.from(gs.sd, r2),
+        samples: m.samples.filter(s => s.src === "robot").map(s => [r2(s.x), r2(s.y)]), trail: r.trail.filter((p, i) => i % 3 === 0).slice(-160).map(p => [r2(p[0]), r2(p[1])]),
+        robot: [r2(r.x), r2(r.y)], purifier: [O.air.cfg.purifier.x, O.air.cfg.purifier.y, O.air.cfg.purifierOn ? 1 : 0] };
+    }
+  }
+  ex.actions = O.log.map(l => [Math.round(l.t), l.text]);
+  ex.dose = { oddech: r1(O.dose.child), corner: r1(A.dose.child) };
+  assert(ex.maps && ex.advice && /move the purifier/.test(ex.advice), "maps and the move-the-purifier advice recorded");
+  assert(ex.dose.oddech < 0.85 * ex.dose.corner, `evening dose ${ex.dose.oddech} vs ${ex.dose.corner}`);
+  console.log(`evening: child's dose ${ex.dose.oddech} vs ${ex.dose.corner} µg; actions: ${ex.actions.map(a => a[1]).join("; ")}`);
+}
+fs.writeFileSync(__dirname + "/site/bench.json", JSON.stringify(bench, null, 1));
 console.log("all sim checks passed");

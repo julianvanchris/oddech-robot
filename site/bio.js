@@ -188,7 +188,7 @@
       <text x="1050" y="364" fill="${I}" ${mono} font-size="11" text-anchor="middle">EXHALE · CLEAN AIR</text>
       ${Array.from({ length: 8 }, (_, i) => `<circle cx="${1100 + (i * 29) % 80}" cy="${290 + (i * 41) % 90}" r="2.5" fill="${I}" fill-opacity=".55"/>`).join("")}
       ${dot("p2", A, 1.6, 0)}${dot("p2", A, 1.6, .8)}${dot("pE", A, 1.4, .3)}${dot("pC", I, 1.8, .2)}${dot("pX", T, 1.2, .5)}${dot("pO", I, 1.6, .1)}${dot("pO", I, 1.6, .9)}
-      <text x="600" y="404" fill="${G}" ${mono} font-size="11" text-anchor="middle">E · exposed to room air    C · same air, filtered    REF · lamp reference    BLK · no cells</text>`;
+      <text x="600" y="404" fill="${G}" ${mono} font-size="11" text-anchor="middle">E · exposed to room air  C · same air, filtered  REF · lamp reference  BLK · no cells</text>`;
     const steps = Array.from(document.querySelectorAll(".breath-steps li")); let k = 0;
     if (steps.length) setInterval(() => { steps.forEach((li, i) => li.classList.toggle("on", i === k)); k = (k + 1) % steps.length; }, 1600);
   })();

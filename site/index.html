@@ -15,6 +15,7 @@
 <div id="cursor" aria-hidden="true"><i></i></div>
 <div id="progress" aria-hidden="true"></div>
 
+<div class="topfade" aria-hidden="true"></div>
 <header class="topbar">
   <a href="#hero" class="brand"><span class="brand-dot"></span>Oddech</a>
   <nav class="topnav" aria-label="Sections">
@@ -775,7 +776,7 @@
     </div>
     <div class="team four" data-reveal>
       <div class="member"><div class="m-k mono">Physics-informed AI</div><h4>Julian Evan Chrisnanto</h4><span>Tokyo University of Agriculture and Technology, Japan</span><p>Builds the room map, the robot's choices and the dose.</p></div>
-      <div class="member"><div class="m-k mono">Physical AI and robotics</div><h4>Antonio Galiza Cardeira Gonzales, Ph.D.</h4><span>Researcher, Physical AI and Robotics</span><p>Takes Oddech from model to machine: body, mast, motion and safety.</p></div>
+      <div class="member"><div class="m-k mono">Physical AI and robotics</div><h4>Antonio Galiza Cerdeira Gonzalez, Ph.D.</h4><span>Researcher, Physical AI and Robotics</span><p>Takes Oddech from model to machine: body, mast, motion and safety.</p></div>
       <div class="member"><div class="m-k mono">RNA bioinformatics</div><h4>Xiyue (Thea) Cao</h4><span>Tokyo University of Agriculture and Technology, Japan</span><p>Designs the Living Air Sensor and links the glow to what happens in airway cells.</p></div>
       <div class="member"><div class="m-k mono">Human–machine communication</div><h4>Aleksandra Skrzypiec</h4><span>Jagiellonian University, Poland</span><p>Designs and tests how Oddech speaks, and when people trust it: a machine as a communicator. <a class="c" data-ref="guzman2020"></a></p></div>
     </div>
@@ -806,15 +807,15 @@
     <div class="sec-head" data-reveal>
       <div class="sec-num mono">15</div>
       <div><div class="kicker light">The pitch, camera-ready</div>
-      <h2 class="sec-title">Twelve slides. <em>One story.</em></h2>
-      <p class="stand">The final presentation in pitch form. Click the deck, then use the arrow keys; open it full screen, or save it as a PDF.</p></div>
+      <h2 class="sec-title">Fourteen slides. <em>One story.</em></h2>
+      <p class="stand">The final presentation in pitch form, with results from our room model. Click the deck and use the arrow keys; press Present (or F) for full screen, where each slide morphs into the next, or save it as a PDF.</p></div>
     </div>
     <div class="deck-wrap" data-reveal>
-      <div class="deck" id="deck" tabindex="0" aria-label="Pitch deck, 12 slides"><div class="deck-stage" id="deckStage"></div></div>
+      <div class="deck" id="deck" tabindex="0" aria-label="Pitch deck, 14 slides"><div class="deck-stage" id="deckStage"></div><i class="deck-prog" id="deckProg"></i></div>
       <div class="deck-ctl">
-        <button class="chip" id="deckPrev">Previous</button><span class="mono" id="deckCount">01 / 12</span><button class="chip" id="deckNext">Next</button>
+        <button class="chip" id="deckPrev">Previous</button><span class="mono" id="deckCount">01 / 14</span><button class="chip" id="deckNext">Next</button>
         <span class="deck-sp"></span>
-        <button class="chip" id="deckFull">Full screen</button><button class="chip" id="deckPrint">Save as PDF</button>
+        <button class="chip" id="deckMotion" aria-pressed="true" title="Slide morphs and entrances">Motion on</button><button class="chip" id="deckFull">Present</button><button class="chip" id="deckPrint">Save as PDF</button>
       </div>
       <div class="deck-thumbs" id="deckThumbs"></div>
     </div>
