@@ -1,20 +1,17 @@
 """Oddech: the team's site for the FL Joint Program 2026 (Krakow), served with Streamlit.
 
-The site is one HTML page (site/index.html with its CSS and scripts) that this file assembles and shows full screen in a
-component iframe, deployed like the CBIC app: GitHub repository -> Streamlit Community Cloud.
+The site is one HTML page (site/index.html with its CSS and scripts) that build.py assembles; this file shows it full
+screen in a component iframe, deployed like the CBIC app: GitHub repository -> Streamlit Community Cloud.
 Run locally:  streamlit run app.py
 """
-import json
 from pathlib import Path
-from html import escape
 
 import streamlit as st
 import streamlit.components.v1 as components
 
+import build
+
 HERE = Path(__file__).parent
-SITE = HERE / "site"
-SCRIPTS = ["robot3d.js", "hero.js", "sensor.js", "bio.js", "scene.js", "results.js", "cloud.js", "blueprint.js", "twin.js", "deck.js", "main.js"]   # after three.min.js and sim.js
-GZ = HERE / "gazebo"                             # the Gazebo package: the robot's part list, a recorded run, the drawing
 
 st.set_page_config(page_title="Oddech · a robot that reads the air", page_icon=str(HERE / "assets" / "icon.png"),
                    layout="wide", initial_sidebar_state="collapsed")
@@ -30,35 +27,8 @@ iframe { display: block; width: 100vw !important; height: 100vh !important; bord
 
 @st.cache_data(show_spinner=False)
 def page(stamp: float) -> str:
-    """Inline everything into one document; `stamp` (newest file time) refreshes the cache when a file changes."""
-    read = lambda p: p.read_text(encoding="utf-8")
-    safe = lambda s: s.replace("</script", "<\\/script")
-    sim = read(SITE / "sim.js")
-    data = (f"window.ODDECH_REFS={read(SITE / 'refs.json')};window.ODDECH_BENCH={read(SITE / 'bench.json')};"
-            f"window.ODDECH_ROBOT={read(GZ / 'blueprint.json')};window.ODDECH_GZRUN={read(GZ / 'docs' / 'gazebo_run.json')};"
-            f"window.ODDECH_SIM_SRC={json.dumps(sim)};")
-    scripts = [read(HERE / "vendor" / "three.min.js"), sim] + [read(SITE / f) for f in SCRIPTS]
-    html = read(SITE / "index.html")
-    film = escape(read(SITE / "living-air-sensor.html"), quote=True)
-    film_frame = (
-        '<iframe title="Living-cell air sensor animation" '
-        'style="display:block;width:100%;height:1050px;border:0;" '
-        'loading="lazy" '
-        f'srcdoc="{film}"></iframe>'
-    )
-    html = html.replace("<!--LIVING_AIR_SENSOR-->", film_frame)
-    sheet = read(GZ / "docs" / "oddech_general_arrangement.svg")
-    sheet = sheet[sheet.index("<svg"):].replace('width="1190.88pt" height="841.68pt"', 'class="bp-svg" role="img" aria-label="General arrangement drawing of Oddech OD-1"', 1)
-    assert html.count("<!--BLUEPRINT_SVG-->") == 1
-    html = html.replace("<!--BLUEPRINT_SVG-->", sheet)
-    for mark, block in (("<!--STYLE-->", f"<style>{read(SITE / 'style.css')}</style>"),
-                        ("<!--DATA-->", f"<script>{safe(data)}</script>"),
-                        ("<!--SCRIPTS-->", "".join(f"<script>{safe(s)}</script>" for s in scripts))):
-        assert html.count(mark) == 1, mark
-        html = html.replace(mark, block)
-    return html
+    """The assembled page; `stamp` (newest file time) refreshes the cache when a file changes."""
+    return build.page()
 
 
-stamp = max(p.stat().st_mtime for p in [*SITE.iterdir(), HERE / "vendor" / "three.min.js", GZ / "blueprint.json", GZ / "docs" / "gazebo_run.json",
-                                         GZ / "docs" / "oddech_general_arrangement.svg"])
-components.html(page(stamp), height=900, scrolling=True)
+components.html(page(build.stamp()), height=900, scrolling=True)

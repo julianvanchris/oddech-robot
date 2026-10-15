@@ -201,12 +201,30 @@
   bindCalc(["ueHw", "ueFee", "ueCart", "uePc", "ueSvc", "ueLife"], () => {
     const o = { hw: +$("ueHw").value, fee: +$("ueFee").value, cart: +$("ueCart").value, pc: +$("uePc").value, svc: +$("ueSvc").value, life: +$("ueLife").value };
     const { gm, pay, ltv } = window.OddechSim.unitEconomics(o), life = o.life;
-    const eur = v => (v < 0 ? "−" : "") + "€" + Math.abs(Math.round(v)).toLocaleString("en-GB");
+    const eur = v => "€" + Math.abs(Math.round(v)).toLocaleString("en-GB") + (v < 0 ? " loss" : "");   // a loss in words, not a minus sign
     $("ueHwV").textContent = eur(o.hw); $("ueFeeV").textContent = eur(o.fee); $("ueCartV").textContent = o.cart; $("uePcV").textContent = `${eur(o.pc)} · ${eur(o.pc / 2)}`;
     $("ueSvcV").textContent = eur(o.svc); $("ueLifeV").textContent = life + " months";
     $("ueGm").textContent = eur(gm); $("uePay").textContent = isFinite(pay) ? pay.toFixed(1) + " months" : "never"; $("ueLtv").textContent = eur(ltv);
     $("uePay").style.color = isFinite(pay) && pay <= life ? "" : "#B4532A";
   });
+
+  // ---------------------------------------------------------------- one robot or many devices (section 04), the live demonstration (section 16)
+  (function pictures() {
+    const A = window.OddechArt, B = window.ODDECH_BENCH; if (!A) return;
+    if ($("setupsArt")) $("setupsArt").innerHTML = A.setups(false);
+    if ($("trioArt")) $("trioArt").insertAdjacentHTML("afterbegin", A.img("robot_trio", "Oddech with its nose at 0.40, 1.10 and 1.60 m", "width:100%;height:auto"));
+    if ($("vsPoints") && B) {
+      const e = v => Math.round(100 * (Math.exp(v) - 1)), eO = e(B.median.oddech_people), eF = e(B.median.fixed4_people), all = B.wins.people_vs_fixed === B.seeds;
+      $("vsPoints").innerHTML = [
+        [eO < eF / 2 ? "Less than half the error" : "Less error", `In our room model, three fixed sensors and Oddech misjudged the air people breathe by ${eO} %, four fixed sensors by ${eF} %, ${all ? "in every model room" : "in most model rooms"}.`],
+        ["It chooses where to go", `It also beat a robot that wanders at random${B.wins.people_vs_random === B.seeds ? " in every model room" : ""}: the gain is in the choosing.`],
+        ["Living cells cannot sit in every corner", "They need 37 °C, moist air and a fresh cartridge each week. One robot carries one cartridge to every spot."],
+        ["One device to look after", "It works with the purifier you already have, and tells you when to open the window instead."],
+      ].map(([h, t], i) => `<div class="${i ? "" : "hot"}"><h4>${h}</h4><p>${t}</p></div>`).join("");
+    }
+    if ($("liveRobot")) $("liveRobot").innerHTML = A.img("robot_hero", "Oddech, rendered from its 3D model", "height:420px;width:auto");
+    if ($("liveQr")) $("liveQr").innerHTML = A.qr(true, 220);
+  })();
 
   // ---------------------------------------------------------------- platform matrix (section 04)
   (function matrix() {

@@ -144,51 +144,11 @@
     requestAnimationFrame(frame);
   })();
 
-  // ================================================================ 2. the breath path
-  (function breath() {
-    const svg = $("breathSvg"); if (!svg) return;
-    const A = "#D9875C", I = "#7E98BC", T = "#EDE8DF", G = "#9C958A", Hh = "rgba(237,232,223,.25)";
-    const mono = 'font-family="JetBrains Mono, monospace"', serif = 'font-family="Instrument Serif, serif"';
-    const box = (x, y, w, h, label, sub) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="4" fill="#14120f" stroke="${Hh}"/>
-      <text x="${x + w / 2}" y="${y + h / 2 - 7}" fill="${T}" ${serif} font-size="22" text-anchor="middle" dominant-baseline="middle">${label}</text>
-      <text x="${x + w / 2}" y="${y + h / 2 + 16}" fill="${G}" ${mono} font-size="10.5" text-anchor="middle">${sub}</text>`;
-    const path = (id, d, c) => `<path id="${id}" d="${d}" fill="none" stroke="${c}" stroke-width="2" class="flow" stroke-dasharray="6 6"/>`;
-    const dot = (pid, c, dur, delay) => `<circle r="3.5" fill="${c}"><animateMotion dur="${dur}s" begin="${delay}s" repeatCount="indefinite"><mpath href="#${pid}"/></animateMotion></circle>`;
-    let wells = "";
-    for (let i = 0; i < 8; i++) {
-      const x = 554 + (i % 4) * 48, y = i < 4 ? 130 : 226, role = ["E1", "E2", "E3", "E4", "C1", "C2", "REF", "BLK"][i];
-      const fill = i < 6 ? "#e9a0b4" : i === 6 ? "#9fb4d2" : "#2a2622";
-      wells += `<rect x="${x}" y="${y}" width="36" height="36" rx="6" fill="${fill}" fill-opacity="${i < 6 ? .35 : .5}" stroke="${Hh}"/>`;
-      if (i < 4) wells += `<rect x="${x}" y="${y}" width="36" height="36" rx="6" fill="${A}" class="glow g${i}"/>`;
-      wells += `<text x="${x + 18}" y="${y + 52}" fill="${G}" ${mono} font-size="9.5" text-anchor="middle">${role}</text>`;
-    }
-    svg.innerHTML = `
-      <style>.flow{animation:flow 1.4s linear infinite}@keyframes flow{to{stroke-dashoffset:-24}}
-      .glow{opacity:.1;animation:glow 5s ease-in-out infinite}.g1{animation-delay:.3s}.g2{animation-delay:.6s}.g3{animation-delay:.9s}
-      @keyframes glow{0%,100%{opacity:.08}50%{opacity:.75}}
-      .lung{transform-origin:center;transform-box:fill-box;animation:lung 5s ease-in-out infinite}@keyframes lung{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
-      @media (prefers-reduced-motion:reduce){.flow,.glow,.lung{animation:none}}</style>
-      ${Array.from({ length: 26 }, (_, i) => `<circle cx="${30 + (i * 37) % 120}" cy="${70 + (i * 53) % 180}" r="${2 + i % 3}" fill="#cfc6b8" fill-opacity=".7"/>`).join("")}
-      <text x="90" y="290" fill="${G}" ${mono} font-size="11" text-anchor="middle">ROOM AIR</text>
-      <g class="lung"><circle cx="196" cy="160" r="22" fill="none" stroke="${A}" stroke-width="2"/><circle cx="196" cy="160" r="6" fill="${A}"/></g>
-      <text x="196" y="122" fill="${A}" ${mono} font-size="11" text-anchor="middle">INHALE · NOSE</text>
-      ${path("p2", "M 218 160 L 290 160", A)}
-      ${box(290, 120, 160, 80, "Dust counter", "PM1 · PM2.5 · PM10")}
-      ${path("pE", "M 450 150 C 495 150 505 148 548 148", A)}
-      ${path("pC", "M 450 182 C 475 205 470 244 492 244", I)}${path("pC2", "M 532 244 L 548 244", I)}
-      <rect x="492" y="228" width="40" height="32" rx="3" fill="#1d2430" stroke="${I}"/><text x="512" y="248" fill="${I}" ${mono} font-size="9.5" text-anchor="middle">HEPA</text>
-      <rect x="544" y="96" width="206" height="208" rx="8" fill="none" stroke="${Hh}" stroke-dasharray="3 4"/>
-      <text x="647" y="84" fill="${T}" ${serif} font-size="22" text-anchor="middle">Living cartridge · 8 wells</text>
-      ${wells}
-      <text x="647" y="326" fill="${G}" ${mono} font-size="10.5" text-anchor="middle">LED below · detector above · 37 °C</text>
-      ${path("pX", "M 750 200 L 820 200", T)}
-      ${box(820, 160, 160, 80, "HEPA + carbon", "filters everything")}
-      ${path("pO", "M 980 200 L 1050 200 L 1050 296", I)}
-      <g class="lung"><circle cx="1050" cy="320" r="22" fill="none" stroke="${I}" stroke-width="2"/><circle cx="1050" cy="320" r="6" fill="${I}"/></g>
-      <text x="1050" y="364" fill="${I}" ${mono} font-size="11" text-anchor="middle">EXHALE · CLEAN AIR</text>
-      ${Array.from({ length: 8 }, (_, i) => `<circle cx="${1100 + (i * 29) % 80}" cy="${290 + (i * 41) % 90}" r="2.5" fill="${I}" fill-opacity=".55"/>`).join("")}
-      ${dot("p2", A, 1.6, 0)}${dot("p2", A, 1.6, .8)}${dot("pE", A, 1.4, .3)}${dot("pC", I, 1.8, .2)}${dot("pX", T, 1.2, .5)}${dot("pO", I, 1.6, .1)}${dot("pO", I, 1.6, .9)}
-      <text x="600" y="404" fill="${G}" ${mono} font-size="11" text-anchor="middle">E · exposed to room air  C · same air, filtered  REF · lamp reference  BLK · no cells</text>`;
+  // ================================================================ 2. the breath path, the cells, the cartridge's loop (pictures from art.js)
+  (function pictures() {
+    const A = window.OddechArt; if (!A) return;
+    const put = (id, html) => { const el = $(id); if (el) el.innerHTML = html; };
+    put("breathArt", A.airLoop(true)); put("cellsArt", A.cells(true)); put("loopArt", A.cartridgeLoop(true));
     const steps = Array.from(document.querySelectorAll(".breath-steps li")); let k = 0;
     if (steps.length) setInterval(() => { steps.forEach((li, i) => li.classList.toggle("on", i === k)); k = (k + 1) % steps.length; }, 1600);
   })();

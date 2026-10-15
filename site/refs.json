@@ -257,5 +257,30 @@
   "url": "https://www.sigmaaldrich.com/US/en/product/mm/pezgs0416",
   "accessed": "13 Oct 2026",
   "entry": "Merck Millipore. Millicell EZ SLIDE 4-well glass chamber slide, 1.7 cm²/well, sterile (PEZGS0416), product page."
+ },
+ {
+  "key": "juarez2024",
+  "short": "Juárez-Facio et al. 2024",
+  "doi": "10.1080/02786826.2024.2426487",
+  "entry": "Juárez-Facio, A. T., Introna, M., Gustavsson, S. Å., Attergren, M., Lindwall, M., Olofsson, U., Steimer, S. S., Elihn, K. (2024). A mobile air-liquid interface exposure system optimized for outdoor toxicity testing of aerosols. Aerosol Science and Technology, 59(2), 214–226."
+ },
+ {
+  "key": "chidekel2012",
+  "short": "Chidekel et al. 2012",
+  "doi": "10.1155/2012/380686",
+  "entry": "Chidekel, A., Zhu, Y., Wang, J., Mosko, J. J., Rodriguez, E., Shaffer, T. H. (2012). The effects of gas humidification with high-flow nasal cannula on cultured human airway epithelial cells. Pulmonary Medicine, 2012, 380686."
+ },
+ {
+  "key": "jeannet2015",
+  "short": "Jeannet et al. 2015",
+  "doi": "10.3109/17435390.2014.886739",
+  "entry": "Jeannet, N., Fierz, M., Kalberer, M., Burtscher, H., Geiser, M. (2015). Nano Aerosol Chamber for In-Vitro Toxicity (NACIVT) studies. Nanotoxicology, 9(1), 34–42."
+ },
+ {
+  "key": "who2020lbm",
+  "short": "WHO 2020, Laboratory biosafety manual",
+  "url": "https://www.who.int/publications/i/item/9789240011311",
+  "accessed": "16 Oct 2026",
+  "entry": "World Health Organization (2020). Laboratory biosafety manual, fourth edition; monograph: Decontamination and waste management. Geneva: WHO."
  }
 ]

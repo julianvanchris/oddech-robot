@@ -20,7 +20,7 @@
   <a href="#hero" class="brand"><span class="brand-dot"></span>Oddech</a>
   <nav class="topnav" aria-label="Sections">
     <a href="#problem">Problem</a><a href="#diagnosis">Questions</a><a href="#new">What is new</a><a href="#robot">Robot</a><a href="#blueprint">Blueprint</a><a href="#sensor">Living sensor</a>
-    <a href="#simulation">Simulation</a><a href="#cloud">Cloud</a><a href="#model">Business</a><a href="#pitch">Pitch</a>
+    <a href="#simulation">Simulation</a><a href="#cloud">Cloud</a><a href="#model">Business</a><a href="#pitch">Pitch</a><a href="#live">Live</a>
   </nav>
   <button class="present-btn" id="presentBtn" title="Presentation mode: arrow keys move section by section (P)">Present</button>
 </header>
@@ -259,6 +259,14 @@
       <div><span class="mono">8 wells</span>living cells</div><div><span class="mono">≈ 100 Wh</span>battery</div><div><span class="mono">0</span>cameras</div>
     </div>
 
+    <div class="sub-head" data-reveal><div class="kicker">One robot or many devices?</div><h3 class="h3">More devices give more numbers. None says how harmful the air is where the child breathes.</h3>
+      <p class="note">Our assessment of today's setups, in a room with a child playing on the floor. Low-cost sensor units also drift apart. <a class="c" data-ref="castell2017"></a></p></div>
+    <div class="setups-wrap" id="setupsArt" data-reveal></div>
+    <div class="vs" data-reveal>
+      <figure class="vs-fig" id="trioArt"><figcaption class="note">One robot, three breathing heights: a child on the floor, a seated and a standing adult. Rendered from the robot's 3D model.</figcaption></figure>
+      <div class="vs-points" id="vsPoints"></div>
+    </div>
+
     <div class="sub-head" data-reveal><div class="kicker">Why this platform</div><h3 class="h3">Six ways to watch a room's air, judged on the same ten questions</h3>
       <p class="note">Our engineering assessment, for discussion. Filled: yes · ringed: partly · open: no.</p></div>
     <div class="matrix-wrap" data-reveal><table class="matrix" id="platformMatrix"></table></div>
@@ -392,18 +400,33 @@
       <div class="film-stage"><canvas id="filmCanvas" aria-label="Animated concept of the living-cell air sensor, in six scenes"></canvas></div>
     </div>
 
-    <div class="sub-head" data-reveal><div class="kicker light">How Oddech breathes</div><h3 class="h3 light">Inhale, sense, feel, clean, exhale</h3>
-      <p class="note light">Every ten minutes the robot takes a breath through its nose, lets the dust counter and the living cells read it, and breathes it out through its filter, cleaner than it came in.</p></div>
+    <div class="sub-head" data-reveal><div class="kicker light">How Oddech breathes</div><h3 class="h3 light">Inhale, condition, sense, feel, clean, exhale, return</h3>
+      <p class="note light">Every ten minutes the robot takes one breath: it warms and moistens it, weighs its dust, lets living cells feel it, cleans it and breathes it out, cleaner than it came in. Part of the clean air loops back to the front, where the control wells breathe it.</p></div>
     <div class="breath" data-reveal>
-      <svg id="breathSvg" viewBox="0 0 1200 420" role="img" aria-label="Air path through the robot: inlet, dust counter, living-cell cartridge with exposed and filtered control wells, filter, clean exhaust"></svg>
+      <div class="breath-art" id="breathArt"></div>
       <ol class="breath-steps">
         <li><b>Inhale</b><span>A small pump draws air in at the nose, at the chosen height.</span></li>
+        <li><b>Condition</b><span>Warmed to body temperature and moistened, like the air in our airways.</span></li>
         <li><b>Sense</b><span>The dust counter weighs it: PM1, PM2.5, PM10.</span></li>
-        <li><b>Feel</b><span>The air flows over four wells of airway cells; two more get the same air through a filter, as controls.</span></li>
-        <li><b>Clean</b><span>All of it passes a HEPA and carbon filter.</span></li>
-        <li><b>Exhale</b><span>Clean air leaves at the base; the room's purifier does the heavy cleaning on Oddech's advice.</span></li>
+        <li><b>Feel</b><span>It flows over four wells of living airway cells.</span></li>
+        <li><b>Clean</b><span>The cartridge's own filter, then HEPA and carbon.</span></li>
+        <li><b>Exhale</b><span>Clean air leaves at the base.</span></li>
+        <li><b>Return</b><span>A share loops back to the two control wells: the same warm, moist air, minus what the room carries.</span></li>
       </ol>
     </div>
+
+    <div class="sub-head" data-reveal><div class="kicker light">Temperature and humidity</div><h3 class="h3 light">Body-warm and airway-moist, or the reading does not count</h3>
+      <p class="note light">Room air in a Kraków winter is cool and dry; airway cells live at body temperature in moist air. Get this wrong and the cells would report the climate, not the dust.</p></div>
+    <div class="climate" data-reveal>
+      <div><span class="mono">37 °C</span><h4>A warm bay</h4><p>A heater and a fan hold the cartridge bay at body temperature, for about 6 W of the battery.</p></div>
+      <div><span class="mono">85–90 % RH</span><h4>Moist sample air</h4><p>The breath is warmed and moistened before it reaches the cells. A mobile air-liquid interface system, built to enable field studies, holds its cells at 37 °C, 85–90 % RH. <a class="c" data-ref="juarez2024"></a></p></div>
+      <div><span class="mono">dry air</span><h4>Why it matters</h4><p>In a cell study, dry air alone reduced airway-cell function and raised inflammation. <a class="c" data-ref="chidekel2012"></a> A transportable exposure chamber controls temperature and humidity by computer, preventing cellular stress. <a class="c" data-ref="jeannet2015"></a></p></div>
+      <div><span class="mono">in range</span><h4>Every cycle is checked</h4><p>Temperature and humidity are logged in the bay; a cycle counts only if both stayed in range. The lines are heated so nothing condenses on the wells, and the controls share every condition.</p></div>
+    </div>
+
+    <div class="sub-head" data-reveal><div class="kicker light">What the cells are</div><h3 class="h3 light">A thin airway lining, grown on a membrane</h3>
+      <p class="note light">Bronchial cells grown at the air-liquid interface form a lining of ciliated, goblet, club and basal cells, fed from below and open to the air above. <a class="c" data-ref="upadhyay2018"></a> A dye makes their mitochondria glow when the air stresses them: filtered air leaves a faint glow, smoky room air a bright one.</p></div>
+    <div class="cells-art" id="cellsArt" data-reveal></div>
 
     <div class="sub-head" data-reveal><div class="kicker light">Inside the cartridge</div><h3 class="h3 light">Read the cells yourself</h3>
       <p class="note light">Pick the air, run the cycles, and watch the wells. Each cycle is ten minutes of breathing; the graph shows the glow against the cycle count.</p></div>
@@ -438,6 +461,19 @@
       <div><h4>Keeping cells alive</h4><p>Airway cells grown at an air-liquid interface meet the air the way our airways do. <a class="c" data-ref="upadhyay2018"></a> The bay keeps them near 37 °C (about 6 W); a cartridge is swapped weekly.</p></div>
       <div><h4>What it adds</h4><p>Smoke-like dust raises the glow more than cooking dust of the same mass. That is the gap between weighing the air and knowing its harm. <a class="c" data-ref="daellenbach2020,gao2021"></a></p></div>
       <div><h4>What is not yet proven</h4><p>Thea's concept is a design, not a measurement. Whether the glow tracks exposure reliably, and how long cells stay stable in a robot, is the first thing to test in the lab (section 11).</p></div>
+    </div>
+
+    <div class="sub-head" data-reveal><div class="kicker light">Biological waste</div><h3 class="h3 light">Nothing living leaves the cartridge</h3>
+      <p class="note light">The cells never meet the room: they travel sealed, breathe through their own filter and go back to the lab that grew them.</p></div>
+    <div class="waste" data-reveal>
+      <div class="waste-art" id="loopArt"></div>
+      <ol class="waste-steps">
+        <li><b>Sealed</b><span>The partner lab grows the cells and seals the cartridge; the medium is held in a pad, so no liquid moves.</span></li>
+        <li><b>Contained</b><span>The cartridge breathes through its own filter: nothing living reaches the robot's HEPA and carbon filter, or the room.</span></li>
+        <li><b>Returned</b><span>After a week it goes back in the pouch it came in, never opened in the room.</span></li>
+        <li><b>Made safe</b><span>The lab inactivates it as laboratory biological waste, following the WHO guidance on decontamination and waste management. <a class="c" data-ref="who2020lbm"></a></span></li>
+        <li><b>Reused</b><span>The glass slides are cleaned and reused and the housing refilled: the cartridge is a loop, not a throwaway.</span></li>
+      </ol>
     </div>
     <details class="original" data-reveal>
       <summary><span class="kicker light">The original concept film</span><span class="note light">Thea Cao's full animation of the Living Air Sensor, as she made it</span></summary>
@@ -832,6 +868,16 @@
       <div class="tl"><span class="mono">26 Feb 2027</span><b>Entre Challenge</b><span>Business model tested</span></div>
       <div class="tl hot"><span class="mono">2027</span><b>Lab calibration, first pilot room</b><span>Plan</span></div>
     </div>
+    <div class="sub-head" data-reveal><div class="kicker">Risks</div><h3 class="h3">What could go wrong, and our answer</h3></div>
+    <div class="risks" data-reveal>
+      <div class="risk"><h4>Cells drift or tire</h4><p>Controls, a lamp reference and a blank in every cartridge; a fresh cartridge each week. <b>Plan B:</b> the robot collects filter samples and a partner lab tests them.</p></div>
+      <div class="risk"><h4>Heat, dry air, condensation</h4><p>A 37 °C bay, sample air kept moist, heated lines; a cycle counts only if temperature and humidity stayed in range (section 05).</p></div>
+      <div class="risk"><h4>Biological waste</h4><p>A sealed cartridge with its own filter, returned in its pouch and inactivated by the partner lab as laboratory waste. <a class="c" data-ref="who2020lbm"></a></p></div>
+      <div class="risk"><h4>Safety around children</h4><p>Slow near people, the mast down while it drives, a soft bumper, no camera.</p></div>
+      <div class="risk"><h4>Rooms turn out evenly mixed</h4><p><b>Plan B:</b> Oddech Station, a fixed living sensor with the cloud.</p></div>
+      <div class="risk"><h4>No one pays</h4><p><b>Plan B:</b> license the robot's brain and cloud to purifier makers.</p></div>
+    </div>
+
     <div class="deliv" data-reveal>
       <div class="kicker">Ready for 16 October</div>
       <div class="deliv-grid">
@@ -886,17 +932,39 @@
     <div class="sec-head" data-reveal>
       <div class="sec-num mono">15</div>
       <div><div class="kicker light">The pitch, camera-ready</div>
-      <h2 class="sec-title">Fourteen slides. <em>One story.</em></h2>
+      <h2 class="sec-title">Fifteen slides. <em>One story.</em></h2>
       <p class="stand">The final presentation in pitch form, with results from our room model. Click the deck and use the arrow keys; press Present (or F) for full screen, where each slide morphs into the next, or save it as a PDF.</p></div>
     </div>
     <div class="deck-wrap" data-reveal>
-      <div class="deck" id="deck" tabindex="0" aria-label="Pitch deck, 14 slides"><div class="deck-stage" id="deckStage"></div><i class="deck-prog" id="deckProg"></i></div>
+      <div class="deck" id="deck" tabindex="0" aria-label="Pitch deck, 15 slides"><div class="deck-stage" id="deckStage"></div><i class="deck-prog" id="deckProg"></i></div>
       <div class="deck-ctl">
-        <button class="chip" id="deckPrev">Previous</button><span class="mono" id="deckCount">01 / 14</span><button class="chip" id="deckNext">Next</button>
+        <button class="chip" id="deckPrev">Previous</button><span class="mono" id="deckCount">01 / 15</span><button class="chip" id="deckNext">Next</button>
         <span class="deck-sp"></span>
         <button class="chip" id="deckMotion" aria-pressed="true" title="Slide morphs and entrances">Motion on</button><button class="chip" id="deckFull">Present</button><button class="chip" id="deckPrint">Save as PDF</button>
       </div>
       <div class="deck-thumbs" id="deckThumbs"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================ 16 LIVE DEMONSTRATION -->
+<section id="live" class="night live-sec" data-title="Live">
+  <div class="wrap">
+    <div class="sec-head" data-reveal>
+      <div class="sec-num mono">16</div>
+      <div><div class="kicker light">Live demonstration</div>
+      <h2 class="sec-title">Open the loop, <em>run it yourself.</em></h2>
+      <p class="stand">Scan the code to open this site on your phone: the room model, the living sensor, the 3D blueprint and the Gazebo twin.</p></div>
+    </div>
+    <div class="live" data-reveal>
+      <div class="live-robot" id="liveRobot"></div>
+      <div class="live-link">
+        <div class="kicker light">Demo link</div>
+        <a class="live-url" href="https://oddech-robot.streamlit.app/" target="_blank" rel="noopener">oddech-robot.streamlit.app</a>
+        <p class="note light mono">https://oddech-robot.streamlit.app/</p>
+        <p class="live-take serif-i">Not a stronger purifier: knowing the air where the child breathes, and acting on it.</p>
+      </div>
+      <div class="live-qr"><div id="liveQr"></div><span class="mono">scan to open</span></div>
     </div>
   </div>
 </section>

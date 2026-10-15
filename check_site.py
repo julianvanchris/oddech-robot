@@ -46,7 +46,7 @@ for r in REFS:
         m = requests.get(f"https://api.crossref.org/works/{r['doi']}", headers=UA, timeout=60).json()["message"]
     except Exception as e:  # noqa: BLE001
         fails.append(f"crossref {r['key']}: {e}"); continue
-    title = (m.get("title") or [""])[0]
+    title = re.sub(r"<[^>]+>", " ", (m.get("title") or [""])[0])          # Crossref titles can carry <i> tags
     if letters(title)[:40] not in letters(r["entry"]):
         fails.append(f"title {r['key']}: Crossref says '{title}'")
     years = {str(m[k]["date-parts"][0][0]) for k in ("issued", "published-print", "published-online")
@@ -98,6 +98,11 @@ CLAIMS = [  # key, words in the abstract or title, words on the page
     ("ihantola2022", "notable genotoxic effects", "notable genotoxic effects"),
     ("ihantola2022", "after one-hour exposure", "after one-hour exposure"),
     ("upadhyay2018", "air-liquid interface", "air-liquid interface"),
+    ("upadhyay2018", "ciliated cells, goblet cells, club cells and basal cells", "ciliated, goblet, club and basal cells"),
+    ("juarez2024", "37 °c, 85–90% rh", "37 °c, 85–90 % rh"),
+    ("juarez2024", "enable field studies", "built to enable field studies"),
+    ("chidekel2012", "exposure to low humidity results in reduced epithelial cell function and increased inflammation", "dry air alone reduced airway-cell function and raised inflammation"),
+    ("jeannet2015", "temperature and humidity conditioning, preventing cellular stress during exposure", "preventing cellular stress"),
 ]
 DOI = {r["key"]: r.get("doi") for r in REFS}
 abstracts = {}
@@ -120,7 +125,7 @@ print(f"2. claims: {len(CLAIMS)} checked against {len(abstracts)} abstracts")
 
 # ---------------------------------------------------------------- 3. web sources
 WEB = [("ecovacs", ["600", "PM2.5"]), ("ballie", ["innovation platform"]), ("astro", ["Astro for Business"]), ("airly", ["Airly"]),
-       ("millicell", ["1.7", "4"])]
+       ("millicell", ["1.7", "4"]), ("who2020lbm", ["Laboratory biosafety manual", "waste management"])]
 URL = {r["key"]: r.get("url") for r in REFS}
 for key, words in WEB:
     resp, text = None, ""

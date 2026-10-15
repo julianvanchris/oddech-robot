@@ -137,7 +137,8 @@
   log.innerHTML = R.patrol.map(([t, , kind, val]) => `<li><span class="k">${(t + OFFSET).toFixed(1).padStart(5)} s</span>  ${say(kind, val)}</li>`).join("");
   const logItems = Array.from(log.querySelectorAll("li"));
   const mmss = s => `${String(Math.floor(s / 60)).padStart(2, "0")}:${(s % 60).toFixed(1).padStart(4, "0")}`;
-  const deg = a => ((a * 180 / Math.PI + 540) % 360 - 180).toFixed(1);
+  const deg = a => (((a * 180 / Math.PI) % 360 + 360) % 360).toFixed(1);       // a heading from 0 to 360, never signed
+  const fix = (v, d) => (Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v).toFixed(d);  // no "-0.00"
   function hud() {
     const live = st.mode === "drive", tt = live ? st.simT : Math.min(st.tau, T_END);
     $("twinHud").innerHTML = (live ? `<b>LIVE</b> · computed in your browser with the Gazebo model's limits` : `<span class="rec">●</span> <b>GAZEBO HARMONIC 8.10</b> · recorded run, played at 1×`) +
@@ -146,7 +147,7 @@
     $("twinTopics").innerHTML = [
       ["/clock", `sim ${tt.toFixed(1)} s`],
       ["/cmd_vel", `linear.x ${st.v.toFixed(2)} · angular.z ${st.w.toFixed(2)}`],
-      ["/odom", `x ${ox.toFixed(2)} · y ${oy.toFixed(2)} · yaw ${deg(st.yaw - yaw0)}°`],
+      ["/odom", `x ${fix(ox, 2)} · y ${fix(oy, 2)} · yaw ${deg(st.yaw - yaw0)}°`],
       ["/joint_states", `wheels ${st.wl.toFixed(0)}, ${st.wr.toFixed(0)} rad · mast 4 × ${st.q.toFixed(3)}`],
       ["/mast/cmd", `${st.cmdQ.toFixed(3)} · nose ${(0.4 + 4 * st.q).toFixed(2)} m`],
       ["/scan", `${D.lidar.samples} beams · nearest ${st.scanMin[0].toFixed(2)} m at ${st.scanMin[1].toFixed(0)}°`]].map(([k, val]) => `<span class="t">${k.padEnd(14)}</span>${val}`).join("\n");
