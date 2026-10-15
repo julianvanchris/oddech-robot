@@ -77,6 +77,8 @@ def main(out):
         pdf = cdp(ws, "Page.printToPDF", {"printBackground": True, "preferCSSPageSize": True, "marginTop": 0, "marginBottom": 0,
                                          "marginLeft": 0, "marginRight": 0, "displayHeaderFooter": False})
         Path(out).write_bytes(base64.b64decode(pdf["data"]))
+        static = Path(__file__).resolve().parent.parent / "static" / "Oddech_Pitch.pdf"   # what the deck's Download PDF button fetches
+        static.parent.mkdir(exist_ok=True); static.write_bytes(base64.b64decode(pdf["data"]))
         print(f"{out}: {n} slides, {Path(out).stat().st_size // 1024} KB")
         ws.close()
     finally:

@@ -845,6 +845,7 @@ html.deck-vt .slide { transition: none; }
   body.print-deck .slide { position: relative; opacity: 1 !important; visibility: visible !important; break-after: page; page-break-after: always; transition: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body.print-deck .slide, body.print-deck .slide * { animation: none !important; }
   body.print-deck .deck-prog { display: none; } .topfade { display: none; }
+  body.print-deck .slide:last-child { break-after: auto; page-break-after: auto; }
   body.print-deck .anim { display: none !important; } body.print-deck .art-flow, body.print-deck .sl-flow { animation: none !important; }
 }
 

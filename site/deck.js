@@ -81,10 +81,6 @@
     s += bar(352, eF, "#8A847A", "four fixed") + bar(384, eO, "#B4532A", "with Oddech");
     return s + `</svg>`;
   }
-  function archArt() {                                    // the data path from section 07, at slide size
-    const src = $("archSvg"); if (!src) return "";
-    return `<svg viewBox="0 40 1200 240" width="960" height="192" aria-hidden="true">${src.innerHTML.replace(/id="(u1|d1|d2|d3)"/g, 'id="dk-$1"').replace(/href="#(u1|d1|d2|d3)"/g, 'href="#dk-$1"').replace(/begin="([\d.]+)s"/g, (m, t) => `begin="-${t}s"`)}</svg>`;
-  }
   // where the parts are in robot_hero.webp (fractions of its width and height), from the render that made it
   const HERO = { w: 582, h: 1200, head: [0.33, 0.008], mast: [0.282, 0.37], ring: [0.27, 0.708], bio: [0.354, 0.77], vent: [0.156, 0.818], lidar: [0.335, 0.868] };
   function robotCallouts() {
@@ -200,7 +196,7 @@
       ${foot("Room model, minutes 5 to 20: three fixed sensors and Oddech against four fixed sensors · the method, not field evidence")}`]);
     SL.push(["For every user", "s-paper", `${head("09 · The product · robot at the edge, every room in the cloud")}
       <h2 data-m="t" style="font-size:52px">Each user gets <em>what they can act on.</em></h2>
-      <div class="sl-arch">${archArt()}</div>
+      <div class="sl-arch">${A.archFlow()}</div>
       <div class="sl-users">
         <div class="sl-user"><i>Staff and director · every room, live</i>
           <div class="sl-dash mini">
@@ -372,7 +368,21 @@
     window.addEventListener("afterprint", done);
     setTimeout(() => { try { window.print(); } catch (e) { done(); } }, 60);
   }
-  $("deckPrint").addEventListener("click", printDeck);
+  async function downloadPdf() {                          // the PDF tools/deck_pdf.py made and checked, served from Streamlit's static folder
+    const b = $("deckPrint"), label = b.textContent;
+    try {
+      let base = location.href; try { base = window.parent.location.href; } catch (e) { /* not reachable: our own address */ }
+      b.textContent = "Preparing…";
+      const r = await fetch(new URL("app/static/Oddech_Pitch.pdf", base).href, { cache: "no-store" });
+      const data = r.ok ? await r.arrayBuffer() : null;
+      if (!data || data.byteLength < 20000) throw new Error("no PDF");
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([data], { type: "application/pdf" })); a.download = "Oddech_Pitch.pdf";
+      document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 5000);
+    } catch (e) { printDeck(); }                         // locally without the static folder: print the deck instead
+    finally { b.textContent = label; }
+  }
+  $("deckPrint").addEventListener("click", downloadPdf);
   if (/print-deck/.test(location.hash)) document.body.classList.add("print-deck");   // for a headless PDF export of the deck alone
   window.addEventListener("resize", scale);
   new ResizeObserver(scale).observe(deck);

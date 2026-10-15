@@ -16,7 +16,8 @@ def page() -> str:
     read = lambda p: p.read_text(encoding="utf-8")
     safe = lambda s: s.replace("</script", "<\\/script")
     sim = read(SITE / "sim.js")
-    imgs = {p.stem: "data:image/webp;base64," + base64.b64encode(p.read_bytes()).decode() for p in sorted((SITE / "img").glob("*.webp"))}   # robot renders
+    imgs = {p.stem: f"data:image/{p.suffix[1:]};base64," + base64.b64encode(p.read_bytes()).decode()          # robot renders, the QR code
+            for p in sorted((SITE / "img").iterdir()) if p.suffix in (".webp", ".png")}
     data = (f"window.ODDECH_REFS={read(SITE / 'refs.json')};window.ODDECH_BENCH={read(SITE / 'bench.json')};"
             f"window.ODDECH_ROBOT={read(GZ / 'blueprint.json')};window.ODDECH_GZRUN={read(GZ / 'docs' / 'gazebo_run.json')};"
             f"window.ODDECH_IMG={json.dumps(imgs)};window.ODDECH_QR={read(SITE / 'qr.json')};"

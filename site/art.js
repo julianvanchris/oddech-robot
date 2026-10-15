@@ -225,9 +225,40 @@
     return s + `</svg>`;
   }
 
+  // ---------------------------------------------------------------- the product: robot at the edge, the cloud, three users (no ids, no style, nothing moves)
+  function archFlow() {
+    const I = "#1F1D1A", G = "#77716a", A = "#B4532A", B = "#2E4A6E", H = "rgba(31,29,26,.22)";
+    const t = (x, y, s, c = I, f = mono, size = 11, anchor = "middle") => `<text x="${x}" y="${y}" fill="${c}" ${f} font-size="${size}" text-anchor="${anchor}">${s}</text>`;
+    const dash = d => `<path d="${d}" fill="none" stroke-width="1.4" stroke-dasharray="4 5" stroke="${B}"/>`;
+    return `<svg viewBox="0 40 1200 240" width="960" height="192" aria-hidden="true">
+      <g transform="translate(40,0)">
+        <rect x="62" y="150" width="56" height="70" rx="10" fill="#F1ECE3" stroke="${I}"/>
+        <rect x="86" y="70" width="8" height="80" fill="${I}"/><rect x="74" y="56" width="32" height="18" rx="4" fill="#F1ECE3" stroke="${I}"/>
+        <circle cx="90" cy="65" r="3" fill="${A}"/><rect x="66" y="196" width="48" height="6" rx="3" fill="${B}" opacity=".7"/>
+        <rect x="70" y="160" width="40" height="22" rx="3" fill="#e9a0b4" fill-opacity=".45" stroke="${H}"/>
+        ${t(90, 248, "Oddech robot", I, serif, 22)}${t(90, 268, "edge: map · plan · living sensor")}
+      </g>
+      <path d="M 180 150 L 470 150" fill="none" stroke-width="1.4" stroke-dasharray="4 5" stroke="${A}"/><circle cx="250" cy="150" r="4" fill="${A}"/><circle cx="400" cy="150" r="4" fill="${A}"/>
+      <g transform="translate(325,124)"><rect x="-11" y="2" width="22" height="16" rx="3" fill="${I}"/><path d="M -6 2 v -5 a 6 6 0 0 1 12 0 v 5" fill="none" stroke="${I}" stroke-width="2"/></g>
+      ${t(325, 172, "encrypted · about 400 bytes every 10 s", G)}${t(325, 190, "keeps working offline, syncs later", G)}
+      <path d="M 500 190 a 40 40 0 0 1 22 -66 a 58 58 0 0 1 108 -10 a 44 44 0 0 1 76 34 a 34 34 0 0 1 -6 66 z" fill="#ECE6DA" stroke="${I}"/>
+      ${t(600, 158, "Oddech Cloud", I, serif, 26)}${t(600, 180, "time series · alerts · models")}
+      <rect x="548" y="240" width="104" height="18" rx="2" fill="none" stroke="${H}"/>${t(600, 253, "EU hosting · GDPR", G, mono, 10)}
+      ${dash("M 712 140 C 790 140 800 70 880 70")}${dash("M 712 156 L 880 156")}${dash("M 712 172 C 790 172 800 242 880 242")}
+      <rect x="884" y="48" width="64" height="42" rx="3" fill="#fff" stroke="${I}"/><rect x="892" y="56" width="22" height="16" fill="${A}" opacity=".7"/><rect x="918" y="56" width="22" height="7" fill="${B}" opacity=".6"/><rect x="918" y="66" width="22" height="6" fill="${B}" opacity=".35"/>
+      ${t(962, 66, "Staff dashboard", I, serif, 20, "start")}${t(962, 84, "every room, live", G, mono, 11, "start")}
+      <rect x="902" y="132" width="28" height="48" rx="5" fill="#fff" stroke="${I}"/><rect x="907" y="140" width="18" height="10" rx="2" fill="${A}" opacity=".75"/>
+      ${t(962, 152, "Parent's phone", I, serif, 20, "start")}${t(962, 170, "alert: act now, and why", G, mono, 11, "start")}
+      <rect x="886" y="226" width="12" height="30" fill="${I}" opacity=".7"/><rect x="902" y="214" width="14" height="42" fill="${I}" opacity=".5"/><rect x="920" y="232" width="12" height="24" fill="${I}" opacity=".7"/><rect x="936" y="222" width="10" height="34" fill="${I}" opacity=".5"/>
+      ${t(962, 240, "City programme", I, serif, 20, "start")}${t(962, 258, "anonymous, consented trends", G, mono, 11, "start")}
+    </svg>`;
+  }
+
   // ---------------------------------------------------------------- the QR code to this site, with its quiet zone
   function qr(dark, size) {
     const Q = window.ODDECH_QR; if (!Q) return "";
+    if (window.ODDECH_IMG && window.ODDECH_IMG.qr)          // a plain image prints in every browser; the drawn version is the fallback
+      return `<img src="${window.ODDECH_IMG.qr}" alt="QR code: ${Q.url}" width="${size}" height="${size}" style="display:block;margin:0 auto;border-radius:10px;image-rendering:pixelated">`;
     const n = Q.n + 8;                                     // four modules of quiet zone on every side
     return `<svg viewBox="-4 -4 ${n} ${n}" width="${size}" height="${size}" role="img" aria-label="QR code: ${Q.url}" shape-rendering="crispEdges">
       <rect x="-4" y="-4" width="${n}" height="${n}" fill="${dark ? "#EDE8DF" : "#fff"}"/><path d="${Q.d}" fill="#1F1D1A"/></svg>`;
@@ -237,5 +268,5 @@
     return src ? `<img src="${src}" alt="${alt}" style="${style || ""}" decoding="sync">` : "";
   };
 
-  window.OddechArt = { cells, room, plan, setups, SETUPS, airLoop, cartridgeLoop, timeLadder, qr, img };
+  window.OddechArt = { cells, room, plan, setups, SETUPS, airLoop, cartridgeLoop, timeLadder, archFlow, qr, img };
 })();
