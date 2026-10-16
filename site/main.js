@@ -223,6 +223,7 @@
       ].map(([h, t], i) => `<div class="${i ? "" : "hot"}"><h4>${h}</h4><p>${t}</p></div>`).join("");
     }
     if ($("liveRobot")) $("liveRobot").innerHTML = A.img("robot_hero", "Oddech, rendered from its 3D model", "height:420px;width:auto");
+    if ($("simShot")) $("simShot").innerHTML = A.img("sim_preview", "Oddech Sim: Antonio's CAD robot in the model flat, its mast raised beside the child's play mat");
     if ($("liveQr")) $("liveQr").innerHTML = A.qr(true, 220);
     if ($("priceRead") && $("ueFee")) {                    // section 05's price, from the business section's default inputs
       const fee = +$("ueFee").defaultValue, cart = +$("ueCart").defaultValue, pc = +$("uePc").defaultValue, reads = 7 * 24 * 6;

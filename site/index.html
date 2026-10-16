@@ -20,7 +20,7 @@
   <a href="#hero" class="brand"><span class="brand-dot"></span>Oddech</a>
   <nav class="topnav" aria-label="Sections">
     <a href="#problem">Problem</a><a href="#diagnosis">Questions</a><a href="#new">What is new</a><a href="#robot">Robot</a><a href="#blueprint">Blueprint</a><a href="#sensor">Living sensor</a>
-    <a href="#simulation">Simulation</a><a href="#cloud">Cloud</a><a href="#model">Business</a><a href="#pitch">Pitch</a><a href="#live">Live</a>
+    <a href="#simulation">Simulation</a><a href="#cloud">Cloud</a><a href="#model">Business</a><a href="#pitch">Pitch</a><a href="#live">Live</a><a href="https://oddech-sim.streamlit.app/" target="_blank" rel="noopener" class="ext" title="Oddech Sim: the robot, live, in a second app">Sim ↗</a>
   </nav>
   <button class="present-btn" id="presentBtn" title="Presentation mode: arrow keys move section by section (P)">Present</button>
 </header>
@@ -353,7 +353,18 @@
         <div class="kicker light">The sampling round · sim time</div><ol class="twin-log mono" id="twinLog"></ol>
       </aside>
     </div>
-    <p class="note light twin-note">Pose, wheels and mast come from Gazebo. The laser beams are traced here against the same room: Gazebo's scanner needs a graphics card, which the test machine could not give it. The air itself is not in Gazebo yet; section 06 runs that model.</p>
+    <p class="note light twin-note">Pose, wheels and mast come from Gazebo. The laser beams are traced here against the same room: Gazebo's scanner needs a graphics card, which the test machine could not give it. The air itself is not in Gazebo yet: section 06 runs that model, and Oddech Sim, below, runs both together.</p>
+
+    <a class="sim-card" href="https://oddech-sim.streamlit.app/" target="_blank" rel="noopener" data-reveal>
+      <div class="sim-shot" id="simShot"></div>
+      <div class="sim-copy">
+        <div class="kicker light">Oddech Sim · a second app, built from its own branch</div>
+        <h3 class="h3 light">The whole robot, live: <em>Antonio's CAD in one simulated world</em></h3>
+        <p class="note light">Antonio's COLLADA model drives the model flat in real time. Its wheels turn, its four mast stages telescope and its nose samples the air at the child's height. Around it, the laser maps the room, the living cells answer and every ROS 2 topic can be read. The air is this site's own model, so both tell the same story.</p>
+        <ul class="sim-feats mono"><li>drive it yourself</li><li>laser and map</li><li>air and living cells</li><li>topics and plots</li><li>the CAD, exploded</li></ul>
+        <span class="sim-go">Open Oddech Sim <i>↗</i></span>
+      </div>
+    </a>
 
     <div class="bp-pkg" data-reveal>
       <div>
@@ -972,6 +983,7 @@
         <div class="kicker light">Demo link</div>
         <a class="live-url" href="https://oddech-robot.streamlit.app/" target="_blank" rel="noopener">oddech-robot.streamlit.app</a>
         <p class="note light mono">https://oddech-robot.streamlit.app/</p>
+        <a class="live-sim" href="https://oddech-sim.streamlit.app/" target="_blank" rel="noopener"><span class="mono">and the robot itself, live</span>oddech-sim.streamlit.app ↗</a>
         <p class="live-take serif-i">Not a stronger purifier: knowing the air where the child breathes, and acting on it.</p>
       </div>
       <div class="live-qr"><div id="liveQr"></div><span class="mono">scan to open</span></div>

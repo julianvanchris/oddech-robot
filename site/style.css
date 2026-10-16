@@ -55,6 +55,7 @@ em { font-style: italic; }
 .topnav a { text-decoration: none; font: 500 12px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; opacity: .8; position: relative; }
 .topnav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -5px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .45s var(--ease); }
 .topnav a:hover::after, .topnav a.on::after { transform: scaleX(1); transform-origin: left; }
+.topnav a.ext { color: var(--accent2); opacity: 1; }
 .present-btn { background: none; border: 1px solid currentColor; border-radius: 99px; padding: 8px 16px; font: 500 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
 .present-btn.on { background: var(--nightText); color: #000; }
 .index { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 60; display: flex; flex-direction: column; gap: 10px; mix-blend-mode: difference; }
@@ -726,6 +727,19 @@ html.deck-vt .slide { transition: none; }
 .bp .chip.on { background: var(--bpInk); color: var(--bp); border-color: var(--bpInk); }
 .bp code { font: 500 .9em var(--mono); color: var(--bpInk); }
 
+.sim-card { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(24px, 3vw, 52px); align-items: center; margin: clamp(56px, 6vw, 96px) 0 0; padding: 16px; border: 1px solid var(--bpHair); color: inherit; text-decoration: none; transition: border-color .45s var(--ease), background .45s var(--ease); }
+.sim-card:hover { border-color: var(--bpHot); background: rgba(240, 162, 124, .035); }
+.sim-shot { position: relative; overflow: hidden; aspect-ratio: 16 / 9; background: #0F0E0C; }
+.sim-shot img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease); }
+.sim-card:hover .sim-shot img { transform: scale(1.04); }
+.sim-shot::after { content: "live · in your browser"; position: absolute; left: 14px; top: 14px; font: 500 10.5px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--bpInk); padding: 7px 10px; border-radius: 99px; background: rgba(13, 44, 77, .72); border: 1px solid var(--bpHair); }
+.sim-copy .h3 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--bpHot); }
+.sim-feats { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 18px 0 24px; font-size: 11px; }
+.sim-feats li { border: 1px solid var(--bpHair); border-radius: 99px; padding: 5px 10px; color: var(--bpText); }
+.sim-go { display: inline-flex; align-items: baseline; gap: 10px; font: 400 clamp(22px, 2.2vw, 32px)/1.1 var(--serif); color: var(--bpHot); border-bottom: 1px solid currentColor; padding-bottom: 4px; }
+.sim-go i { font-style: normal; display: inline-block; transition: transform .45s var(--ease); }
+.sim-card:hover .sim-go i { transform: translate(3px, -3px); }
+@media (max-width: 1180px) { .sim-card { grid-template-columns: 1fr; } }
 .bp-view, .twin { display: grid; grid-template-columns: 1fr 340px; gap: clamp(24px, 3vw, 48px); align-items: stretch; }
 .bp-stage, .twin-stage { position: relative; height: min(78vh, 760px); min-height: 520px; border: 1px solid var(--bpHair); overflow: hidden; }
 .bp-stage::before { content: ""; position: absolute; inset: 8px; border: 1px solid var(--bpHair); pointer-events: none; }
@@ -824,6 +838,9 @@ html.deck-vt .slide { transition: none; }
 .live-robot img { display: block; }
 .live-url { display: inline-block; white-space: nowrap; font: 400 clamp(24px, 3.1vw, 50px)/1.1 var(--serif); color: var(--accent2); text-decoration: none; border: 1.5px solid var(--accent2); border-radius: 999px; padding: .06em .5em .14em; transition: background .3s, color .3s; }
 .live-url:hover { background: var(--accent2); color: var(--night); }
+.live-sim { display: inline-flex; flex-direction: column; gap: 6px; margin-top: 22px; font: 400 clamp(18px, 1.6vw, 24px)/1.15 var(--serif); color: var(--nightText); text-decoration: none; transition: color .3s; }
+.live-sim span { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--nightGrey); }
+.live-sim:hover { color: var(--accent2); }
 .live-take { font-size: clamp(22px, 2vw, 30px); line-height: 1.25; color: var(--nightText); margin: 28px 0 0; max-width: 560px; }
 .live-qr { text-align: center; border: 1.5px solid var(--accent2); border-radius: 22px; padding: 18px 18px 12px; }
 .live-qr svg { display: block; border-radius: 10px; }
