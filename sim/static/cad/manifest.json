@@ -1,0 +1,455 @@
+{
+ "source": "3model/ (Antonio Galiza Cerdeira Gonzalez, branch CADmodel)",
+ "freecad": "3model/Oddech.FCStd",
+ "unit": "metre",
+ "up": "Z",
+ "files": [
+  {
+   "file": "Oddech-Cilindro.dae",
+   "bytes": 29250,
+   "gz_bytes": 6406,
+   "parts": [
+    {
+     "name": "Cilindro",
+     "triangles": 500,
+     "vertices": 252,
+     "bbox": [
+      [
+       -0.03,
+       -0.03,
+       0.35
+      ],
+      [
+       0.03,
+       0.03,
+       0.67
+      ]
+     ],
+     "color": [
+      0.506,
+      0.506,
+      0.506
+     ],
+     "freecad": {
+      "object": "Cylinder",
+      "type": "Part::Cylinder",
+      "body": null
+     }
+    }
+   ]
+  },
+  {
+   "file": "Oddech-Cilindro001.dae",
+   "bytes": 29252,
+   "gz_bytes": 6345,
+   "parts": [
+    {
+     "name": "Cilindro001",
+     "triangles": 500,
+     "vertices": 252,
+     "bbox": [
+      [
+       -0.025,
+       -0.025,
+       0.67
+      ],
+      [
+       0.025,
+       0.025,
+       0.99
+      ]
+     ],
+     "color": [
+      0.506,
+      0.506,
+      0.506
+     ],
+     "freecad": {
+      "object": "Cylinder001",
+      "type": "Part::Cylinder",
+      "body": null
+     }
+    }
+   ]
+  },
+  {
+   "file": "Oddech-Cilindro002.dae",
+   "bytes": 29248,
+   "gz_bytes": 6357,
+   "parts": [
+    {
+     "name": "Cilindro002",
+     "triangles": 500,
+     "vertices": 252,
+     "bbox": [
+      [
+       -0.02,
+       -0.02,
+       0.99
+      ],
+      [
+       0.02,
+       0.02,
+       1.31
+      ]
+     ],
+     "color": [
+      0.506,
+      0.506,
+      0.506
+     ],
+     "freecad": {
+      "object": "Cylinder002",
+      "type": "Part::Cylinder",
+      "body": null
+     }
+    }
+   ]
+  },
+  {
+   "file": "Oddech-Cilindro003.dae",
+   "bytes": 29385,
+   "gz_bytes": 6416,
+   "parts": [
+    {
+     "name": "Cilindro003",
+     "triangles": 500,
+     "vertices": 252,
+     "bbox": [
+      [
+       -0.015,
+       -0.015,
+       1.31
+      ],
+      [
+       0.015,
+       0.015,
+       1.63
+      ]
+     ],
+     "color": [
+      0.506,
+      0.506,
+      0.506
+     ],
+     "freecad": {
+      "object": "Cylinder003",
+      "type": "Part::Cylinder",
+      "body": null
+     }
+    }
+   ]
+  },
+  {
+   "file": "Oddech.dae",
+   "bytes": 10615785,
+   "gz_bytes": 2985511,
+   "parts": [
+    {
+     "name": "Fillet013",
+     "triangles": 19570,
+     "vertices": 9787,
+     "bbox": [
+      [
+       -0.2091,
+       -0.209,
+       0.17
+      ],
+      [
+       0.2091,
+       0.209,
+       0.35
+      ]
+     ],
+     "color": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "freecad": {
+      "object": "Fillet013",
+      "type": "Part::Fillet",
+      "body": "Corpo"
+     }
+    },
+    {
+     "name": "Thickness",
+     "triangles": 18140,
+     "vertices": 9072,
+     "bbox": [
+      [
+       -0.031,
+       -0.217,
+       0.223
+      ],
+      [
+       0.031,
+       -0.186,
+       0.285
+      ]
+     ],
+     "color": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "freecad": {
+      "object": "Thickness",
+      "type": "Part::Thickness",
+      "body": null
+     }
+    },
+    {
+     "name": "Pad001",
+     "triangles": 500,
+     "vertices": 252,
+     "bbox": [
+      [
+       -0.19,
+       -0.1899,
+       0.12
+      ],
+      [
+       0.19,
+       0.1899,
+       0.17
+      ]
+     ],
+     "color": [
+      0.506,
+      0.506,
+      0.506
+     ],
+     "freecad": {
+      "object": "Pad001",
+      "type": "PartDesign::Pad",
+      "body": "Segment6"
+     }
+    },
+    {
+     "name": "Fillet009",
+     "triangles": 52758,
+     "vertices": 26373,
+     "bbox": [
+      [
+       -0.21,
+       -0.2099,
+       0.0
+      ],
+      [
+       0.21,
+       0.2099,
+       0.14
+      ]
+     ],
+     "color": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "freecad": {
+      "object": "Fillet009",
+      "type": "Part::Fillet",
+      "body": "Segment4"
+     }
+    },
+    {
+     "name": "Fusion001",
+     "triangles": 4754,
+     "vertices": 2379,
+     "bbox": [
+      [
+       -0.012,
+       0.165,
+       -0.02
+      ],
+      [
+       0.012,
+       0.189,
+       0.01
+      ]
+     ],
+     "color": [
+      0.506,
+      0.506,
+      0.506
+     ],
+     "freecad": {
+      "object": "Fusion001",
+      "type": "Part::MultiFuse",
+      "body": null
+     }
+    },
+    {
+     "name": "Fillet002",
+     "triangles": 16628,
+     "vertices": 8316,
+     "bbox": [
+      [
+       -0.187,
+       -0.03,
+       -0.025
+      ],
+      [
+       -0.177,
+       0.03,
+       0.035
+      ]
+     ],
+     "color": [
+      0.506,
+      0.506,
+      0.506
+     ],
+     "freecad": {
+      "object": "Fillet002",
+      "type": "PartDesign::Fillet",
+      "body": "LWheel"
+     }
+    },
+    {
+     "name": "Fusion",
+     "triangles": 4754,
+     "vertices": 2379,
+     "bbox": [
+      [
+       -0.012,
+       -0.189,
+       -0.02
+      ],
+      [
+       0.012,
+       -0.165,
+       0.01
+      ]
+     ],
+     "color": [
+      0.506,
+      0.506,
+      0.506
+     ],
+     "freecad": {
+      "object": "Fusion",
+      "type": "Part::MultiFuse",
+      "body": null
+     }
+    },
+    {
+     "name": "Cilindro009",
+     "triangles": 500,
+     "vertices": 252,
+     "bbox": [
+      [
+       -0.028,
+       -0.21,
+       0.226
+      ],
+      [
+       0.028,
+       -0.2,
+       0.282
+      ]
+     ],
+     "color": [
+      0.506,
+      0.506,
+      0.506
+     ],
+     "freecad": {
+      "object": "Cylinder009",
+      "type": "Part::Cylinder",
+      "body": null
+     }
+    },
+    {
+     "name": "Fillet003",
+     "triangles": 16628,
+     "vertices": 8316,
+     "bbox": [
+      [
+       0.177,
+       -0.03,
+       -0.025
+      ],
+      [
+       0.187,
+       0.03,
+       0.035
+      ]
+     ],
+     "color": [
+      0.506,
+      0.506,
+      0.506
+     ],
+     "freecad": {
+      "object": "Fillet003",
+      "type": "PartDesign::Fillet",
+      "body": "RWheel"
+     }
+    }
+   ]
+  },
+  {
+   "file": "Oddech_sniffer.dae",
+   "bytes": 1334784,
+   "gz_bytes": 371282,
+   "parts": [
+    {
+     "name": "Fillet004",
+     "triangles": 8564,
+     "vertices": 4284,
+     "bbox": [
+      [
+       -0.035,
+       -0.035,
+       1.68
+      ],
+      [
+       0.035,
+       0.035,
+       1.69
+      ]
+     ],
+     "color": [
+      0.506,
+      0.506,
+      0.506
+     ],
+     "freecad": {
+      "object": "Fillet004",
+      "type": "PartDesign::Fillet",
+      "body": "Camera001"
+     }
+    },
+    {
+     "name": "Cut001",
+     "triangles": 9104,
+     "vertices": 4554,
+     "bbox": [
+      [
+       -0.035,
+       -0.035,
+       1.63
+      ],
+      [
+       0.035,
+       0.035,
+       1.68
+      ]
+     ],
+     "color": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "freecad": {
+      "object": "Cut001",
+      "type": "Part::Cut",
+      "body": "Camera"
+     }
+    }
+   ]
+  }
+ ]
+}

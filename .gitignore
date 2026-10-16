@@ -10,3 +10,4 @@ Thumbs.db
 .idea/
 *.log
 .ruff_cache/
+sim/preview.html

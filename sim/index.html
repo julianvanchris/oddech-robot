@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oddech Sim</title>
+<meta name="description" content="Oddech in a live simulation: Antonio's CAD robot, loaded from its COLLADA files, drives a model flat while the air, the laser, the map and the living cells run in real time.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!--STYLE-->
+</head>
+<body>
+
+<div id="boot" role="status" aria-live="polite">
+  <div class="boot-in">
+    <div class="boot-mark"><span class="dot"></span>Oddech <em>Sim</em></div>
+    <h1>A robot that reads the air, <em>live.</em></h1>
+    <p class="boot-sub">Loading Antonio's CAD model, part by part, from its COLLADA files.</p>
+    <ol class="boot-files mono" id="bootFiles"></ol>
+    <div class="boot-step mono" id="bootStep">connecting</div>
+  </div>
+</div>
+
+<header class="bar">
+  <a class="brand" id="siteLink" href="#" target="_blank" rel="noopener" title="Back to the Oddech site"><span class="dot"></span>Oddech <em>Sim</em></a>
+  <div class="bar-world">
+    <span class="mono dim">world</span><b>model flat</b><span class="mono dim">8 × 6 × 2.7 m</span>
+    <div class="seg" id="scBtns" aria-label="Scenario"></div>
+  </div>
+  <div class="bar-time">
+    <button class="ic" id="playBtn" title="Play or pause (P)" aria-label="Pause">❚❚</button>
+    <button class="ic" id="stepBtn" title="Step one simulated second" aria-label="Step">⏭</button>
+    <div class="seg" id="speedBtns" aria-label="Speed"><button class="chip" data-s="1">1×</button><button class="chip" data-s="5">5×</button><button class="chip" data-s="20">20×</button><button class="chip" data-s="60">60×</button></div>
+    <div class="clock mono" id="clock"><span>sim 00:00</span><span>RTF 1.00</span></div>
+  </div>
+  <div class="bar-right">
+    <button class="chip" id="leftToggle" aria-controls="leftPanel">Model</button>
+    <button class="chip" id="rightToggle" aria-controls="rightPanel">Panels</button>
+    <a class="chip out" id="siteLink2" href="#" target="_blank" rel="noopener">Oddech site ↗</a>
+  </div>
+</header>
+
+<main class="stage" id="stage">
+  <canvas id="view" tabindex="0" aria-label="3D view of the simulation. Drag to turn, scroll to zoom, arrow keys or WASD to drive the robot."></canvas>
+  <div class="labels" id="labels" aria-hidden="true"></div>
+
+  <aside class="panel left" id="leftPanel" aria-label="Model">
+    <div class="p-head"><span class="kicker">Entity tree</span><span class="mono dim" id="cadStat"></span></div>
+    <div class="tree mono" id="tree"></div>
+    <div class="p-head"><span class="kicker">Inspector</span></div>
+    <dl class="insp mono" id="insp"></dl>
+    <p class="p-note">Geometry, part names and colours as exported from <code>3model/Oddech.FCStd</code>. Joints, limits and dynamics are this simulator's; the mast limits follow the site's blueprint.</p>
+  </aside>
+
+  <aside class="panel right" id="rightPanel" aria-label="Controls and data">
+    <nav class="tabs" role="tablist">
+      <button class="tab on" data-tab="drive" role="tab">Drive</button><button class="tab" data-tab="air" role="tab">Air</button><button class="tab" data-tab="topics" role="tab">Topics</button><button class="tab" data-tab="plots" role="tab">Plots</button>
+    </nav>
+
+    <section class="pane on" data-pane="drive">
+      <div class="kicker">Who is driving</div>
+      <div class="seg wide" id="modeBtns"><button class="chip on" data-mode="oddech">Oddech decides</button><button class="chip" data-mode="patrol">Fixed round</button><button class="chip" data-mode="teleop">You drive</button></div>
+      <p class="p-note" id="modeNote"></p>
+      <div class="pad" id="pad">
+        <button data-k="f" aria-label="Forward">↑</button><button data-k="l" aria-label="Turn left">←</button><button data-k="s" aria-label="Stop">■</button><button data-k="r" aria-label="Turn right">→</button><button data-k="b" aria-label="Back">↓</button>
+      </div>
+      <div class="kicker">The nose · sampling height</div>
+      <div class="nose">
+        <input type="range" id="noseR" min="0.40" max="1.69" step="0.01" value="0.40" aria-label="Nose height">
+        <span class="mono" id="noseV">0.40 m</span>
+      </div>
+      <div class="seg" id="noseBtns"><button class="chip" data-h="0.4">0.40 child</button><button class="chip" data-h="1.1">1.10 seated</button><button class="chip" data-h="1.6">1.60 standing</button></div>
+      <button class="chip act" id="sampleBtn">Sample here · three heights</button>
+      <dl class="readout mono" id="robotRead"></dl>
+      <p class="p-note mono">keys · arrows or WASD drive · Q E nose · 1 2 3 heights · M sample · space stop · P pause · C camera</p>
+    </section>
+
+    <section class="pane" data-pane="air">
+      <div class="kicker">Sources</div>
+      <label class="tg"><input type="checkbox" id="candleT"><span>Candle on the dining table</span></label>
+      <label class="tg"><input type="checkbox" id="stoveT"><span>Frying on the cooktop</span></label>
+      <label class="tg"><input type="checkbox" id="matT"><span>Dust from play on the mat</span></label>
+      <label class="tg"><input type="checkbox" id="winT"><span>Window open</span></label>
+      <div class="kicker">Outdoor PM2.5</div>
+      <div class="nose"><input type="range" id="coutR" min="5" max="150" step="1" value="40" aria-label="Outdoor PM2.5"><span class="mono" id="coutV">40 µg/m³</span></div>
+      <div class="kicker">Purifier</div>
+      <div class="seg" id="purBtns"><button class="chip on" data-m="auto">Oddech switches it</button><button class="chip" data-m="on">On</button><button class="chip" data-m="off">Off</button></div>
+      <label class="tg"><input type="checkbox" id="followT"><span>The household follows Oddech's advice</span></label>
+      <div class="kicker">The living cells · section 05 of the site</div>
+      <div class="wells" id="wells"></div>
+      <dl class="readout mono" id="cellRead"></dl>
+      <p class="p-note">The air model, the map, the planner and the cells are the site's own (<code>site/sim.js</code>): a model room with stated, illustrative parameters, not a measurement.</p>
+    </section>
+
+    <section class="pane" data-pane="topics">
+      <div class="kicker">ROS 2 topics · as the package names them</div>
+      <div class="topics mono" id="topics"></div>
+      <div class="kicker" id="echoHead">ros2 topic echo</div>
+      <pre class="echo mono" id="echo"></pre>
+      <p class="p-note">Messages are computed here in the browser at simulated time, with the rates the Gazebo package uses; no ROS is running.</p>
+    </section>
+
+    <section class="pane" data-pane="plots">
+      <div class="kicker">PM2.5 · µg/m³</div>
+      <canvas class="plot" id="plotPM"></canvas>
+      <div class="key mono"><span class="k1">at the nose</span><span class="k2">the child's air</span><span class="k3">Oddech's estimate for the child</span></div>
+      <div class="kicker">Nose height · m</div>
+      <canvas class="plot short" id="plotZ"></canvas>
+      <div class="kicker">Living cells · stress index</div>
+      <canvas class="plot short" id="plotCells"></canvas>
+    </section>
+  </aside>
+
+  <div class="viewbar" id="viewbar">
+    <div class="seg" id="camBtns" aria-label="Camera"><button class="chip on" data-c="orbit">Orbit</button><button class="chip" data-c="follow">Follow</button><button class="chip" data-c="top">Top</button><button class="chip" data-c="robot">The robot</button></div>
+    <div class="seg" id="showBtns" aria-label="Show">
+      <button class="chip on" data-v="air">Air</button><button class="chip on" data-v="particles">Particles</button><button class="chip on" data-v="laser">Laser</button><button class="chip" data-v="map">Map</button><button class="chip on" data-v="path">Path</button><button class="chip" data-v="frames">Frames</button><button class="chip" data-v="collision">Collisions</button>
+    </div>
+    <div class="seg" id="skinBtns" aria-label="Finish"><button class="chip on" data-skin="studio">Studio</button><button class="chip" data-skin="cad">As exported</button></div>
+    <button class="chip" id="explodeBtn">Explode</button>
+  </div>
+
+  <div class="mini" id="mini"><canvas id="miniCanvas" width="320" height="240" aria-label="Map built from the laser"></canvas><div class="mini-cap mono"><span>/map · laser, 5 cm</span><span id="miniKnown"></span></div></div>
+
+  <div class="advice" id="advice">
+    <div class="adv-head mono"><span class="dot"></span>Oddech <span id="advT"></span><button class="ic small" id="advClose" aria-label="Hide advice">×</button></div>
+    <p id="advText">Warming up: the robot is taking its first readings.</p>
+    <div class="adv-acts" id="advActs"></div>
+  </div>
+
+  <div class="hud mono" id="hud" aria-live="off"></div>
+</main>
+
+<!--DATA-->
+<!--SCRIPTS-->
+</body>
+</html>
