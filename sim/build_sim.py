@@ -10,6 +10,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 SCRIPTS = [REPO / "vendor" / "three.min.js", HERE / "vendor" / "collada.js", REPO / "site" / "sim.js", HERE / "gz.js"]
 SITE_URL = "https://oddech-robot.streamlit.app/"          # the main site, linked from the top bar
+CAD_RAW = "https://raw.githubusercontent.com/julianvanchris/oddech-robot/simulation/sim/static/cad/"   # if static serving fails
 
 
 def page(static=None):
@@ -18,6 +19,7 @@ def page(static=None):
     safe = lambda s: s.replace("</script", "<\\/script")
     html = read(HERE / "index.html")
     data = (f"window.ODDECH_CAD={read(HERE / 'static' / 'cad' / 'manifest.json')};window.ODDECH_SITE={json.dumps(SITE_URL)};"
+            f"window.ODDECH_CAD_RAW={json.dumps(CAD_RAW)};"
             + (f"window.ODDECH_STATIC={json.dumps(static)};" if static else ""))
     for mark, block in (("<!--STYLE-->", f"<style>{read(HERE / 'gz.css')}</style>"),
                         ("<!--DATA-->", f"<script>{safe(data)}</script>"),

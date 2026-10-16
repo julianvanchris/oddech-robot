@@ -1071,17 +1071,27 @@
     try { if (window.parent !== window && window.parent.location.href) base = window.parent.location.href; } catch (e) { /* another origin: stay with ours */ }
     return new URL("app/static/" + path, base).href;
   }
-  async function fetchText(file, row) {
-    const res = await fetch(staticUrl("cad/" + file + ".gz"));
-    if (!res.ok) throw new Error(`${file}: HTTP ${res.status}`);
-    const total = +res.headers.get("content-length") || 0, reader = res.body.getReader(), chunks = []; let got = 0;
-    for (;;) { const { done, value } = await reader.read(); if (done) break; chunks.push(value); got += value.length; row.style.setProperty("--p", total ? (got / total).toFixed(3) : 0.5); }
-    const bytes = new Uint8Array(got); let o = 0; for (const c of chunks) { bytes.set(c, o); o += c.length; }
-    if (bytes[0] === 0x1f && bytes[1] === 0x8b) {
-      if (!("DecompressionStream" in window)) throw new Error("this browser cannot unzip the CAD files");
-      return await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).text();
+  async function fetchText(file, row) {                           // Streamlit's static folder first, then the same file on GitHub
+    const urls = [staticUrl("cad/" + file + ".gz")];
+    if (window.ODDECH_CAD_RAW) urls.push(window.ODDECH_CAD_RAW + file + ".gz");
+    let why = "";
+    for (const url of urls) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) { why = `HTTP ${res.status}`; continue; }
+        const total = +res.headers.get("content-length") || 0, reader = res.body.getReader(), chunks = []; let got = 0;
+        for (;;) { const { done, value } = await reader.read(); if (done) break; chunks.push(value); got += value.length; row.style.setProperty("--p", total ? (got / total).toFixed(3) : 0.5); }
+        const bytes = new Uint8Array(got); let o = 0; for (const c of chunks) { bytes.set(c, o); o += c.length; }
+        let text;
+        if (bytes[0] === 0x1f && bytes[1] === 0x8b) {
+          if (!("DecompressionStream" in window)) throw new Error("this browser cannot unzip the CAD files");
+          text = await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).text();
+        } else text = new TextDecoder().decode(bytes);                // already unzipped on the way
+        if (text.indexOf("<COLLADA") >= 0) return text;
+        why = "not a COLLADA file";
+      } catch (e) { why = e.message; }
     }
-    return new TextDecoder().decode(bytes);                          // already unzipped on the way
+    throw new Error(`${file}: ${why}`);
   }
   const mb = b => (b / 1e6).toFixed(b < 1e5 ? 2 : 1) + " MB";
   async function loadCad() {
